@@ -45,7 +45,10 @@ def astHash(iterable):
 
 def getLineNo(node, bottom):
   f = min if bottom else max
-  lineno = node.lineno
+  try:
+    lineno = node.lineno
+  except:
+    lineno = 10000 if bottom else -10000
   for node in ast.walk(node):
     if hasattr(node, 'lineno'):
       lineno = f(lineno, node.lineno)

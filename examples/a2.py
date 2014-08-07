@@ -5,8 +5,9 @@ print 'hello world'
 def super_duper(second_variable):
   second_variable *= 2
 
+  print 'maybe even print random things?'
 
-
+  # we should probably randomly insert comments here
 
 
   if isinstance(second_variable, int):
