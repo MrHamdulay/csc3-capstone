@@ -10,6 +10,8 @@ def Counter():
 #MAGIC
 
 def determinstic_iter_fields(node):
+    if not hasattr(node, '_fields'):
+      return
     for field in sorted(node._fields):
         try:
             f = getattr(node, field)
@@ -43,7 +45,18 @@ def astHash(iterable):
 
 def getLineNo(node, bottom):
   f = min if bottom else max
+  lineno = node.lineno
+  for node in ast.walk(node):
+    if hasattr(node, 'lineno'):
+      lineno = f(lineno, node.lineno)
+
+  return lineno
 
 
 def getCodeFromNode(program, node):
-  pass
+  bottom, top = getLineNo(node, True), getLineNo(node, False)
+
+  try:
+    return '\n'.join(program.program_source.split('\n')[bottom-1:top+1])
+  except:
+    return ''
