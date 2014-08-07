@@ -51,11 +51,11 @@ class TreeHash(BaseAlgorithm):
             devariabled = RenamerTransform().visit(deepcopy(node))
             h = hash(str(ast.dump(devariabled)))
             if h in self.program_hashes:
-                print 'we found some copies! \nSTART'
+                print 'we found some copies! daaaamn.\n original \n \033[1;31m'
                 print getCodeFromNode(program, node)
-                print 'END!\n Original'
+                print '\033[1;m\ncopy\n \033[1;32m'
                 print getCodeFromNode(*self.program_hashes[h])
-                print 'END!'
+                print '\033[1;m'
                 print
                 #print ast.dump(node, True, True)
                 self.copied_instances.append(node)
