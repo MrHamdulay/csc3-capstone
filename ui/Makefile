@@ -1,2 +1,2 @@
 run:
-	node index
+	gulp
