@@ -5,16 +5,25 @@
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/prism.css">
     <link rel="stylesheet" href="css/style.css">
-
 </head>
 <body>
     <div class="container">
-        <h1>Cheaters</h1>
-        <section class="assignment">
-            <h3>Assignment 1</h3>
-            <pre>
-                <code class="language-python">
-print 'hello world'
+
+        <section class='clearfix'>
+            <h2>Dashboard</h2>
+            <p>Number of cheaters per Assignment</p>
+            <canvas id="overall"></canvas>
+        </section>
+
+        <section class="clearfix">
+
+            <hr />
+            <h2>Assignment 3</h2>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <pre data-line="4-6,10">
+<code class="language-python"> print 'hello world'
 
 def first_function(a):
   a *= 2
@@ -24,127 +33,232 @@ def first_function(a):
 
 b = 2
 for i in xrange(1000):
-  first_function(i)
-                </code>
-            </pre>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>%</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Student Number</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>97%</td>
-                        <td>Jarred</td>
-                        <td>de Beer</td>
-                        <td>DBRJAR001</td>
-                    </tr>
-                    <tr>
-                        <td>86%</td>
-                        <td>Yasseen</td>
-                        <td>Hamdulay</td>
-                        <td>HMDYAS001</td>
-                    </tr>
-                    <tr>
-                        <td>83%</td>
-                        <td>Merishka</td>
-                        <td>Lalla</td>
-                        <td>LLLMER001</td>
-                    </tr>
-                    <tr>
-                        <td>56%</td>
-                        <td>Someone</td>
-                        <td>Elsewhere</td>
-                        <td>SMLSWH001</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-        <section class="assignment">
-            <h3>Assignment 2</h3>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>%</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Student Number</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>97%</td>
-                        <td>Jarred</td>
-                        <td>de Beer</td>
-                        <td>DBRJAR001</td>
-                    </tr>
-                    <tr>
-                        <td>86%</td>
-                        <td>Yasseen</td>
-                        <td>Hamdulay</td>
-                        <td>HMDYAS001</td>
-                    </tr>
-                    <tr>
-                        <td>83%</td>
-                        <td>Merishka</td>
-                        <td>Lalla</td>
-                        <td>LLLMER001</td>
-                    </tr>
-                    <tr>
-                        <td>56%</td>
-                        <td>Someone</td>
-                        <td>Elsewhere</td>
-                        <td>SMLSWH001</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-        <section class="assignment">
-            <h3>Assignment 3</h3>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>%</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Student Number</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>97%</td>
-                        <td>Jarred</td>
-                        <td>de Beer</td>
-                        <td>DBRJAR001</td>
-                    </tr>
-                    <tr>
-                        <td>86%</td>
-                        <td>Yasseen</td>
-                        <td>Hamdulay</td>
-                        <td>HMDYAS001</td>
-                    </tr>
-                    <tr>
-                        <td>83%</td>
-                        <td>Merishka</td>
-                        <td>Lalla</td>
-                        <td>LLLMER001</td>
-                    </tr>
-                    <tr>
-                        <td>56%</td>
-                        <td>Someone</td>
-                        <td>Elsewhere</td>
-                        <td>SMLSWH001</td>
-                    </tr>
-                </tbody>
-            </table>
+  first_function(i) </code>
+                    </pre>
+                </div>
+            
+                <div class="col-md-6">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>%</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Student Number</th>
+                                <th>File</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="active">
+                                <td>97%</td>
+                                <td>Jarred</td>
+                                <td>de Beer</td>
+                                <td>DBRJAR001</td>
+                                <td>SomeFile.py</td>
+                            </tr>
+                            <tr class="active">
+                                <td>86%</td>
+                                <td>Yaseen</td>
+                                <td>Hamdulay</td>
+                                <td>HMDYAS001</td>
+                                <td>SomeFile.py</td>
+                            </tr>
+                            <tr>
+                                <td>83%</td>
+                                <td>Merishka</td>
+                                <td>Lalla</td>
+                                <td>LLLMER001</td>
+                                <td>SomeFile.py</td>
+                            </tr>
+                            <tr>
+                                <td>56%</td>
+                                <td>Someone</td>
+                                <td>Elsewhere</td>
+                                <td>SMLSWH001</td>
+                                <td>SomeFile.py</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </section>
 
+        <section class="clearfix">
+
+            <hr />
+            <h2>Assignment 2</h2>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <pre data-line="3-5">
+<code class="language-python">def first_function(a):
+a *= 2
+if isinstance(a, int):
+  print 'This most definitely gets executed for sure'
+return first_function</code>
+                    </pre>
+                </div>
+
+                <div class="col-md-6">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>%</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Student Number</th>
+                                <th>File</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>97%</td>
+                                <td>Jarred</td>
+                                <td>de Beer</td>
+                                <td>DBRJAR001</td>
+                                <td>OtherFile.py</td>
+                            </tr>
+                            <tr class="active">
+                                <td>86%</td>
+                                <td>Yaseen</td>
+                                <td>Hamdulay</td>
+                                <td>HMDYAS001</td>
+                                <td>OtherFile.py</td>
+                            </tr>
+                            <tr>
+                                <td>83%</td>
+                                <td>Merishka</td>
+                                <td>Lalla</td>
+                                <td>LLLMER001</td>
+                                <td>OtherFile.py</td>
+                            </tr>
+                            <tr class="active">
+                                <td>56%</td>
+                                <td>Someone</td>
+                                <td>Elsewhere</td>
+                                <td>SMLSWH001</td>
+                                <td>OtherFile.py</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <pre data-line="2-3">
+<code class="language-python">b = 2
+for i in xrange(1000):
+  first_function(i)</code>
+                    </pre>
+                </div>
+
+                <div class="col-md-6">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>%</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Student Number</th>
+                                <th>File</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="active">
+                                <td>75%</td>
+                                <td>Jarred</td>
+                                <td>de Beer</td>
+                                <td>DBRJAR001</td>
+                                <td>B.py</td>
+                            </tr>
+                            <tr class="active">
+                                <td>64%</td>
+                                <td>Yaseen</td>
+                                <td>Hamdulay</td>
+                                <td>HMDYAS001</td>
+                                <td>C.py</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="clearfix">
+
+            <hr />
+            <h2>Assignment 1</h2>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <pre data-line="4-7,10-11">
+<code class="language-python">print 'hello world'
+
+def first_function(a):
+  a *= 2
+  if isinstance(a, int):
+    print 'This most definitely gets executed for sure'
+  return first_function
+
+b = 2
+for i in xrange(1000):
+  first_function(i)</code>
+                        </pre>
+                    </div>
+
+                    <div class="col-md-6">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>%</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Student Number</th>
+                                    <th>File</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="active">
+                                    <td>97%</td>
+                                    <td>Jarred</td>
+                                    <td>de Beer</td>
+                                    <td>DBRJAR001</td>
+                                    <td>OtherFile.py</td>
+                                </tr>
+                                <tr>
+                                    <td>86%</td>
+                                    <td>Yaseen</td>
+                                    <td>Hamdulay</td>
+                                    <td>HMDYAS001</td>
+                                    <td>OtherFile.py</td>
+                                </tr>
+                                <tr>
+                                    <td>83%</td>
+                                    <td>Merishka</td>
+                                    <td>Lalla</td>
+                                    <td>LLLMER001</td>
+                                    <td>OtherFile.py</td>
+                                </tr>
+                                <tr class="active">
+                                    <td>56%</td>
+                                    <td>Someone</td>
+                                    <td>Elsewhere</td>
+                                    <td>SMLSWH001</td>
+                                    <td>OtherFile.py</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+            </div>
+        </section>
+
+        <hr />
+
     </div>
+    <script src="js/jquery-2.1.1.js"></script>
     <script src="js/prism.js"></script>
+    <script src="js/Chart.js"></script>
     <script src="js/main.js"></script>
 </body>
 
