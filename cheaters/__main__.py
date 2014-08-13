@@ -3,8 +3,8 @@ import os
 import sys
 
 detectors = [TreeHash]
+print sys.argv
 
-files = []
 if len(sys.argv) > 2:
     files = sys.argv[1:]
 elif len(sys.argv) == 2:
@@ -12,14 +12,23 @@ elif len(sys.argv) == 2:
         files += given_files
 
 # filter file types
-for f in files:
-
 
 detector = TreeHash()
 
-programSubmissions = [PythonProgram(open(filename).read(), filename) for filename in sys.argv[1:]]
+programSubmissions = []
+for filename in files:
+  try:
+    programSubmissions.append(PythonProgram(open(filename).read(), filename))
+  except SyntaxError as e:
+    print 'Syntax error in ', filename
+    print e
+    sys.exit(1)
+
+print programSubmissions
+
 print 'LISTINGS!'
 for program in programSubmissions:
+    print 'meh'
     detector.isPlagiarised(program)
 
 for program in programSubmissions:

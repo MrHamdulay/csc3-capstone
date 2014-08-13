@@ -1,9 +1,10 @@
 import ast
+import _ast
 
 
 BLOCKCLASSES_AST = (ast.Module, ast.FunctionDef, ast.For, ast.If, ast.While)
 
-IGNORE_AST = (ast.Store, ast.Name, ast.Load, ast.Store, ast.Del, ast.Str, ast.Num, ast.arguments, ast.Load, ast.Mult, ast.Ellipsis)
+IGNORE_AST = (_ast.Store, _ast.Name, _ast.Load, _ast.Store, _ast.Del, _ast.Str, _ast.Num, _ast.arguments, _ast.Load, _ast.Mult, _ast.Ellipsis, _ast.Attribute)
 
 def Counter():
     count = 0

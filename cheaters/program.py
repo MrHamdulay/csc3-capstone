@@ -7,6 +7,9 @@ class Program:
         self.potential_cheated_sections = [False]*len(program_source.split('\n'))
         self.cheated_sections = None
 
+    def __repr__(self):
+      return '<Program file:%s len:%s>' % (self.filename, len(self.program_source))
+
     def mark_cheated(self, section):
       raise NotImplemented
 

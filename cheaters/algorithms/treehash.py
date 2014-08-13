@@ -11,6 +11,9 @@ class PythonProgram(Program):
   def __init__(self, program_source, filename=''):
     Program.__init__(self, program_source, filename)
     self.ast = ast.parse(program_source)
+    print 'programs ast'
+    print ast.dump(self.ast)
+    print
 
 
   def mark_cheated(self, node):
@@ -22,7 +25,7 @@ class PythonProgram(Program):
 
   def print_node(self, node):
     bottom, top = getLineLimits(node)
-    print '\n'.join(self.program_source.split('\n')[bottom:top+1])
+    print '\n'.join(self.program_source.split('\n')[bottom:top])
 
 class RenamerTransform(ast.NodeTransformer):
     def __init__(self):
@@ -34,51 +37,67 @@ class RenamerTransform(ast.NodeTransformer):
         self.generic_visit(node)
         return ast.copy_location(
             ast.Name(
-              id='asdf',#self.name_map[node.id],
+              id='',#self.name_map[node.id],
               ctx=node.ctx),
             node)
+
+    def visit_Str(self, node):
+        self.generic_visit(node)
+        return ast.copy_location(ast.Str(s=''), node)
 
     def visit_FunctionDef(self, node):
         self.generic_visit(node)
         return ast.copy_location(
             ast.FunctionDef(
-                'asdf',#self.name_map[node.name],
+                '',#self.name_map[node.name],
                 node.body,
                 node.args,
                 node.decorator_list),
             node)
 
+    #this should strip out the function name when calling methods on a class
+    #def visit_Call(self, node):
+    #    call = ast.Call(
+    #            args=node.args,
+
+
 
 class TreeHash(BaseAlgorithm):
     def __init__(self):
-        self.program_hashes = {}
-        self.new_hashes = {}
+        self.program_hashes = defaultdict(list)
+        self.new_hashes = defaultdict(list)
 
     def isPlagiarised(self, program):
         if isinstance(program, str):
             program = PythonProgram(program)
 
+        # remove all variable anf function names from ast
         devariabled = RenamerTransform().visit(program.ast)
         for node in ast.walk(devariabled):
           # get rid of all the painful variables
           # deepcopy the nodes. may be a performance problem but should be fine
-          if len(list(ast.walk(node))) < 3:
+          if len(list(ast.walk(node))) < 4:
             continue
           if isinstance(node, IGNORE_AST):
+            #print 'ignored', type(node)
             continue
+          print type(node), len(list(ast.walk(node))), ast.dump(node)[:90]
           h = str(ast.dump(node))
           node.cheated = h in self.program_hashes
           if h in self.program_hashes:
-              #print 'new listing. This came from'
-              #print h
-              #sys.stdout.write( '\033[92m')
-              #self.program_hashes[h][0].print_node(self.program_hashes[h][1])
-              #sys.stdout.write( '\033[0m')
-              #print 'and then'
-              #print ast.dump(self.program_hashes[h][1])
-              #sys.stdout.write( '\033[94m')
-              #program.print_node(node)
-              #sys.stdout.write( '\033[0m')
+              if True:
+                  print '\033[92m', self.program_hashes[h][0].filename,'\033[0m new listing. This came from '
+                  print h
+                  sys.stdout.write( '\033[92m')
+                  self.program_hashes[h][0].print_node(self.program_hashes[h][1])
+                  sys.stdout.write( '\033[0m')
+                  print '\033[92m',program.filename,'\033[0m and then'
+                  print ast.dump(self.program_hashes[h][1])
+                  sys.stdout.write( '\033[94m')
+                  program.print_node(node)
+                  sys.stdout.write( '\033[0m')
+                  print
+                  print
               self.program_hashes[h][0].mark_cheated(self.program_hashes[h][1])
 
               program.mark_cheated(node)
@@ -88,7 +107,7 @@ class TreeHash(BaseAlgorithm):
               self.new_hashes[h] = (program, node)
 
         self.program_hashes.update(self.new_hashes)
-        self.new_hashes = {}
+        self.new_hashes = defaultdict(list)
 
 
 
