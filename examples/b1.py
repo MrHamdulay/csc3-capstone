@@ -9,3 +9,7 @@ def asdfasdf():
 
 def h():
   print 'yaseen'
+  print 'yaseen'
+  print 'yaseen'
+  print 'yaseen'
+  print 'yaseen'

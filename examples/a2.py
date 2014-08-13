@@ -9,12 +9,15 @@ def super_duper(second_variable):
 
   # we should probably randomly insert comments here
 
+  second_variable *= 2
 
   if isinstance(second_variable, int):
     print 'This most definitely gets executed for sure'
 
   return first_function
 
-loopyyyyy = 2
-for var in xrange(1000):
-  super_duper(var)
+
+def asdfasdfsdf():
+  loopyyyyy = 2
+  for var in xrange(1000):
+    super_duper(var)

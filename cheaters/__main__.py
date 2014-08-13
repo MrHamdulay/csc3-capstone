@@ -1,15 +1,27 @@
-from algorithms.treehash import TreeHash
+from algorithms.treehash import TreeHash, PythonProgram
+import os
 import sys
 
 detectors = [TreeHash]
 
-if len(sys.argv) < 2:
-  print 'python capstone [<file1>.py]'
-  sys.exit(1)
+files = []
+if len(sys.argv) > 2:
+    files = sys.argv[1:]
+elif len(sys.argv) == 2:
+    for _, _, given_files in os.walk(sys.argv[1]):
+        files += given_files
+
+# filter file types
+for f in files:
+
 
 detector = TreeHash()
 
-files = [open(filename).read() for filename in sys.argv[1:]]
-for file_ in files:
-    detector.isPlagiarised(file_)
+programSubmissions = [PythonProgram(open(filename).read(), filename) for filename in sys.argv[1:]]
+print 'LISTINGS!'
+for program in programSubmissions:
+    detector.isPlagiarised(program)
 
+for program in programSubmissions:
+    print 'NEW PROGRAM'
+    print program.listing

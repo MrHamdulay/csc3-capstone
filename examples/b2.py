@@ -15,3 +15,6 @@ def not_cheated(a):
 
 def z():
   print 'yaseen'
+  print 'yaseen'
+  print 'yaseen'
+  print 'yaseen'
