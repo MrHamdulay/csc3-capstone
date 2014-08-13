@@ -86,25 +86,27 @@ class TreeHash(BaseAlgorithm):
           node.cheated = h in self.program_hashes
           if h in self.program_hashes:
               if True:
-                  print '\033[92m', self.program_hashes[h][0].filename,'\033[0m new listing. This came from '
+                  print '\033[92m', self.program_hashes[h][0][0].filename,'\033[0m new listing. This came from '
                   print h
                   sys.stdout.write( '\033[92m')
-                  self.program_hashes[h][0].print_node(self.program_hashes[h][1])
+                  self.program_hashes[h][0][0].print_node(self.program_hashes[h][0][1])
                   sys.stdout.write( '\033[0m')
                   print '\033[92m',program.filename,'\033[0m and then'
-                  print ast.dump(self.program_hashes[h][1])
+                  print ast.dump(self.program_hashes[h][0][1])
                   sys.stdout.write( '\033[94m')
                   program.print_node(node)
                   sys.stdout.write( '\033[0m')
                   print
                   print
-              self.program_hashes[h][0].mark_cheated(self.program_hashes[h][1])
+
+              for (oProgram, oNode) in self.program_hashes[h]:
+                  oProgram.mark_cheated(oNode)
 
               program.mark_cheated(node)
           else:
               # store for next time (don't add it to the thing we look up to prevent
               # self cheating
-              self.new_hashes[h] = (program, node)
+              self.new_hashes[h].append((program, node))
 
         self.program_hashes.update(self.new_hashes)
         self.new_hashes = defaultdict(list)
