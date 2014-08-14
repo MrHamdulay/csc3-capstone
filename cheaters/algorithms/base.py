@@ -1,5 +1,6 @@
 class BaseAlgorithm:
-  ALLOWED_LANGUAGES = ['py']
+  ''' a list of all file extensions allowed by this algorithm '''
+  ALLOWED_LANGUAGE_EXTENSIONS = []
 
   '''
   @param program string source code of the program we are checking for cheating

@@ -1,7 +1,7 @@
 import ast
 from collections import defaultdict
 from utils import Counter
-from .ast_utils import getLineLimits
+from languages.python.ast_utils import getLineLimits
 
 from program import Program
 

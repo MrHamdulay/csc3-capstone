@@ -4,19 +4,19 @@ from copy import deepcopy
 import ast
 
 from algorithms.base import BaseAlgorithm
-from algorithms.ast_utils import *
 from program import Program
 
 
-
 class TreeHash(BaseAlgorithm):
+    ALLOWED_LANGUAGE_EXTENSIONS = ['py']
+
     def __init__(self):
         self.program_hashes = defaultdict(list)
         self.new_hashes = defaultdict(list)
 
     def isPlagiarised(self, program):
 
-        # remove all variable anf function names from ast
+        # remove all variable and function names from ast
         devariabled = program.canonicalised_ast
         for node in ast.walk(devariabled):
           # get rid of all the painful variables
