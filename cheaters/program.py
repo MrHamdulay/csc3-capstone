@@ -1,4 +1,4 @@
-MIN_CHEAT_LENGTH = 3
+MIN_CHEAT_LENGTH = 1
 
 class Program:
     def __init__(self, program_source, filename=''):
@@ -9,6 +9,14 @@ class Program:
 
     def __repr__(self):
       return '<Program file:%s len:%s>' % (self.filename, len(self.program_source))
+
+    '''
+    return a version of the program source
+    with all variable names, strings, class names etc
+    removed. This removes the potential for simple
+    replacements to deceive us'''
+    def get_canonicalised_program_source(self):
+      rase NotImplemented
 
     def mark_cheated(self, section):
       raise NotImplemented
@@ -37,6 +45,11 @@ class Program:
             self.cheated_sections[j] = True
 
 
+    '''
+    return a (posix) string representation of the program source that
+    highlights all sections of the code that we have detected
+    as being copied from someone
+    '''
     @property
     def listing(self):
       if self.cheated_sections is None:
