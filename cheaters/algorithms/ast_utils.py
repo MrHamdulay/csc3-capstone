@@ -1,4 +1,11 @@
 import ast
+import _ast
+
+
+BLOCKCLASSES_AST = (ast.Module, ast.FunctionDef, ast.For, ast.If, ast.While)
+
+IGNORE_AST = (_ast.Store, _ast.Name, _ast.Load, _ast.Store, _ast.Del, _ast.Str, _ast.Num, _ast.arguments, _ast.Load, _ast.Mult, _ast.Ellipsis, _ast.Attribute)
+
 def Counter():
     count = 0
     def counterer():
@@ -55,11 +62,14 @@ def getLineNo(node, bottom):
 
   return lineno
 
+def getLineLimits(node):
+  return getLineNo(node, True)-1, getLineNo(node, False)+1
+
 
 def getCodeFromNode(program, node):
-  bottom, top = getLineNo(node, True), getLineNo(node, False)
+  bottom, top = getLineLimits(node)
 
   try:
-    return '\n'.join(program.program_source.split('\n')[bottom-1:top+1])
+    return '\n'.join(program.program_source.split('\n')[bottom:top])
   except:
     return ''

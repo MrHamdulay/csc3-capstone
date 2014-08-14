@@ -7,6 +7,14 @@ def first_function(a):
 
   return first_function
 
+def second_function(b):
+  b = 2
+  for i in xrange(1000):
+    first_function(i)
+    b = 2
+    for i in xrange(1000):
+      first_function(i)
+
 b = 2
 for i in xrange(1000):
   first_function(i)
