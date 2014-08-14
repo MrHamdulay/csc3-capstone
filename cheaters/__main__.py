@@ -3,7 +3,6 @@ import os
 import sys
 
 detectors = [TreeHash]
-print sys.argv
 
 if len(sys.argv) > 2:
     files = sys.argv[1:]
@@ -13,7 +12,6 @@ elif len(sys.argv) == 2:
 
 # filter file types
 
-detector = TreeHash()
 
 programSubmissions = []
 for filename in files:
@@ -27,8 +25,8 @@ for filename in files:
 print programSubmissions
 
 print 'LISTINGS!'
+detector = TreeHash()
 for program in programSubmissions:
-    print 'meh'
     detector.isPlagiarised(program)
 
 for program in programSubmissions:

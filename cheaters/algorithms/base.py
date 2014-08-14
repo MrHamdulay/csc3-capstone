@@ -1,4 +1,3 @@
-
 class BaseAlgorithm:
   '''
   @param program string source code of the program we are checking for cheating
@@ -6,3 +5,5 @@ class BaseAlgorithm:
   '''
   def isPlagiarised(self, program):
     raise NotImplemented('This method is not implemented yet')
+
+

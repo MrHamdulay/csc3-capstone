@@ -63,7 +63,7 @@ def getLineNo(node, bottom):
   return lineno
 
 def getLineLimits(node):
-  return getLineNo(node, True)-1, getLineNo(node, False)
+  return getLineNo(node, True)-1, getLineNo(node, False)+1
 
 
 def getCodeFromNode(program, node):

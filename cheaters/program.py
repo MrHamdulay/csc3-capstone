@@ -16,7 +16,7 @@ class Program:
     removed. This removes the potential for simple
     replacements to deceive us'''
     def get_canonicalised_program_source(self):
-      rase NotImplemented
+      raise NotImplemented
 
     def mark_cheated(self, section):
       raise NotImplemented
