@@ -1,4 +1,5 @@
-from algorithms.treehash import TreeHash, PythonProgram
+from algorithms.treehash import TreeHash
+from languages.python import PythonProgram
 import os
 import sys
 

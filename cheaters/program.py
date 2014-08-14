@@ -15,8 +15,10 @@ class Program:
     with all variable names, strings, class names etc
     removed. This removes the potential for simple
     replacements to deceive us'''
+    @property
     def get_canonicalised_program_source(self):
       raise NotImplemented
+
 
     def mark_cheated(self, section):
       raise NotImplemented
