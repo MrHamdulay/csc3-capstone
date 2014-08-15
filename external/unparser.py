@@ -4,6 +4,8 @@ import ast
 import cStringIO
 import os
 
+from cheaters.languages.python.ast_utils import getLineLimits
+
 # Large float and imaginary literals get turned into infinities in the AST.
 # We unparse those infinities to INFSTR.
 INFSTR = "1e" + repr(sys.float_info.max_10_exp + 1)
@@ -21,6 +23,7 @@ def interleave(inter, f, seq):
             inter()
             f(x)
 
+
 class Unparser:
     """Methods in this class recursively traverse an AST and
     output source code for the abstract syntax; original formatting
@@ -32,13 +35,18 @@ class Unparser:
         self.f = file
         self.future_imports = []
         self._indent = 0
+        self._line_number = 0
         self.dispatch(tree)
         self.f.write("")
         self.f.flush()
 
-    def fill(self, text = ""):
+    def fill(self, tree, text = ""):
         "Indent a piece of text, according to the current indentation level"
-        self.f.write("\n"+"    "*self._indent + text)
+        assert tree.line_no - self._line_number >= 0
+        while tree.line_no - self._line_number > 0:
+          self.f.write('\n')
+          self._line_number += 1
+        self.f.write("    "*self._indent + text)
 
     def write(self, text):
         "Append a piece of text to the current line."
@@ -76,11 +84,11 @@ class Unparser:
 
     # stmt
     def _Expr(self, tree):
-        self.fill()
+        self.fill(tree)
         self.dispatch(tree.value)
 
     def _Import(self, t):
-        self.fill("import ")
+        self.fill(t"import ")
         interleave(lambda: self.write(", "), self.dispatch, t.names)
 
     def _ImportFrom(self, t):
@@ -88,7 +96,7 @@ class Unparser:
         if t.module and t.module == '__future__':
             self.future_imports.extend(n.name for n in t.names)
 
-        self.fill("from ")
+        self.fill(t, "from ")
         self.write("." * t.level)
         if t.module:
             self.write(t.module)
@@ -96,46 +104,46 @@ class Unparser:
         interleave(lambda: self.write(", "), self.dispatch, t.names)
 
     def _Assign(self, t):
-        self.fill()
+        self.fill(t)
         for target in t.targets:
             self.dispatch(target)
             self.write(" = ")
         self.dispatch(t.value)
 
     def _AugAssign(self, t):
-        self.fill()
+        self.fill(t)
         self.dispatch(t.target)
         self.write(" "+self.binop[t.op.__class__.__name__]+"= ")
         self.dispatch(t.value)
 
     def _Return(self, t):
-        self.fill("return")
+        self.fill(t, "return")
         if t.value:
             self.write(" ")
             self.dispatch(t.value)
 
     def _Pass(self, t):
-        self.fill("pass")
+        self.fill(t, "pass")
 
     def _Break(self, t):
-        self.fill("break")
+        self.fill(t, "break")
 
     def _Continue(self, t):
-        self.fill("continue")
+        self.fill(t, "continue")
 
     def _Delete(self, t):
-        self.fill("del ")
+        self.fill(t, "del ")
         interleave(lambda: self.write(", "), self.dispatch, t.targets)
 
     def _Assert(self, t):
-        self.fill("assert ")
+        self.fill(t, "assert ")
         self.dispatch(t.test)
         if t.msg:
             self.write(", ")
             self.dispatch(t.msg)
 
     def _Exec(self, t):
-        self.fill("exec ")
+        self.fill(t, "exec ")
         self.dispatch(t.body)
         if t.globals:
             self.write(" in ")
@@ -145,7 +153,7 @@ class Unparser:
             self.dispatch(t.locals)
 
     def _Print(self, t):
-        self.fill("print ")
+        self.fill(t, "print ")
         do_comma = False
         if t.dest:
             self.write(">>")
@@ -159,7 +167,7 @@ class Unparser:
             self.write(",")
 
     def _Global(self, t):
-        self.fill("global ")
+        self.fill(t, "global ")
         interleave(lambda: self.write(", "), self.write, t.names)
 
     def _Yield(self, t):
@@ -171,7 +179,7 @@ class Unparser:
         self.write(")")
 
     def _Raise(self, t):
-        self.fill('raise ')
+        self.fill(t, 'raise ')
         if t.type:
             self.dispatch(t.type)
         if t.inst:
@@ -182,7 +190,7 @@ class Unparser:
             self.dispatch(t.tback)
 
     def _TryExcept(self, t):
-        self.fill("try")
+        self.fill(t, "try")
         self.enter()
         self.dispatch(t.body)
         self.leave()
@@ -190,7 +198,7 @@ class Unparser:
         for ex in t.handlers:
             self.dispatch(ex)
         if t.orelse:
-            self.fill("else")
+            self.fill(t, "else")
             self.enter()
             self.dispatch(t.orelse)
             self.leave()
@@ -200,18 +208,18 @@ class Unparser:
             # try-except-finally
             self.dispatch(t.body)
         else:
-            self.fill("try")
+            self.fill(t, "try")
             self.enter()
             self.dispatch(t.body)
             self.leave()
 
-        self.fill("finally")
+        self.fill(t, "finally")
         self.enter()
         self.dispatch(t.finalbody)
         self.leave()
 
     def _ExceptHandler(self, t):
-        self.fill("except")
+        self.fill(t, "except")
         if t.type:
             self.write(" ")
             self.dispatch(t.type)
@@ -225,9 +233,9 @@ class Unparser:
     def _ClassDef(self, t):
         self.write("\n")
         for deco in t.decorator_list:
-            self.fill("@")
+            self.fill(t, "@")
             self.dispatch(deco)
-        self.fill("class "+t.name)
+        self.fill(t, "class "+t.name)
         if t.bases:
             self.write("(")
             for a in t.bases:
@@ -241,9 +249,9 @@ class Unparser:
     def _FunctionDef(self, t):
         self.write("\n")
         for deco in t.decorator_list:
-            self.fill("@")
+            self.fill(t, "@")
             self.dispatch(deco)
-        self.fill("def "+t.name + "(")
+        self.fill(t, "def "+t.name + "(")
         self.dispatch(t.args)
         self.write(")")
         self.enter()
@@ -251,7 +259,7 @@ class Unparser:
         self.leave()
 
     def _For(self, t):
-        self.fill("for ")
+        self.fill(t, "for ")
         self.dispatch(t.target)
         self.write(" in ")
         self.dispatch(t.iter)
@@ -259,13 +267,13 @@ class Unparser:
         self.dispatch(t.body)
         self.leave()
         if t.orelse:
-            self.fill("else")
+            self.fill(t, "else")
             self.enter()
             self.dispatch(t.orelse)
             self.leave()
 
     def _If(self, t):
-        self.fill("if ")
+        self.fill(t, "if ")
         self.dispatch(t.test)
         self.enter()
         self.dispatch(t.body)
@@ -274,32 +282,32 @@ class Unparser:
         while (t.orelse and len(t.orelse) == 1 and
                isinstance(t.orelse[0], ast.If)):
             t = t.orelse[0]
-            self.fill("elif ")
+            self.fill(t, "elif ")
             self.dispatch(t.test)
             self.enter()
             self.dispatch(t.body)
             self.leave()
         # final else
         if t.orelse:
-            self.fill("else")
+            self.fill(t, "else")
             self.enter()
             self.dispatch(t.orelse)
             self.leave()
 
     def _While(self, t):
-        self.fill("while ")
+        self.fill(t, "while ")
         self.dispatch(t.test)
         self.enter()
         self.dispatch(t.body)
         self.leave()
         if t.orelse:
-            self.fill("else")
+            self.fill(t, "else")
             self.enter()
             self.dispatch(t.orelse)
             self.leave()
 
     def _With(self, t):
-        self.fill("with ")
+        self.fill(t, "with ")
         self.dispatch(t.context_expr)
         if t.optional_vars:
             self.write(" as ")
