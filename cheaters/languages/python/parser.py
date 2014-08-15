@@ -5,6 +5,7 @@ from languages.python.ast_utils import getLineLimits
 
 from program import Program
 
+
 class RenamerTransform(ast.NodeTransformer):
     ''' ast transform that removes variable names,
     strings and function names to make matching easier

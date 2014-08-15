@@ -1,6 +1,7 @@
 import ast
 import _ast
 
+
 # ast nodes that start new blocks
 BLOCKCLASSES_AST = (ast.Module, ast.FunctionDef, ast.For, ast.If, ast.While)
 
