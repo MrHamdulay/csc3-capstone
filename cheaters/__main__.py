@@ -1,4 +1,4 @@
-from algorithms.treehash import TreeHash
+from algorithms.treehashalgorithm import TreeHashAlgorithm
 from languages.python import PythonProgram
 import os
 import sys
@@ -27,12 +27,12 @@ for filename in files:
 print programSubmissions
 
 print 'LISTINGS!'
-detector = TreeHash()
+detector = TreeHashAlgorithm()
 # check each file for plagiarism
 for program in programSubmissions:
     detector.isPlagiarised(program)
 
 # print sections of code that have been copied / cheated
-for program in programSubmissions:
+for i, program in enumerate(programSubmissions):
     print 'NEW PROGRAM'
     print program.listing

@@ -8,7 +8,7 @@ from program import Program
 from languages.python.ast_utils import IGNORE_AST
 
 
-class TreeHash(BaseAlgorithm):
+class TreeHashAlgorithm(BaseAlgorithm):
     ALLOWED_LANGUAGE_EXTENSIONS = ['py']
 
     def __init__(self):
