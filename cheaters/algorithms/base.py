@@ -9,5 +9,11 @@ class BaseAlgorithm:
   def isPlagiarised(self, program):
     raise NotImplemented('This method is not implemented yet')
 
+  def plagiarisedSections(self, program):
+    raise NotImplemented
 
 
+class SectionMatch:
+  def __init__(self):
+
+    pass

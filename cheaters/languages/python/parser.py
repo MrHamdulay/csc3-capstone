@@ -6,10 +6,15 @@ from languages.python.ast_utils import getLineLimits
 from program import Program
 
 class RenamerTransform(ast.NodeTransformer):
-    def __init__(self):
-        # it turns out that the name map is only used when checking
-        # for equality, not when we are hashing. It's too strict
-        self.name_map = defaultdict(Counter())
+    ''' ast transform that removes variable names,
+    strings and function names to make matching easier
+
+    use: RenamerTransform().visit(ast_node)
+
+    methods of form visit_`type' are called when we
+    arrive at a node of type `type' and return
+    the node that we wish to replace it with.
+    '''
 
     def visit_Name(self, node):
         self.generic_visit(node)
@@ -45,6 +50,9 @@ class PythonProgram(Program):
     self.ast = ast.parse(program_source)
 
 
+  '''
+  mark a section of code as having being cheated
+  from someone'''
   def mark_cheated(self, node):
     # reevaluate this when we mark more things
     self.cheated_sections = None
@@ -52,14 +60,18 @@ class PythonProgram(Program):
     for i in xrange(bottom, top):
       self.potential_cheated_sections[i] = True
 
+  ''' print the source of a given node '''
   def print_node(self, node):
     bottom, top = getLineLimits(node)
     print '\n'.join(self.program_source.split('\n')[bottom:top])
 
+  ''' return an AST with variable names etc removed '''
   @property
   def canonicalised_ast(self):
     return RenamerTransform().visit(self.ast)
 
+  ''' return the program source with variable names etc removed'''
   @property
   def get_canonicalised_program_source(self):
-    return str(ast.dump(self.canonicalised_ast))
+    ast = self.canonicalised_ast
+    return ast.dump(self.canonicalised_ast)

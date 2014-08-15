@@ -1,5 +1,7 @@
 MIN_CHEAT_LENGTH = 1
 
+''' generic/ abstract class that represents a program subimssion.
+'''
 class Program:
     def __init__(self, program_source, filename=''):
         self.filename=filename
@@ -20,6 +22,8 @@ class Program:
       raise NotImplemented
 
 
+    ''' mark a section of the program as having being copied
+    from another submission'''
     def mark_cheated(self, section):
       raise NotImplemented
 
