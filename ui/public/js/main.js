@@ -1,5 +1,6 @@
 // Initialize the dashboard chart
 
+// set Chart's global defaults
 Chart.defaults.global.responsive = true;
 Chart.defaults.global.maintainAspectRatio = false;
 
@@ -18,11 +19,9 @@ var data = {
 }
 
 var options = {
-    bezierCurveTension: 0.2,
-    legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].lineColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
+    bezierCurveTension: 0.2
 }
+
+// initialize the Dashboard Chart
 var dsh = document.getElementById('overall').getContext('2d')
   , dsh_chart = new Chart(dsh).Line(data, options);
-
-var legend = dsh_chart.generateLegend();
-document.getElementById('legend').innerHTML = legend;
