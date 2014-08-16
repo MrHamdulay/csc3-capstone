@@ -2,6 +2,8 @@ import ast
 from collections import defaultdict
 from utils import Counter
 from languages.python.ast_utils import getLineLimits
+import external.unparser
+from StringIO import StringIO
 
 from program import Program
 
@@ -18,24 +20,24 @@ class RenamerTransform(ast.NodeTransformer):
     '''
 
     def visit_Name(self, node):
-        self.generic_visit(node)
+        #self.generic_visit(node)
         return ast.copy_location(
             ast.Name(
-              id='',#self.name_map[node.id],
+              id='i',#self.name_map[node.id],
               ctx=node.ctx),
             node)
 
     def visit_Str(self, node):
-        self.generic_visit(node)
-        return ast.copy_location(ast.Str(s=''), node)
+        #self.generic_visit(node)
+        return ast.copy_location(ast.Str(s='s'), node)
 
     def visit_FunctionDef(self, node):
         self.generic_visit(node)
         return ast.copy_location(
             ast.FunctionDef(
-                '',#self.name_map[node.name],
-                node.body,
+                'f',#self.name_map[node.name],
                 node.args,
+                node.body,
                 node.decorator_list),
             node)
 
@@ -74,5 +76,6 @@ class PythonProgram(Program):
   ''' return the program source with variable names etc removed'''
   @property
   def get_canonicalised_program_source(self):
-    ast = self.canonicalised_ast
-    return ast.dump(self.canonicalised_ast)
+    buf = StringIO()
+    external.unparser.Unparser(self.canonicalised_ast, buf)
+    return buf.getvalue()

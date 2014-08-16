@@ -4,7 +4,7 @@ import ast
 import cStringIO
 import os
 
-from cheaters.languages.python.ast_utils import getLineLimits
+from languages.python.ast_utils import getLineLimits
 
 # Large float and imaginary literals get turned into infinities in the AST.
 # We unparse those infinities to INFSTR.
@@ -44,7 +44,6 @@ class Unparser:
         "Indent a piece of text, according to the current indentation level"
         if hasattr(tree, 'lineno'):
           lines_to_print = tree.lineno - self._line_number - 1
-          assert lines_to_print > 0
           if lines_to_print > 0:
             self.f.write('\n' * lines_to_print )
             self._line_number += lines_to_print
