@@ -14,6 +14,7 @@ class BaseAlgorithm:
 
 
 class SectionMatch:
-  def __init__(self):
-
-    pass
+  def __init__(self, program, startline, endline):
+    self.program = program
+    self.startline = startline
+    self.endline = endline

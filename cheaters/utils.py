@@ -1,4 +1,3 @@
-
 def Counter():
     count = 0
     def counterer():

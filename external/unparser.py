@@ -42,10 +42,16 @@ class Unparser:
 
     def fill(self, tree, text = ""):
         "Indent a piece of text, according to the current indentation level"
-        assert tree.line_no - self._line_number >= 0
-        while tree.line_no - self._line_number > 0:
-          self.f.write('\n')
+        if hasattr(tree, 'lineno'):
+          lines_to_print = tree.lineno - self._line_number - 1
+          assert lines_to_print > 0
+          if lines_to_print > 0:
+            self.f.write('\n' * lines_to_print )
+            self._line_number += lines_to_print
+        else:
+          print 'no line no'
           self._line_number += 1
+          self.f.write('\n')
         self.f.write("    "*self._indent + text)
 
     def write(self, text):
@@ -88,7 +94,7 @@ class Unparser:
         self.dispatch(tree.value)
 
     def _Import(self, t):
-        self.fill(t"import ")
+        self.fill(t, "import ")
         interleave(lambda: self.write(", "), self.dispatch, t.names)
 
     def _ImportFrom(self, t):
@@ -232,6 +238,7 @@ class Unparser:
 
     def _ClassDef(self, t):
         self.write("\n")
+        self._line_number += 1
         for deco in t.decorator_list:
             self.fill(t, "@")
             self.dispatch(deco)
@@ -248,6 +255,7 @@ class Unparser:
 
     def _FunctionDef(self, t):
         self.write("\n")
+        self._line_number += 1
         for deco in t.decorator_list:
             self.fill(t, "@")
             self.dispatch(deco)

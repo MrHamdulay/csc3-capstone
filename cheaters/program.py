@@ -1,5 +1,6 @@
 MIN_CHEAT_LENGTH = 1
 
+
 ''' generic/ abstract class that represents a program subimssion.
 '''
 class Program:
