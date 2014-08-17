@@ -48,9 +48,10 @@ class RenamerTransform(ast.NodeTransformer):
     #            args=node.args,
 
 
-class PythonProgramSubmission(ProgramSubmission):
-  def __init__(self, program_source, filename=''):
-    ProgramSubmission.__init__(self, program_source, filename)
+class PythonLanguageHandler(ProgramSubmission):
+  file_types = ['py']
+
+  def parse_file(self, program_source, filename=''):
     self.ast = ast.parse(program_source)
 
 
@@ -79,7 +80,7 @@ class PythonProgramSubmission(ProgramSubmission):
 
   ''' return the program source with variable names etc removed'''
   @property
-  def canonicalised_program_source(self):
+  def strip_unstable_attributes(self):
     buf = StringIO()
     external.unparser.Unparser(self.canonicalised_ast, buf)
     return buf.getvalue()

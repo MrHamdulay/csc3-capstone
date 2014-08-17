@@ -1,5 +1,6 @@
 from programsubmission import ProgramSubmission
 
 
-class JavaProgramSubmission(ProgramSubmission):
-  pass
+class JavaLanguageHandler(ProgramSubmission):
+    file_types = ['java']
+    pass

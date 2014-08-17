@@ -1,4 +1,5 @@
 from algorithms.base import BaseAlgorithm, SectionMatch
+from signature import Signature
 from collections import deque, defaultdict
 
 WINDOW_LENGTH = 11
@@ -13,34 +14,22 @@ class WinnowerAlgorithm(BaseAlgorithm):
   ALLOWED_LANGUAGE_EXTENSIONS = ['*']
   MINIMUM_SIGNATURES_MATCH_THRESHOLD = 5
 
-  def __init__(self):
-    self.current_ngrams = defaultdict(list)
+  language_handler = None
 
-  def isPlagiarised(self, program):
-    canonicalised_ = program.canonicalised_program_source
+
+  def __init__(self, language_handler):
+    self.current_ngrams = defaultdict(list)
+    self.language_handler = language_handler
+
+  def generate_signatures(self):
+    stripped_source = self.language_handler.strip_unstable_atrributes()
 
     # generate, store and look up all winnower hashes
-    program_matches = defaultdict(list)
-    for line_number, h in self.window_hashes(program.canonicalised_program_source):
-      if h in self.current_ngrams:
+    signatures = []
+    for line_number, h in self.window_hashes(stripped_source):
+        signatures.append(Signature(h, None, line_number))
 
-        for program_match, match_line_number in self.current_ngrams[h]:
-          if program_match != program:
-              program_matches[program_match].append((line_number, match_line_number))
-      self.current_ngrams[h].append((program, line_number))
-
-    # filter out programs that matched below the threshold
-    for other_program, matches in program_matches.iteritems():
-        if len(matches) < self.MINIMUM_SIGNATURES_MATCH_THRESHOLD:
-            del program_matches[other_program]
-
-    for other_program, matches in program_matches.iteritems():
-        # needs to be consecutive matches within a program match
-        for original_line, matched_line in matches:
-            match = SectionMatch(program, original_line, original_line+1)
-            program.mark_cheated(match)
-            other_program.mark_cheated(SectionMatch(other_program, matched_line, matched_line+1))
-
+    return signatures
 
   '''
   given a string and a length generate and return all
