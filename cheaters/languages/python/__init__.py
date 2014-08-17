@@ -1,1 +1,1 @@
-from .parser import PythonProgram
+from .parser import PythonProgramSubmission

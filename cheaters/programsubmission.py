@@ -3,7 +3,7 @@ MIN_CHEAT_LENGTH = 1
 
 ''' generic/ abstract class that represents a program subimssion.
 '''
-class Program:
+class ProgramSubmission:
     def __init__(self, program_source, filename=''):
         self.filename=filename
         self.program_source = program_source

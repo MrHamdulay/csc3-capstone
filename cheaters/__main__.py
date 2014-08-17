@@ -1,5 +1,6 @@
 from algorithms.treehashalgorithm import TreeHashAlgorithm
-from languages.python import PythonProgram
+from algorithms.winnoweralgorithm import WinnowerAlgorithm
+from languages.python import PythonProgramSubmission
 import os
 import sys
 
@@ -18,7 +19,7 @@ elif len(sys.argv) == 2:
 programSubmissions = []
 for filename in files:
   try:
-    programSubmissions.append(PythonProgram(open(filename).read(), filename))
+    programSubmissions.append(PythonProgramSubmission(open(filename).read(), filename))
   except SyntaxError as e:
     print 'Syntax error in ', filename
     print e
@@ -27,7 +28,8 @@ for filename in files:
 print programSubmissions
 
 print 'LISTINGS!'
-detector = TreeHashAlgorithm()
+#detector = TreeHashAlgorithm()
+detector = WinnowerAlgorithm()
 # check each file for plagiarism
 for program in programSubmissions:
     detector.isPlagiarised(program)

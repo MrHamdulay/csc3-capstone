@@ -5,7 +5,8 @@ from languages.python.ast_utils import getLineLimits
 import external.unparser
 from StringIO import StringIO
 
-from program import Program
+from programsubmission import ProgramSubmission
+from algorithms.base import SectionMatch
 
 
 class RenamerTransform(ast.NodeTransformer):
@@ -47,9 +48,9 @@ class RenamerTransform(ast.NodeTransformer):
     #            args=node.args,
 
 
-class PythonProgram(Program):
+class PythonProgramSubmission(ProgramSubmission):
   def __init__(self, program_source, filename=''):
-    Program.__init__(self, program_source, filename)
+    ProgramSubmission.__init__(self, program_source, filename)
     self.ast = ast.parse(program_source)
 
 
@@ -59,7 +60,10 @@ class PythonProgram(Program):
   def mark_cheated(self, node):
     # reevaluate this when we mark more things
     self.cheated_sections = None
-    bottom, top = getLineLimits(node)
+    if isinstance(node, SectionMatch):
+      bottom, top = node.startline, node.endline
+    else:
+      bottom, top = getLineLimits(node)
     for i in xrange(bottom, top):
       self.potential_cheated_sections[i] = True
 
@@ -75,7 +79,7 @@ class PythonProgram(Program):
 
   ''' return the program source with variable names etc removed'''
   @property
-  def get_canonicalised_program_source(self):
+  def canonicalised_program_source(self):
     buf = StringIO()
     external.unparser.Unparser(self.canonicalised_ast, buf)
     return buf.getvalue()
