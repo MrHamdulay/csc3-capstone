@@ -2,6 +2,7 @@ import zipfile
 
 from langauges.python.parser import PythonLanguageHandler
 from langauges.java.parser import JavaLanguageHandler
+from database.database import DatabaseManager
 
 class UnknownLanguageException(Exception):
     pass
@@ -30,15 +31,16 @@ class Detector:
 
         self.language_handler.parse_file(concatenated_file)
 
+        database = DatabaseManager()
         cheating_algorithm = CheatingAlgorithm(self.language_handler)
         signatures = cheating_algorithm.generate_signatures()
-
-        matches = self.lookup_signatures(signatures)
+        submission_id = database.store_submission(concatenated_file, assignment_number)
+        database.store_signatures(signatures, submission_id)
+        matches = database.lookup_signatures(submission_id)
 
         grouped_matches = cheating_algorithm.group(matches)
-        self.store_matches(grouped_matches)
-        self.store_signatures(signatures)
-        self.store_submission(concatenated_file, assignment_number)
+        database.store_matches(grouped_matches)
+
 
     def set_language_handler(self, zip_file):
         '''

@@ -26,8 +26,8 @@ class WinnowerAlgorithm(BaseAlgorithm):
 
     # generate, store and look up all winnower hashes
     signatures = []
-    for line_number, h in self.window_hashes(stripped_source):
-        signatures.append(Signature(h, None, line_number))
+    for line_number, hash in self.window_hashes(stripped_source):
+        signatures.append(Signature(hash, None, line_number))
 
     return signatures
 
