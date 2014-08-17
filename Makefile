@@ -1,5 +1,5 @@
 run:
-	./run.sh
+	python server
 
 setup:
 	virtualenv ve
