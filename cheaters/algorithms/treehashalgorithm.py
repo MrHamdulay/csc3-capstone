@@ -4,7 +4,7 @@ from copy import deepcopy
 import ast
 
 from algorithms.base import BaseAlgorithm
-from program import Program
+from programsubmission import ProgramSubmission
 from languages.python.ast_utils import IGNORE_AST
 
 

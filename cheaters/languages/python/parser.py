@@ -5,7 +5,7 @@ from languages.python.ast_utils import getLineLimits
 import external.unparser
 from StringIO import StringIO
 
-from program import Program
+from programsubmission import ProgramSubmission
 from algorithms.base import SectionMatch
 
 
@@ -48,9 +48,9 @@ class RenamerTransform(ast.NodeTransformer):
     #            args=node.args,
 
 
-class PythonProgram(Program):
+class PythonProgramSubmission(ProgramSubmission):
   def __init__(self, program_source, filename=''):
-    Program.__init__(self, program_source, filename)
+    ProgramSubmission.__init__(self, program_source, filename)
     self.ast = ast.parse(program_source)
 
 
