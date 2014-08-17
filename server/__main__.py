@@ -16,7 +16,7 @@ class View(FlaskView):
   '''
   Receive and Process assignments submitted from the web form
   @POST /submit
-  @return TODO: complete this
+  @render :)
   '''
   @route('/submit', methods=['POST'])
   def upload_file(self):
