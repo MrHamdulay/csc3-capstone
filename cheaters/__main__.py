@@ -1,4 +1,5 @@
 from algorithms.treehashalgorithm import TreeHashAlgorithm
+from algorithms.winnoweralgorithm import WinnowerAlgorithm
 from languages.python import PythonProgram
 import os
 import sys
@@ -27,7 +28,8 @@ for filename in files:
 print programSubmissions
 
 print 'LISTINGS!'
-detector = TreeHashAlgorithm()
+#detector = TreeHashAlgorithm()
+detector = WinnowerAlgorithm()
 # check each file for plagiarism
 for program in programSubmissions:
     detector.isPlagiarised(program)

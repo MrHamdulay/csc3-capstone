@@ -21,4 +21,3 @@ def testWindowHashes():
 
 testNgrams()
 testWindowHashes()
-print 'ALL PASSED :D'

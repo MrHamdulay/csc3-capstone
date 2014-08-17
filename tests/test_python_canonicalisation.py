@@ -21,5 +21,27 @@ def second_function(b):
 b = 2
 for i in xrange(1000):
   first_function(i)'''
+expected='''print 's'
+
+class A:
+    def f(i, i):
+        i *= 2
+        if i(i, i):
+            print 's'
+
+        return i
+
+def f(i):
+    i = 2
+    for i in i(1000):
+        i(i)
+        i = 2
+        for i in i(1000):
+            i(i)
+
+i = 2
+for i in i(1000):
+    i(i)'''
+
 program = PythonProgram(code, 'a.py')
-print program.get_canonicalised_program_source
+assert program.get_canonicalised_program_source.strip() == expected.strip()
