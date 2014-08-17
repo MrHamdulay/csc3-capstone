@@ -1,5 +1,5 @@
-from program import Program
+from programsubmission import ProgramSubmission
 
 
-class JavaProgram(Program):
+class JavaProgramSubmission(ProgramSubmission):
   pass
