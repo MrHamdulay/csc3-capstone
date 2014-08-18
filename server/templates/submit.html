@@ -5,6 +5,11 @@
 <body>
     <h3>Submit your file</h3>
     <form action="/submit" method="POST" enctype="multipart/form-data">
+        <select>
+            {% for assignment in assignments %}
+                <option>{{assignment.description}}</option>
+            {% endfor %}
+        </select>
         <input type="file" name="submission" />
         <input type="submit" name="submit" value="Submit" />
     </form>

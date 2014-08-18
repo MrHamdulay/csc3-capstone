@@ -1,13 +1,16 @@
 #__author__ = 'Merishka Lalla'
 import os
 import sqlite3
-from signature import Signature
+from model.signature import Signature
+from model.assignment import Assignment
+
 
 class DatabaseManager:
     conn = None
 
     def __init__(self, database_file='cheaters.db'):
         self.conn = sqlite3.connect(database_file)
+        self.initialise_database()
 
 
     def initialise_database(self):
@@ -47,3 +50,12 @@ class DatabaseManager:
         c.close()
         return signatures
 
+    def fetch_current_assignments(self):
+        c = self.conn.cursor()
+        c.execute('SELECT Id, CourseCode, AssignmentDescription FROM Assignments')# WHERE DueDate >= CURRENT_DATE')
+        assignments = []
+        for row in c:
+            assignments.append(Assignment(*row))
+        c.close()
+        print assignments
+        return assignments

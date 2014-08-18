@@ -3,7 +3,7 @@ CREATE TABLE if not exists Students(
   StudentNumber TEXT,
   CourseCode TEXT );
 
-INSERT OR IGNORE INTO Students VALUES (1, 'hmdyas001', 'mam3000w');
+INSERT OR REPLACE INTO Students VALUES (1, 'hmdyas001', 'mam3000w');
 
  CREATE TABLE if not exists Assignments(
   Id INT PRIMARY KEY,
@@ -11,6 +11,9 @@ INSERT OR IGNORE INTO Students VALUES (1, 'hmdyas001', 'mam3000w');
   AssignmentDescription TEXT,
   DueDate DATE
  );
+
+INSERT OR REPLACE INTO Assignments VALUES (1, 'CSC3002W', 'Capstone Project', date(2015, 1, 1));
+INSERT OR REPLACE INTO Assignments VALUES (2, 'MAM3000W', 'Final math project', date(2016, 1, 1));
 
 CREATE TABLE if not exists Submissions(
   Id INT PRIMARY KEY,

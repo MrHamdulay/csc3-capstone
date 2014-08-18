@@ -5,6 +5,7 @@ import os
 sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../cheaters')
 
 from detector import Detector
+from database import DatabaseManager
 
 app = Flask(__name__)
 
@@ -17,7 +18,10 @@ class View(FlaskView):
     '''
     @route('/')
     def index(self):
-        return render_template('submit.html')
+        database = DatabaseManager()
+        assignments = database.fetch_current_assignments()
+
+        return render_template('submit.html', assignments=assignments)
 
     '''
     Receive and Process assignments submitted from the web form
