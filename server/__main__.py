@@ -13,15 +13,12 @@ class View(FlaskView):
 
     '''
     Web form to submit assignments. This is the starting point.
-    @GET /
+    @GET /submit
     @render submit.html
     '''
-    @route('/')
+    @route('/submit')
     def index(self):
-        database = DatabaseManager()
-        assignments = database.fetch_current_assignments()
-
-        return render_template('submit.html', assignments=assignments)
+        return render_template('submit.html')
 
     '''
     Receive and Process assignments submitted from the web form
@@ -41,23 +38,23 @@ class View(FlaskView):
             -List of submissions, e.g. DBRJAR001 (90%)
                 - 2 way diffs
     '''
-    @route('/assignments')
-    def list_of_assignments(self):
-        # TODO: get assignments from db
-        # TODO: return template
-        return ':]'
+    @route('/')
+    def list_assignments(self):
+        database = DatabaseManager()
+        assignments = database.fetch_current_assignments()
+        return render_template('assignments.html' , assignments=assignments)
 
-    @route('/assignments/<assignment_id>')
-    def assignment(self, assignment_id, submission_id):
-        # TODO: get results from db
-        # TODO: return template
-        return ':D'
+    @route('/<assignment_num>')
+    def list_submissions(self, assignment_num):
+        database = DatabaseManager() # TODO: do we want to make the databaseManager a class attribute?
+        submissions = database.fetch_current_submissions(assignment_num)
+        return render_template('submissions.html', submissions=submissions, assignment_num=assignment_num)
 
-    @route('/assignments/<assignment_id>/<submission_id>')
-    def list_of_submissions(self, id):
-        # TODO: get results from db
-        # TODO: return template
-        return 'XD'
+    @route('/<assignment_num>/<submission_id>')
+    def list_of_submissions(self, assignment_num, submission_id):
+        database = DatabaseManager() # TODO: do we want to make the databaseManager a class attribute?
+        submission = database.fetch_submission(assignment_num, submission_id)
+        return render_template('submission.html', submission=submission, assignment_num=assignment_num)
 
 if __name__ == '__main__':
     View.register(app)
