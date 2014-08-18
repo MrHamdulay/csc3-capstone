@@ -1,28 +1,63 @@
-import re
 import zipfile
 
+from languages.python import PythonLanguageHandler
+from languages.java import JavaLanguageHandler
+from database.database import DatabaseManager
+from algorithms.winnoweralgorithm import WinnowerAlgorithm
 
-languages = ['py', 'java']
+class UnknownLanguageException(Exception):
+    pass
+
+
 class Detector:
     ''' Encapsulates the entire parsing, signature generation and detection process '''
+    LANGUAGES = {
+        'py': PythonLanguageHandler,
+        'java': JavaLanguageHandler
+    }
 
-    def submit(self, files, assignment):
-        '''
-        @param files ZipFile object that contains students files
-        @param assignment id of assignment submitting to
-        '''
-        assert isinstance(files,
-        language = self.detect_language(files)
-        submission = self.concatenate_files(files)
-        algorithm
+    matches = None
+    signatures = None
+    language_handler = None
 
-    def strip_unnecessary_files(self, files):
+
+    def run(self, submission, assignment_number):
+        '''
+        @param submission, File posted through web form
+        @param assignment_number, Number of assignment
+        '''
+        zip_file = zipfile.ZipFile(submission)
+        self.set_language_handler(zip_file)
+        concatenated_file = self.concatenate_files(zip_file)
+
+        self.language_handler.parse_file(concatenated_file)
+
+        database = DatabaseManager()
+        cheating_algorithm = WinnowerAlgorithm(self.language_handler)
+        signatures = cheating_algorithm.generate_signatures()
+        submission_id = database.store_submission(concatenated_file, assignment_number)
+        database.store_signatures(signatures, submission_id)
+        matches = database.lookup_signatures(submission_id)
+
+        grouped_matches = cheating_algorithm.group(matches)
+        database.store_matches(grouped_matches)
+
+
+    def set_language_handler(self, zip_file):
         '''
         @param submission list of files'''
-        pass
+        for filename in zip_file.namelist():
+            extension = filename.split('.')[-1]
+            if extension in Detector.ALLOWED_LANGUAGES:
+                self.language_handler = Detector.LANGUAGES[extension]()
+                break
+        else:
+            raise UnknownLanguageException()
 
-
-    def detect_language(self, files):
-        '''
-        @param submission list of files'''
-
+    def concatenate_files(self, zip_file):
+        concatenated_file = ''
+        for filename in zip_file.namelist():
+            extension = filename.split('.')[-1]
+            if extension in self.language_handler.file_types:
+                concatenated_file += zip_file.read(filename)
+        return concatenated_file

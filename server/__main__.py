@@ -1,6 +1,11 @@
-from cheaters.detector import Detector
 from flask import Flask, render_template, request
 from flask.ext.classy import FlaskView, route
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../cheaters')
+
+from detector import Detector
+
 app = Flask(__name__)
 
 class View(FlaskView):

@@ -3,7 +3,7 @@ CREATE TABLE if not exists Students(
   StudentNumber TEXT,
   CourseCode TEXT );
 
-INSERT INTO Students VALUES (1, 'hmdyas001', 'mam3000w');
+INSERT OR IGNORE INTO Students VALUES (1, 'hmdyas001', 'mam3000w');
 
  CREATE TABLE if not exists Assignments(
   Id INT PRIMARY KEY,
@@ -17,7 +17,7 @@ CREATE TABLE if not exists Submissions(
   StudentId INT NOT NULL,
   AssignmentNumber INT,
   ProgramSource TEXT,
-  SubmissionDate DATE DEFAULT NOW(),
+  SubmissionDate DATE DEFAULT CURRENT_DATE,
   FOREIGN KEY (StudentId) REFERENCES Students(ID),
   FOREIGN KEY (AssignmentNumber) REFERENCES Assignments(Id)
 

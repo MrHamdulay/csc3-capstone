@@ -1,18 +1,18 @@
 #__author__ = 'Merishka Lalla'
+import os
 import sqlite3
 from signature import Signature
 
 class DatabaseManager:
     conn = None
 
-    def __init__(self):
-        self.conn = sqlite3.connect('cheaters.db')
+    def __init__(self, database_file='cheaters.db'):
+        self.conn = sqlite3.connect(database_file)
 
 
     def initialise_database(self):
         c = self.conn.cursor()
-
-        file = open('schema.sql','r')
+        file = open(os.path.dirname(os.path.realpath(__file__))+'/schema.sql','r')
         c.executescript(file.read())
         c.close()
         self.conn.commit()
