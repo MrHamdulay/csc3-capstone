@@ -11,6 +11,7 @@ import os
 import sqlite3
 from model.signature import Signature
 from model.assignment import Assignment
+from model.submissions import Submission
 
 class DatabaseManager:
     conn = None
@@ -84,7 +85,7 @@ class DatabaseManager:
         submissions = []
         c.execute('SELECT * FROM Submissions WHERE AssignmentId = ?' ,(assignment_id))
         for x in c:
-        #    submissions.append(Submission(x))
+            submissions.append(Submission(x))
         c.close()
         return submissions
 
