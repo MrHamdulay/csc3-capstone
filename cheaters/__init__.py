@@ -1,6 +1,5 @@
-from cheaters.langauges.python.parser import PythonProgramSubmission
-from cheaters.langauges.java.parser import javaProgramSubmission
+from langauges.python.parser import PythonProgramSubmission
+from langauges.java.parser import javaProgramSubmission
 
 class LanguageDetector:
-    def
-
+    pass

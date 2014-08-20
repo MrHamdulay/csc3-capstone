@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block title %}Submissions for Assignment {{assignment_num}}{% endblock %}
+{% block content %}
+<ul>
+    {% for submission in submissions %}
+        <li><a href="/{{assignment.number}}/{{submission.id}}">{{submission.by}} - {{submission.confidence}} {{submission.ref}}</a></li>
+    {% else %}
+        <li>No Assignments found.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

@@ -1,11 +1,15 @@
-<!DOCTYPE html>
-<head>
-    <title>Submit your assignment</title>
-</head>
-<body>
-    <h3>Submit your file</h3>
-    <form action="/submit" method="POST" enctype="multipart/form-data">
-        <input type="file" name="submission" />
-        <input type="submit" name="submit" value="Submit" />
-    </form>
-</body>
+{% extends "layout.html" %}
+{% block title%}Submit your assignment{% endblock %}
+{% block content %}
+<h3>Submit your file</h3>
+<form action="/submit" method="POST" enctype="multipart/form-data">
+    <select name="assignment_number">
+        <option>Assignment Number</option>
+        {% for assignment in assignments %}
+        <option val="{{assignment.number}}">Assignment {{assignment.number}}</option>
+        {% endfor %}
+    </select>
+    <input type="file" name="submission" />
+    <input type="submit" name="submit" value="Submit" />
+</form>
+{% endblock %}

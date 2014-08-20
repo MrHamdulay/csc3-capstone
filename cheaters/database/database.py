@@ -6,26 +6,26 @@ an ID and a foreign key which is linked through other relevant column values.
 Database used was sqlite3.
 '''
 
-
+#__author__ = 'Merishka Lalla'
+import os
 import sqlite3
-
-from signature import Signature
+from model.signature import Signature
+from model.assignment import Assignment
 
 class DatabaseManager:
     conn = None
 
     '''A initiator method to allow the database to connect to the class for further database handling.'''
-
-    def __init__(self):
-        self.conn = sqlite3.connect('cheaters.db')
-    '''The initialise database method connects a cursor and reads a sql script. The script is read and executed.
-    Once executed, tables with relevant columns is created and initiated. There after the cursor is closed and the
-    changes are committed.'''
+    def __init__(self, database_file='cheaters.db'):
+        self.conn = sqlite3.connect(database_file)
+        '''The initialise database method connects a cursor and reads a sql script. The script is read and executed.
+        Once executed, tables with relevant columns is created and initiated. There after the cursor is closed and the
+        changes are committed.'''
+        self.initialise_database()
 
     def initialise_database(self):
         c = self.conn.cursor()
-
-        file = open('schema.sql','r')
+        file = open(os.path.dirname(os.path.realpath(__file__))+'/schema.sql','r')
         c.executescript(file.read())
         c.close()
         self.conn.commit()
@@ -61,9 +61,19 @@ class DatabaseManager:
         signatures = [row for row in c]
         c.close()
         return signatures
+
     '''Data populate is a method used to insert students into the database for testing.'''
     def data_populate(self,student_number, course_code):
         c = self.conn.cursor()
         c.execute("INSERT INTO Students (StudentNumber, CourseCode) VALUES (student_number, course_code)")
         c.close()
         self.conn.commit()
+
+    def fetch_current_assignments(self):
+        c = self.conn.cursor()
+        c.execute('SELECT Id, CourseCode, AssignmentDescription FROM Assignments')# WHERE DueDate >= CURRENT_DATE')
+        assignments = []
+        for row in c:
+            assignments.append(Assignment(*row))
+        c.close()
+        return assignments
