@@ -11,7 +11,6 @@ class Detector:
         @param files ZipFile object that contains students files
         @param assignment id of assignment submitting to
         '''
-        assert isinstance(files,
         language = self.detect_language(files)
         submission = self.concatenate_files(files)
         algorithm
