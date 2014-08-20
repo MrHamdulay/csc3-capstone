@@ -48,7 +48,7 @@ class Detector:
         @param submission list of files'''
         for filename in zip_file.namelist():
             extension = filename.split('.')[-1]
-            if extension in Detector.ALLOWED_LANGUAGES:
+            if extension in Detector.LANGUAGES:
                 self.language_handler = Detector.LANGUAGES[extension]()
                 break
         else:

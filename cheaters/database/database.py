@@ -77,3 +77,9 @@ class DatabaseManager:
             assignments.append(Assignment(*row))
         c.close()
         return assignments
+
+    def fetch_submissions(self):
+        pass
+
+    def store_assignment(file_data, assignment_number, student_number):
+        pass
