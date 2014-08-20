@@ -28,8 +28,8 @@ class View(FlaskView):
     @route('/submit', methods=['POST'])
     def upload_file(self):
         submission = request.files['submission']
-        assignment_number = request.form['assignment_number']
-        Detector.run(submission, assignment_number)
+        assignment_id = request.form['assignment_id']
+        Detector().run(submission, assignment_id)
         return ':)'
 
     '''

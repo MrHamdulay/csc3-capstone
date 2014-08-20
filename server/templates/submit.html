@@ -3,10 +3,9 @@
 {% block content %}
 <h3>Submit your file</h3>
 <form action="/submit" method="POST" enctype="multipart/form-data">
-    <select name="assignment_number">
-        <option>Assignment Number</option>
+    <select name="assignment_id">
         {% for assignment in assignments %}
-        <option val="{{assignment.number}}">Assignment {{assignment.number}}</option>
+        <option val="{{assignment.id}}">Assignment {{ assignment.description }}</option>
         {% endfor %}
     </select>
     <input type="file" name="submission" />
