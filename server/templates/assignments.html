@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block title %}Assignments List{% endblock %}
 {% block content %}
-<ul>
+<ul class="nav nav-pills nav-stacked">
     {% for assignment in assignments %}
         <li><a href="/{{assignment.id}}">{{assignment.description}}</a></li>
     {% else %}
