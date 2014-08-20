@@ -47,3 +47,8 @@ class DatabaseManager:
         c.close()
         return signatures
 
+    def data_populate(self,student_number, course_code):
+        c = self.conn.cursor()
+        c.execute("INSERT INTO Students (StudentNumber, COurseCode) VALUES (student_number, course_code)")
+        c.close()
+        self.conn.commit()
