@@ -1,0 +1,120 @@
+Assignment 
+
+Title  Assignment 9  
+Due  16-May-2014 17:00  
+Grade Scale  Points (max 100.0)  
+
+Instructions 
+This tutorial is about files.
+
+Question 1
+Write a Python program to analyse student marks read in from a file and determine which students need to see a student advisor. The students who (hypothetically!) need to see a student advisor are those with marks less than one standard deviation below the mean.
+
+The marks file is composed of lines of text, where each line contains a student number and mark separated by a comma.
+
+Remember that the formula for standard deviation is:
+
+standard dev = sqrt (((X1 -µ)2+(X2 -µ)2 +(X3 -µ)2 +…+(XN -1 -µ)2) / N)
+
+where µ is the mean or average and each Xi is a mark.
+
+Before the list of student names, print out the average and standard deviation with 2 decimal points of precision.
+
+Sample File (test1.txt)
+
+Alan,35
+Siobhan,23
+Mmberengeni,38
+
+Sample I/O
+
+Enter the marks filename:
+test1.txt
+The average is: 32.00
+The std deviation is: 6.48
+List of students who need to see an advisor:
+Siobhan
+
+Save your program as question1.py. Submit all source files only.
+
+Question 2
+Write a program to reformat a text file so that all lines are at most a given length. Do not break up words. Write the formatted text to a new text file.
+
+Treat each set of consecutive non-empty lines as a paragraph - join such lines together with a single space if necessary.
+
+Sample File (input.txt):
+
+Your program should store a single row of the triangle and calculate each subsequent row by adding a value to the values 
+immediately above it and to its left.  The values on each line must be space-separated.
+
+Sample File (output.txt):
+
+Your program should store a single row
+of the triangle and calculate each
+subsequent row by adding a value to the
+values immediately above it and to its
+left.  The values on each line must be
+space-separated.
+
+Sample console I/O:
+
+Enter the input filename:
+input.txt
+Enter the output filename:
+output.txt
+Enter the line width:
+40
+Save your program as question2 .py. Submit all source files only.
+
+Question 3
+Write a program to check if a complete Sudoku grid is valid or not.
+
+A Sudoku grid is a 9x9 grid of integers, with each cell containing an integer value from 1-9. The input to your program is a set of nine lines, each containing 9 single digit integers with no intervening spaces. Your program must store these integers internally in a 2-dimensional array.
+
+In a correct Sudoku solution, the following conditions hold:
+
+•no 2 cells in the same row have the same value
+•no 2 cells in the same column have the same value
+•no 2 cells in the same 3x3 sub-grid have the same value - this is tested for the 9 non-overlapping sub-grids that a 9x9 grid can be divided into
+
+Sample I/O:
+
+359716482
+867345912
+413928675
+398574126
+546281739
+172639548
+984163257
+621857394
+735492861
+Sudoku grid is not valid
+
+Sample I/O:
+
+259716483
+867345912
+413928675
+398574126
+546281739
+172639548
+984163257
+621857394
+735492861
+Sudoku grid is valid
+Save your program as question3.py. Submit all source files only.
+
+ 
+Mark Weighting
+Question 1 : 30
+Question 2 : 40
+Question 3 : 30
+
+     
+
+--------------------------------------------------------------------------------
+
+Submission
+This assignment does not accept online submissions. Contact your instructor for additional instructions. 
+
+  

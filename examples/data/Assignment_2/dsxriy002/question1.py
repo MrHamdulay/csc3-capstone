@@ -1,0 +1,14 @@
+
+#Determining whether years are leap years or not
+#Riya Desai 
+#12 March 2014
+
+def leapyear():
+    x = eval(input("Enter a year: \n"))
+
+    if (x%4== 0 and x%100 != 0) or (x%400 == 0):
+        print(x, "is a leap year.")
+    else:
+        print(x, "is not a leap year.")
+        
+leapyear()

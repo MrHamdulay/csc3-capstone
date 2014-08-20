@@ -1,0 +1,6 @@
+Binary search can interact poorly with the memory hierarchy (i.e.
+caching), because of its random-access nature.
+
+When multiple binary searches are to be performed for the same key
+in related lists, fractional cascading can be used to speed up
+successive searches after the first one.

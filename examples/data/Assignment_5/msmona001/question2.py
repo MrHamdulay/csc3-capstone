@@ -1,0 +1,46 @@
+ 
+"""Change program for given input
+Khanyisile Morudu
+14 April 2014"""
+
+
+#User inputs the cost
+Cent = eval(input("Enter the cost (in cents):\n"))
+
+#setting the variables to zero
+change = 0
+SumCent = 0
+
+#if the entered cost is greater than zero, then money should be asked for
+if Cent > 0:
+    SumCent = eval(input("Deposit a coin or note (in cents):\n"))
+
+#while the cost is greater than amount entered
+while Cent > SumCent:
+    SumCentAdd = eval(input("Deposit a coin or note (in cents):\n"))
+    SumCent = SumCent + SumCentAdd
+change = SumCent - Cent 
+
+# if there is change
+if change != 0:
+    print("Your change is:")
+    if change//100 != 0:
+        print( (change//100), "x $1")
+        change = change - ((change//100) * 100)
+    if change//25 != 0:
+        print( (change//25), "x 25c")
+        change = change - ((change//25) * 25)  
+    if change//10 != 0:
+        print(  (change//10), "x 10c")
+        change = change - ((change//10) * 10) 
+    if change//5 != 0:
+        print( (change//5), "x 5c")
+        change = change - ((change//5) * 5)    
+    if change//1 != 0:
+        print( (change//1), "x 1c")
+        change = change - ((change//1) * 1)      
+        
+        
+        
+    
+    

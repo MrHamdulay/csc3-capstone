@@ -1,0 +1,10 @@
+# Cherise Dube
+# 04 March 2014
+# Program to check the validity of a time
+a=eval(input("Enter the hours:\n"))
+b=eval(input("Enter the minutes:\n"))
+c=eval(input("Enter the seconds:\n"))
+def time(a,b,c):
+     if 0<=a<=23 and 0<=b<=59 and 0<=c<=59: print("Your time is valid.")
+     else: print("Your time is invalid.")
+time(a,b,c)

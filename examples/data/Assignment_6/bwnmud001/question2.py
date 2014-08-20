@@ -1,0 +1,15 @@
+import math
+x=input("Enter vector A:\n")
+y=input("Enter vector B:\n")
+a=x.split()
+b=y.split()
+c=[eval(a[0])+eval(b[0]) , eval(a[1])+eval(b[1]) , eval(a[2])+eval(b[2])]
+d=eval(a[0])*eval(b[0]) + eval(a[1])*eval(b[1]) + eval(a[2])*eval(b[2])
+e=round(math.sqrt(eval(a[0])*eval(a[0])+eval(a[1])*eval(a[1])+eval(a[2])*eval(a[2])),2)
+f=round(math.sqrt(eval(b[0])*eval(b[0])+eval(b[1])*eval(b[1])+eval(b[2])*eval(b[2])),2)
+g="{0:0<4}".format(e)
+h="{0:0<4}".format(f)
+print("A+B =",c)
+print("A.B =",d)
+print("|A| =" , g)
+print("|B| =", h)

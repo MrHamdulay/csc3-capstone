@@ -1,0 +1,40 @@
+"""
+Vending machine change calculator
+Genevieve Brownyn Chetty (CHTGEN002)
+16/04/2014
+"""
+price=eval(input("Enter the cost (in cents):\n")) #cost or price of item 
+paid=0 #initialisation of integer variable to hold total amount inserted
+
+while (price>paid): #until the money inserted exceeds or is equal to the price 
+    paid1=eval(input("Deposit a coin or note (in cents):\n")) 
+    paid=paid+paid1 #to sum all money inserted 
+
+change=paid-price
+#if correct money was inserted, programme will end
+if (change>0): 
+    print("Your change is:")
+    #$1
+    if((change//100)>0):
+        print((change//100),"x $1")
+        change=change-(100*(change//100))
+
+    #25c
+    if((change//25)>0):
+        print((change//25),"x 25c")
+        change=change-(25*(change//25))
+            
+    #10c
+    if((change//10)>0):
+        print((change//10),"x 10c")
+        change=change-(10*(change//10))
+                
+    #5c
+    if((change//5)>0):
+        print((change//5),"x 5c")
+        change=change-(5*(change//5))
+                    
+    #1c
+    if((change//1)>0):
+        print((change//1),"x 1c")
+        change=change-(1*(change//1))

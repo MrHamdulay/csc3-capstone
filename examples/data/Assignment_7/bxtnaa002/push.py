@@ -1,0 +1,96 @@
+# push.py
+# author: bxtnaa002
+# assignment 7
+
+                
+def push_down (grid):
+    #merge grid values downwards
+    for i in range(3):
+        for row in range(2,-1,-1):
+            for column in range(3,-1,-1):
+                if grid[row+1][column] == 0: #check if the adjacent space is empty
+                    grid[row+1][column] = grid[row][column]#make the found empty space the previous value, i.e. shift the value to the empty space
+                    grid[row][column] = 0
+                    
+    for row in range(2,-1,-1):
+        for column in range(3,-1,-1):    
+                if grid[row+1][column] == grid[row][column]:#check if adjacent values are the same
+                    grid[row+1][column] = grid[row+1][column]*2 #if the two values are the same then add them, by multiplying one of them by 2
+                    grid[row][column] = 0
+                    
+    for row in range(2,-1,-1):
+        for column in range(3,-1,-1):
+            if grid[row+1][column] == 0:
+                grid[row+1][column] = grid[row][column]
+                grid[row][column] = 0
+                
+    return grid #return the grid after merging has occured
+                                                          
+def push_left (grid):
+    #merge grid values left
+    for i in range(3):
+        for row in range(4):
+            for column in range(1,4):
+                if grid[row][column-1] == 0:
+                    grid[row][column-1] = grid[row][column]
+                    grid[row][column] = 0
+                    
+    for row in range(4):
+        for column in range(1,4):                    
+            if grid[row][column-1] == grid[row][column]:
+                grid[row][column-1] = grid[row][column-1]*2
+                grid[row][column] = 0
+                
+    for row in range(4):
+        for column in range(1,4):
+            if grid[row][column-1] == 0:
+                grid[row][column-1] = grid[row][column]
+                grid[row][column] = 0
+
+    return grid
+
+def push_up (grid):
+    #merge grid values upwards
+    for i in range(3):
+        for row in range(1,4):
+            for column in range(4):
+                if grid[row-1][column] == 0:
+                    grid[row-1][column] = grid[row][column]
+                    grid[row][column] = 0
+                   
+    for row in range(1,4):
+        for column in range(4):    
+                if grid[row-1][column] == grid[row][column]:
+                    grid[row-1][column] = grid[row-1][column]*2
+                    grid[row][column] = 0
+                        
+    for row in range(1,4):
+        for column in range(4):
+            if grid[row-1][column] == 0:
+                grid[row-1][column] = grid[row][column]
+                grid[row][column] = 0    
+                
+    return grid
+
+def push_right (grid):
+    #merge grid values right
+    for i in range(3):
+        for row in range(3,-1,-1):
+            for column in range(2,-1,-1):
+                if grid[row][column+1] == 0:
+                    grid[row][column+1] = grid[row][column]
+                    grid[row][column] = 0
+                    
+    for row in range(3,-1,-1):
+        for column in range(2,-1,-1):
+            if grid[row][column+1] == grid[row][column]:
+                grid[row][column+1] = grid[row][column+1]*2
+                grid[row][column] = 0
+                
+    for row in range(3,-1,-1):
+        for column in range(2,-1,-1):
+            if grid[row][column+1] == 0:
+                grid[row][column+1] = grid[row][column]
+                grid[row][column] = 0
+                
+    return grid

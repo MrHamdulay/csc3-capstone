@@ -1,0 +1,125 @@
+Assignment
+Title	 Assignment 4
+Due	 04-Apr-2014 17:00
+Grade Scale	 Points (max 100.0)
+Modified by instructor	 30-Mar-2014 21:45
+Instructions
+This tutorial is about functions and strings.
+
+Question 1
+
+Write a Python module that contains the following 3 functions to create hollow boxes of stars.
+
+print_square (), that prints a 5x5 box on the screen
+print_rectangle (width, height), that prints a box on the screen with given width and height
+get_rectangle (width, height) that returns a string containing a box with given width and height
+A python module is a file containing Python code just like a regular program. Typically such a module will contain only functions. To use the module in another program, we first issue the import statement, then refer to each function by prefixing it with the module name.
+
+Sample I/O:
+
+Choose test:
+a
+*****
+*   *
+*   *
+*   *
+*****
+Sample I/O:
+
+Choose test:
+b 3 4
+calling function
+***
+* *
+* *
+***
+called function
+Sample I/O:
+
+Choose test:
+c 4 3
+calling function
+called function
+****
+*  *
+****
+Save your module as boxes.py. The main program has been supplied as question1.py - use this to test your program and do not change this file.
+
+Question 2
+
+Mathematical functions map naturally to program functions and modules often are used to group such functions for reuse.
+
+In the Ndom* language, numbers use only the digits 0-5, such that instead of "tens" and "hundreds", the second and third digits represents multiples of 6 and 36 respectively. Write a Python module with the following functions for simple Ndom arithmetic, assuming that all values have at most 3 digits.
+(Reference: http://en.wikipedia.org/wiki/Senary)
+
+ndom_to_decimal (a), that converts a Ndom number to decimal
+decimal_to_ndom (a), that converts a decimal number to Ndom
+ndom_add (a, b), that adds 2 Ndom numbers
+ndom_multiply (a, b), that multiples 2 Ndom numbers
+Sample I/O:
+
+Choose test:
+d 12
+calling function
+called function
+20
+Sample I/O:
+
+Choose test:
+n 20
+calling function
+called function
+12
+Sample I/O:
+
+Choose test:
+a 123 141
+calling function
+called function
+304
+Sample I/O:
+
+Choose test:
+m 13 14
+calling function
+called function
+230
+Save your module as ndom.py. The main program has been supplied as question2.py - use this to test your program and do not change this file.
+
+Question 3
+
+Write a module to translate sentences between English and a variant of Pig Latin (see: http://en.wikipedia.org/wiki/Pig_Latin).
+
+To convert from English to Pig Latin, each word must be transformed as follows:
+
+if the word begins with a vowel, "way" should be appended (example: apple becomes appleway)
+if the word begins with a sequence of consonants, this sequence should be moved to the end, prefixed with "a" and followed by "ay" (example: please becomes easeaplay)
+Assume that the English text does not contain the letter "w".
+
+Write a Python module with the following functions:
+
+toPigLatin (s), to return the Pig Latin string for a given English string
+toEnglish (s), to return the English string for a given Pig Latin string
+Sample I/O:
+
+(E)nglish or (P)ig Latin?
+E
+Enter an English sentence:
+the quick black fox jumps over the lazy apple
+Pig-Latin:
+eathay uickaqay ackablay oxafay umpsajay overway eathay azyalay appleway
+Sample I/O:
+
+(E)nglish or (P)ig Latin?
+P
+Enter a Pig Latin sentence:
+eathay uickaqay ackablay oxafay umpsajay overway eathay azyalay appleway
+English:
+the quick black fox jumps over the lazy apple
+Save your module as piglatin.py. The main program has been supplied as question3.py - use this to test your program and do not change this file.
+
+Mark Weighting
+
+Question 1 : 35
+Question 2 : 30
+Question 3 : 35

@@ -1,0 +1,12 @@
+a=" "
+b="_"
+c="/"
+d="|"
+e="\\"
+f="("
+g=")"
+print(a,a,b,b,b,b,a,b,b,b,b,a,b,b,b,a,b,b,b,b,a,a,b,b,b,b,b,a,b,a,a,a,b,a,b,a,a,a,b,a,b,a,sep="")
+print(a,c,a,b,b,b,c,a,b,b,b,d,b,a,b,c,a,b,b,b,d,d,a,a,b,b,b,d,a,d,a,d,a,d,a,e,a,d,a,d,a,d,sep="")
+print(d,a,d,a,a,a,e,b,b,b,a,e,d,a,d,e,b,b,b,a,e,d,a,d,b,a,a,d,a,d,a,d,a,d,a,a,e,d,a,d,a,d,sep="")
+print(d,a,d,b,b,b,a,b,b,b,g,a,d,a,d,a,b,b,b,g,a,d,a,a,b,d,a,d,a,d,b,d,a,d,a,d,e,a,a,d,b,d,sep="")
+print(a,e,b,b,b,b,d,b,b,b,b,c,b,b,b,d,b,b,b,b,c,d,b,d,a,a,a,a,e,b,b,b,c,d,b,d,a,e,b,f,b,g,sep="")

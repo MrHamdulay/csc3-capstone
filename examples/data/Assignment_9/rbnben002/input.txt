@@ -1,0 +1,2 @@
+Your program should store a single row of the triangle and calculate each subsequent row by adding a value to the values 
+immediately above it and to its left. The values on each line must be space-separated.

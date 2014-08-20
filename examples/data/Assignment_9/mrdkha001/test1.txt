@@ -1,0 +1,38 @@
+log2(N) is about the expected number of probes in an average
+successful search, and the worst case is log2(N), just one more
+probe. If the list is empty, no probes at all are made. Thus binary
+search is a logarithmic algorithm and executes in O(logN) time. In
+most cases it is considerably faster than a linear search. It can
+be implemented using iteration, or recursion. In some languages it
+is more elegantly expressed recursively; however, in some C-based
+languages tail recursion is not eliminated and the recursive
+version requires more stack space.
+
+Binary search can interact poorly with the memory hierarchy (i.e.
+caching), because of its random-access nature. For in-memory
+searching, if the span to be searched is small, a linear search may
+have superior performance simply because it exhibits better
+locality of reference. For external searching, care must be taken
+or each of the first several probes will lead to a disk seek. A
+common method is to abandon binary searching for linear searching
+as soon as the size of the remaining span falls below a small value
+such as 8 or 16 or even more in recent computers. The exact value
+depends entirely on the machine running the algorithm.
+
+Notice that for multiple searches with a fixed value for N, then
+(with the appropriate regard for integer division), the first
+iteration always selects the middle element at N/2, and the second
+always selects either N/4 or 3N/4, and so on. Thus if the array's
+key values are in some sort of slow storage (on a disc file, in
+virtual memory, not in the cpu's on-chip memory), keeping those
+three keys in a local array for a special preliminary search will
+avoid accessing widely separated memory. Escalating to seven or
+fifteen such values will allow further levels at not much cost in
+storage. On the other hand, if the searches are frequent and not
+separated by much other activity, the computer's various storage
+control features will more or less automatically promote
+frequently-accessed elements into faster storage.
+
+When multiple binary searches are to be performed for the same key
+in related lists, fractional cascading can be used to speed up
+successive searches after the first one.

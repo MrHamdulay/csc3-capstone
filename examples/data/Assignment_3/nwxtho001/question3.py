@@ -1,0 +1,7 @@
+msg = input ('Enter the message:\n')
+msgl = len (msg)
+rep = eval (input ('Enter the message repeat count:\n'))
+frame = eval (input ('Enter the frame thickness:\n'))
+for i in range (frame): print ('|' * i, '+', '-' * (2*frame-(2*i)+msgl), '+', '|' * i, sep='')
+for j in range (rep): print ('|' * frame, msg, '|' * frame)
+for k in range (frame-1, -1, -1): print ('|' * k, '+', '-' * (2*frame-(2*k)+msgl), '+', '|' * k, sep='')

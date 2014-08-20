@@ -1,0 +1,2 @@
+import mathnum=2den=0pi=2count=1while(den<2):    den=math.sqrt(2 + den)    term=num/den    pi*=term    count+=1
+print("Approximation of pi:",round(pi,3))radius=eval(input("Enter the radius:\n"))area=pi*(radius**2)print("Area:",round(area,3))

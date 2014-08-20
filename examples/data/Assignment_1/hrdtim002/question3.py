@@ -1,0 +1,17 @@
+first_name = input("\nEnter first name: ")
+last_name = input("\nEnter last name: ")
+money = eval(input("\nEnter sum of money in USD: "))
+country = input("\nEnter country name: ")
+money30 = 0.3 * money
+
+print("\n")
+print("Dearest ", first_name, sep="")
+print("It is with a heavy heart that I inform you of the death of my father,", sep="")
+print("General Fayk ", last_name,", your long lost relative from Mapsfostol.", sep="")
+print("My father left the sum of ", money, "USD for us, your distant cousins.", sep="")
+print("Unfortunately, we cannot access the money as it is in a bank in ", country, ".", sep="")
+print("I desperately need your assistance to access this money.", sep="")
+print("I will even pay you generously, 30% of the amount - ", money30, "USD,", sep="")
+print("for your help.  Please get in touch with me at this email address asap.", sep="")
+print("Yours sincerely", sep="")
+print("Frank ", last_name, sep="")

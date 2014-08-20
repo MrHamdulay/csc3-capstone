@@ -1,0 +1,7 @@
+Your program should store a single row of the triangle and calculate each subsequent row by adding a value to the values 
+immediately above it and to its left.  The values on each line must be space-separated.
+Write a program to check if a complete Sudoku grid is valid or not.
+
+A Sudoku grid is a 9x9 grid of integers, with each cell containing an integer value from 1-9. 
+The input to your program is a set of nine lines, each containing 9 single digit integers with no intervening spaces. 
+Your program must store these integers internally in a 2-dimensional array.

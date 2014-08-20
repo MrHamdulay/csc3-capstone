@@ -1,0 +1,17 @@
+#question 3
+fname=input("Enter first name:\n")
+sname=input("Enter last name:\n")
+money=input("Enter sum of money in USD:\n")
+country=input("Enter country name:\n")
+perc=eval(money)*30/100
+print(end="\n")
+print("Dearest",fname,end="\n")
+print("It is with a heavy heart that I inform you of the death of my father,",end="\n")
+print("General Fayk ",sname,", your long lost relative from Mapsfostol.",sep="", end="\n")
+print("My father left the sum of ",money,"USD for us, your distant cousins.",sep="", end="\n")
+print("Unfortunately, we cannot access the money as it is in a bank in ", country,".",sep="", end="\n")
+print("I desperately need your assistance to access this money.",end="\n")
+print("I will even pay you generously, 30% of the amount - ",perc,"USD,",sep="",end="\n")
+print("for your help.  Please get in touch with me at this email address asap.",end="\n")
+print("Yours sincerely",end="\n")
+print("Frank",sname,end="\n")

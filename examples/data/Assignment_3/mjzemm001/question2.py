@@ -1,0 +1,9 @@
+height = eval(input("Enter the height of the triangle:\n"))
+x = 1
+y = 1
+height2 = height
+while x <= height: 
+    print(" "*(height2 - 1),y*"*",sep="")
+    x += 1
+    y += 2
+    height2 -= 1

@@ -1,0 +1,6 @@
+height = eval(input("Enter the height of the rectangle:\n"))
+width = eval(input("Enter the width of the rectangle:\n"))
+
+for i in range(1,height+1) :
+    print(width*"*")
+    i += 1

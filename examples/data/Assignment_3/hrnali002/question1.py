@@ -1,0 +1,13 @@
+#A program to draw a rectangle
+#Alison Hoernle
+#HRNALI002
+#19 March 2014
+
+def rect(height,width):
+    for i in range(height):       
+        print("*" * width)
+    
+if __name__=='__main__':
+    height = eval(input("Enter the height of the rectangle:\n"))
+    width = eval(input("Enter the width of the rectangle:\n"))
+    rect(height,width)

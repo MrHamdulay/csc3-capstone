@@ -1,0 +1,19 @@
+x=input('Enter the message:\n')
+y=eval(input('Enter the message repeat count:\n'))
+z=eval(input('Enter the frame thickness:\n'))
+p=z
+a=len(x)
+b=0
+c=0
+while z!=0:
+    print("|"*b,'+-', '-'*(z-1), '-'*a,'-'*(z-1), '-+','|'*b, sep="")
+    z=z-1
+    b=b+1
+while y!=0:
+    print('|'*p, x, '|'*p)
+    y=y-1
+while p!=0:
+    print('|'*(b-1), '+-', '-'*z, '-'*a, '-'*(z), '-+', '|'*(b-1), sep="")
+    z=z+1
+    b=b-1
+    p=p-1
