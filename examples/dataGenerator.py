@@ -1,21 +1,61 @@
 import os
+import zipfile
+from StringIO import StringIO
+from cheaters.detector import Detector
 
-def get_assignment_number(name):
-    ''' gets the assignment number from a folder name
-        @param String name, e.g. Assignment_1
-        @return Int 1 '''
-    return int(name.split('_')[1])
+class DataGenerator:
 
-assignment_folders = []
-assignment_numbers = []
+    course_code = 'csc10015f'
+    path = 'data'
 
-os.chdir('data')
-for name in os.listdir('.'):
-    if os.path.isdir(name):
-        assignment_folders.append(name)
+    def get_assignment_number(name):
+        ''' get the number out of an assignment
+            folder string, such as Assignment_1
+            @param String name, e.g. Assignment_1
+            @return Int 1 '''
+        return int(name.split('_')[1])
 
-for name in assignment_folders:
-    number = get_assignment_number(name)
-    assignment_numbers.append(number)
+    def get_folder_names(path):
+        ''' get the list of folder names in a directory
+            @param String path
+            @return Array'''
+        os.chdir(path)
+        folders = []
+        for name in os.listdir('.'):
+            if os.path.isdir(name):
+                folders.append(name)
+        return folders
 
-print(assignment_numbers)
+    def get_file_names(path):
+        ''' get the list of file names in a directory
+            @param String path
+            @return Array'''
+        os.chdir(path)
+        files = []
+        for name in os.listdir('.'):
+            if os.path.isfile(name):
+                files.append(name)
+        return files
+
+    def run(self):
+        '''Reads assignments from Assignment_* folders, student numbers from
+           their Assignment_x folder, generates a zip of each students' code
+           files and runs the Detector on it'''
+        folders = self.get_folder_names(self.path)
+        for folder in folders:
+            assignment_number = self.get_assignment_number(folder)
+            # TODO
+            # assignment = new Assignment(number, self.course_code)
+            # db.insert_assignment(assignment)
+            student_numbers = self.get_folder_names(folder)
+            for student_number in student_numbers:
+                # TODO
+                # student = new Student(student_number)
+                # db.insert_student(student, assignment)
+                output_file = StringIO()
+                zip = zipfile.ZipFile(output_file, 'w')
+                for file in self.get_file_names(folder):
+                    zip.write(os.path.join(folder, file), file)
+                zip.close()
+                detector = Detector()
+                detector.run(output_file, assignment_number)
