@@ -65,7 +65,8 @@ class DatabaseManager:
     '''Data populate is a method used to insert students into the database for testing.'''
     def data_populate(self,student_number, course_code):
         c = self.conn.cursor()
-        c.execute("INSERT INTO Students (StudentNumber, CourseCode) VALUES (student_number, course_code)")
+        data_Values = (student_number,course_code)
+        c.execute("INSERT INTO Students (StudentNumber, CourseCode) VALUES (?,?,?)",data_Values)
         c.close()
         self.conn.commit()
 
@@ -78,8 +79,21 @@ class DatabaseManager:
         c.close()
         return assignments
 
-    def fetch_submissions(self):
-        pass
+    def fetch_submissions(self, assignment_id):
+        c = self.conn.cursor()
+        submissions = []
+        c.execute('SELECT * FROM Assignments WHERE Id = ?' ,(assignment_id))
+        for x in c:
+            submissions.append(Assignment(x))
+        c.close()
+        return submissions
 
-    def store_assignment(file_data, assignment_number, student_number):
-        pass
+    def store_assignment(self, assignment_description, assignment_number, student_number,due_date):
+        c = self.conn.cursor()
+
+        courseCode = c.execute('SELECT CourseCode FROM Students where StudentNumber = ?', (student_number, ))
+
+        assignmentValues = (assignment_number,assignment_description,due_date,courseCode)
+
+        c.execute('INSERT INTO Assignments (Id, AssignmentDescription,DueDate,CourseCode) VALUES (?,?,?)',assignmentValues)
+
