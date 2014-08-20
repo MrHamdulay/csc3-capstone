@@ -4,7 +4,7 @@ MIN_CHEAT_LENGTH = 1
 ''' generic/ abstract class that represents a program subimssion.
 '''
 class ProgramSubmission:
-    def __init__(self, program_source, filename=''):
+    def parse_file(self, program_source, filename=''):
         self.filename=filename
         self.program_source = program_source
         self.potential_cheated_sections = [False]*len(program_source.split('\n'))

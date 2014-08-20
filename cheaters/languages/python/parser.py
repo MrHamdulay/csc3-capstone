@@ -52,6 +52,8 @@ class PythonLanguageHandler(ProgramSubmission):
   file_types = ['py']
 
   def parse_file(self, program_source, filename=''):
+    ProgramSubmission.parse_file(self, program_source, filename)
+    program_source = 'from __future__ import print_function\n'+program_source
     self.ast = ast.parse(program_source)
 
 
@@ -79,8 +81,7 @@ class PythonLanguageHandler(ProgramSubmission):
     return RenamerTransform().visit(self.ast)
 
   ''' return the program source with variable names etc removed'''
-  @property
-  def strip_unstable_attributes(self):
+  def strip_unstable_atrributes(self):
     buf = StringIO()
     external.unparser.Unparser(self.canonicalised_ast, buf)
     return buf.getvalue()
