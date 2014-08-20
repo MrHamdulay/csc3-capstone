@@ -3,7 +3,7 @@
 {% block content %}
 <ul>
     {% for assignment in assignments %}
-        <li><a href="/{{assignment.number}}">Assignment {{assignment.number}}</a></li>
+        <li><a href="/{{assignment.id}}">{{assignment.description}}</a></li>
     {% else %}
         <li>No Assignments found.</li>
     {% endfor %}

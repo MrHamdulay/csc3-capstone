@@ -18,7 +18,9 @@ class View(FlaskView):
     '''
     @route('/submit')
     def index(self):
-        return render_template('submit.html')
+        database = DatabaseManager()
+        assignments = database.fetch_current_assignments()
+        return render_template('submit.html', assignments=assignments)
 
     '''
     Receive and Process assignments submitted from the web form
@@ -47,7 +49,7 @@ class View(FlaskView):
     @route('/<assignment_num>')
     def list_submissions(self, assignment_num):
         database = DatabaseManager() # TODO: do we want to make the databaseManager a class attribute?
-        submissions = database.fetch_current_submissions(assignment_num)
+        submissions = database.fetch_submissions(assignment_num)
         return render_template('submissions.html', submissions=submissions, assignment_num=assignment_num)
 
     @route('/<assignment_num>/<submission_id>')

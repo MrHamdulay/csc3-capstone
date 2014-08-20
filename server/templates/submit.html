@@ -5,7 +5,7 @@
 <form action="/submit" method="POST" enctype="multipart/form-data">
     <select name="assignment_id">
         {% for assignment in assignments %}
-        <option val="{{assignment.id}}">Assignment {{ assignment.description }}</option>
+        <option val="{{assignment.id}}">{{ assignment.description }}</option>
         {% endfor %}
     </select>
     <input type="file" name="submission" />
