@@ -82,9 +82,9 @@ class DatabaseManager:
     def fetch_submissions(self, assignment_id):
         c = self.conn.cursor()
         submissions = []
-        c.execute('SELECT * FROM Assignments WHERE Id = ?' ,(assignment_id))
+        c.execute('SELECT * FROM Submissions WHERE AssignmentId = ?' ,(assignment_id))
         for x in c:
-            submissions.append(Assignment(x))
+        #    submissions.append(Submission(x))
         c.close()
         return submissions
 
