@@ -38,6 +38,9 @@ CREATE TABLE if not exists Submissions(
 CREATE TABLE if not exists Matches(
   Id INT PRIMARY KEY,
   SubmissionId INT,
+  MatchSubmissionId INT,
   LinesMatched INT,
   LengthOfMatch INT,
-  FOREIGN KEY (SubmissionId) REFERENCES Submissions(Id));
+  FOREIGN KEY (SubmissionId) REFERENCES Submissions(Id),
+  FOREIGN KEY (SubmissionId) REFERENCES Submissions(Id)
+);

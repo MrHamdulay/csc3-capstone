@@ -4,6 +4,7 @@ from languages.python import PythonLanguageHandler
 from languages.java import JavaLanguageHandler
 from database.database import DatabaseManager
 from algorithms.winnoweralgorithm import WinnowerAlgorithm
+from algorithms.grouper import Grouper
 
 class UnknownLanguageException(Exception):
     pass
@@ -39,7 +40,7 @@ class Detector:
         database.store_signatures(signatures, submission_id)
         matches = database.lookup_signatures(submission_id)
 
-        grouped_matches = cheating_algorithm.group(matches)
+        grouped_matches = Grouper().group(matches)
         database.store_matches(grouped_matches)
 
 

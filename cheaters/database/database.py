@@ -52,8 +52,19 @@ class DatabaseManager:
         self.conn.commit()
         return submission_id
 
-    def store_matches(self,grouped_matches):
+    def store_matches(self,grouped_matches, submission_id):
         c = self.conn.cursor()
+        for document_submission_id, document_matches in grouped_matches.iteritems():
+            for match in document_matches:
+                c.execute('INSERT INTO Matches (SubmissionId, MatchSubmissionId, StartLine,'
+                    ' LengthOfMatch) VALUES (?, ?, ?, ?)',
+                    (submission_id, match.submission_id, match.start_lien,
+                     match.match_length))
+
+        c.close()
+        self.conn.commit()
+
+
     '''Lookup_signatures looks up signatures which will be used to check for potential cheating or copied code. '''
     def lookup_signatures(self, submission_id):
         c = self.conn.cursor()
@@ -97,4 +108,6 @@ class DatabaseManager:
         assignmentValues = (assignment_number,assignment_description,due_date,courseCode)
 
         c.execute('INSERT INTO Assignments (Id, AssignmentDescription,DueDate,CourseCode) VALUES (?,?,?)',assignmentValues)
+        c.close()
+        self.conn.commit()
 

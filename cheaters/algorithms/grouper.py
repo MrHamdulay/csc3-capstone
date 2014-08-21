@@ -16,7 +16,7 @@ class Grouper:
         document_matches = defaultdict(list)
 
         # find consecutive matches
-        for submission_id, document_signatures in group_by_document:
+        for submission_id, document_signatures in group_by_document.iteritems():
             # sort by line number
             document_signatures.sort(key=lambda x: x.line_number)
             document_matches = []
