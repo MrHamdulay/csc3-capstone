@@ -61,3 +61,6 @@ class Detector:
             if extension in self.language_handler.file_types:
                 concatenated_file += zip_file.read(filename)
         return concatenated_file
+
+    def super_amazing_feature(self):
+        pass

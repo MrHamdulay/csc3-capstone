@@ -1,5 +1,5 @@
 from algorithms.base import BaseAlgorithm, SectionMatch
-from signature import Signature
+from model.signature import Signature
 from collections import deque, defaultdict
 
 WINDOW_LENGTH = 11
@@ -31,19 +31,29 @@ class WinnowerAlgorithm(BaseAlgorithm):
 
     return signatures
 
+  def whitespaced_stripped_with_line_numbers(self, string):
+      WHITESPACE = ' \n\t'
+      line_number = 0
+      for char in string:
+          if char == '\n':
+              line_number += 1
+          if char in WHITESPACE:
+              continue
+          yield line_number, char
+
   '''
   given a string and a length generate and return all
   length-grams of this string'''
   def ngrams(self, string, ngram_length):
     line_number = 0
-    string = string.replace(' ', '')
+    string = list(self.whitespaced_stripped_with_line_numbers(string))
+    last_ngram = None
     for i in xrange(len(string)-ngram_length+1):
-      if string[i] == '\n':
-        line_number += 1
-      ngram = string[i:i+ngram_length]
-      # skip blank ngrams
-      if len(ngram.strip()):
-          yield (line_number, ngram)
+        ngram_pairs = string[i:i+ngram_length]
+        ngram = (ngram_pairs[0][0], ''.join(char for _, char in ngram_pairs))
+        if ngram != last_ngram:
+            yield ngram
+        last_ngram = ngram
 
 
   '''
@@ -79,3 +89,7 @@ class WinnowerAlgorithm(BaseAlgorithm):
           previous = best
     except StopIteration:
         pass
+
+  def group(self, matches):
+      print matches
+      raise Exception()

@@ -12,3 +12,6 @@ class Signature:
         self.submission_id = submission_id
         self.line_number = line_number
 
+
+    def __repr__(self):
+        return '<Signature hash:"%s" id:%s line_number:%s>' % (self.ngram_hash, self.submission_id, self.line_number)

@@ -42,7 +42,7 @@ class DatabaseManager:
         c.close()
         self.conn.commit()
     '''store_submissions stores the submissions sent to the program which is used to be checked against other submissions. '''
-    def store_submissions(self,concatenated_file, assignment_number):
+    def store_submission(self,concatenated_file, assignment_number):
         c = self.conn.cursor()
         submission_value = (1,concatenated_file,assignment_number)
 
@@ -57,9 +57,9 @@ class DatabaseManager:
     '''Lookup_signatures looks up signatures which will be used to check for potential cheating or copied code. '''
     def lookup_signatures(self, submission_id):
         c = self.conn.cursor()
-        c.execute('SELECT SubmissionId, NgramHash FROM Signatures WHERE SubmissionId != ?'
+        c.execute('SELECT SubmissionId, LineNumber, NgramHash FROM Signatures WHERE SubmissionId != ?'
         'AND NgramHash IN (SELECT NgramHash FROM Signatures WHERE SubmissionId = ?)', (submission_id, submission_id))
-        signatures = [row for row in c]
+        signatures = [Signature(row[2], row[0], row[1])  for row in c]
         c.close()
         return signatures
 
@@ -83,7 +83,7 @@ class DatabaseManager:
     def fetch_submissions(self, assignment_id):
         c = self.conn.cursor()
         submissions = []
-        c.execute('SELECT * FROM Submissions WHERE AssignmentId = ?' ,(assignment_id))
+        c.execute('SELECT * FROM Submissions WHERE AssignmentNumber = ?' ,(assignment_id))
         for x in c:
             submissions.append(Submission(x))
         c.close()
