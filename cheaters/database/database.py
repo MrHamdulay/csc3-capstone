@@ -44,7 +44,7 @@ class DatabaseManager:
     '''store_submissions stores the submissions sent to the program which is used to be checked against other submissions. '''
     def store_submission(self,concatenated_file, assignment_number):
         c = self.conn.cursor()
-        submission_value = (1,concatenated_file,assignment_number)
+        submission_value = (1,assignment_number, concatenated_file)
 
         c.execute("INSERT INTO Submissions (StudentId,AssignmentNumber, ProgramSource) VALUES (?,?,?)",submission_value)
         submission_id = c.lastrowid
