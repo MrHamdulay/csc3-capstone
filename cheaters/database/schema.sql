@@ -1,12 +1,12 @@
 CREATE TABLE if not exists Students(
-  Id INT PRIMARY KEY,
+  Id INTEGER PRIMARY KEY AUTOINCREMENT,
   StudentNumber TEXT,
   CourseCode TEXT );
 
 INSERT OR REPLACE INTO Students VALUES (1, 'hmdyas001', 'mam3000w');
 
  CREATE TABLE if not exists Assignments(
-  Id INT PRIMARY KEY,
+  Id INTEGER PRIMARY KEY AUTOINCREMENT,
   CourseCode TEXT,
   AssignmentDescription TEXT,
   DueDate DATE
@@ -16,8 +16,8 @@ INSERT OR REPLACE INTO Assignments VALUES (1, 'CSC3002W', 'Capstone Project', da
 INSERT OR REPLACE INTO Assignments VALUES (2, 'MAM3000W', 'Final math project', date(2016, 1, 1));
 
 CREATE TABLE if not exists Submissions(
-  Id INT PRIMARY KEY,
-  StudentId INT NOT NULL,
+  Id INTEGER PRIMARY KEY AUTOINCREMENT,
+  StudentId INTEGER NOT NULL,
   AssignmentNumber INT,
   ProgramSource TEXT,
   SubmissionDate DATE DEFAULT CURRENT_DATE,
@@ -27,7 +27,7 @@ CREATE TABLE if not exists Submissions(
 );
 
  CREATE TABLE if not exists Signatures(
-  Id INT PRIMARY KEY,
+  Id INTEGER PRIMARY KEY AUTOINCREMENT,
   LineNumber INT,
   NgramHash INT,
   SubmissionId INT,
@@ -36,7 +36,7 @@ CREATE TABLE if not exists Submissions(
 
 
 CREATE TABLE if not exists Matches(
-  Id INT PRIMARY KEY,
+  Id INTEGER PRIMARY KEY AUTOINCREMENT,
   SubmissionId INT,
   MatchSubmissionId INT,
   LinesMatched INT,
