@@ -4,9 +4,10 @@ class Match:
     match_length = None
     number_of_signatures = None
 
-    def __init__(self, submission_id, start_line, match_length, number_of_signatures=0):
+    def __init__(self, submission_id, start_line_mine, start_line_theirs, match_length, number_of_signatures):
         self.submission_id = submission_id
-        self.start_line = start_line
+        self.start_line_mine = start_line_mine
+        self.start_line_theirs = start_line_theirs
         self.match_length = match_length
         self.number_of_signatures = number_of_signatures
 

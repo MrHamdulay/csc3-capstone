@@ -37,14 +37,14 @@ class DatabaseManager:
     def store_signatures(self,signatures,submission_id):
         c = self.conn.cursor()
         for s in signatures:
-            signature_values = (s.line_number,s.ngram_hash, submission_id)
+            signature_values = (s.line_number_mine,s.ngram_hash, submission_id)
             c.execute("INSERT INTO Signatures(LineNumber,NgramHash,SubmissionId) VALUES(?,?,?)",signature_values)
         c.close()
         self.conn.commit()
     '''store_submissions stores the submissions sent to the program which is used to be checked against other submissions. '''
     def store_submission(self,concatenated_file, assignment_number):
         c = self.conn.cursor()
-        submission_value = (1,assignment_number, concatenated_file)
+        submission_value = ('HMDYAS001',assignment_number, concatenated_file)
 
         c.execute("INSERT INTO Submissions (StudentId,AssignmentNumber, ProgramSource) VALUES (?,?,?)",submission_value)
         submission_id = c.lastrowid
@@ -56,9 +56,9 @@ class DatabaseManager:
         c = self.conn.cursor()
         for document_submission_id, document_matches in grouped_matches.iteritems():
             for match in document_matches:
-                c.execute('INSERT INTO Matches (SubmissionId, MatchSubmissionId, StartLine,'
-                    ' LengthOfMatch) VALUES (?, ?, ?, ?)',
-                    (submission_id, match.submission_id, match.start_lien,
+                c.execute('INSERT INTO Matches (SubmissionIdMine, SubmissionIdTheirs, StartLineMine,'
+                    ', StartLineTheirs, LengthOfMatch) VALUES (?, ?, ?, ?)',
+                    (submission_id, match.submission_id, match.start_line_mine, match.start_line_theirs,
                      match.match_length))
 
         c.close()
@@ -68,9 +68,10 @@ class DatabaseManager:
     '''Lookup_signatures looks up signatures which will be used to check for potential cheating or copied code. '''
     def lookup_signatures(self, submission_id):
         c = self.conn.cursor()
-        c.execute('SELECT SubmissionId, LineNumber, NgramHash FROM Signatures WHERE SubmissionId != ?'
-        'AND NgramHash IN (SELECT NgramHash FROM Signatures WHERE SubmissionId = ?)', (submission_id, submission_id))
-        signatures = [Signature(row[2], row[0], row[1])  for row in c]
+        c.execute('SELECT s1.SubmissionId, s1.LineNumber, s2.LineNumber, s1.NgramHash, s2.SubmissionId FROM Signatures as s1 '
+                'JOIN Signatures as s2 ON s1.NgramHash = s2.NgramHash WHERE s1.SubmissionId = ? AND s2.SubmissionId != ?',
+                (submission_id, submission_id))
+        signatures = [Signature(row[3], row[0], row[1], row[4], row[2])  for row in c]
         c.close()
         return signatures
 
@@ -91,6 +92,21 @@ class DatabaseManager:
         c.close()
         return assignments
 
+    def fetch_a_submission(self, assignment_id, submission_id):
+        c = self.conn.cursor()
+        c.execute('SELECT Id, StudentId, AssignmentNumber, ProgramSource, SubmissionDate FROM Submissions WHERE AssignmentNumber = ? AND Id = ?' ,(assignment_id, submission_id))
+        submission = None
+        for x in c:
+            submission = Submission(
+                    id=x[0],
+                    student_number=x[1],
+                    program_source=x[3],
+                    assignment_id=x[2],
+                    submission_date=x[4])
+        c.close()
+        return submission
+
+
     def fetch_submissions(self, assignment_id):
         c = self.conn.cursor()
         submissions = []
@@ -105,6 +121,10 @@ class DatabaseManager:
                     submission_date=x[4]))
         c.close()
         return submissions
+
+    def fetch_matches(self, submission_id):
+        c = self.conn.cursor()
+        c.execute('SELECT MatchSubmissionId, LinesMatched, LengthOfMatch')
 
     def store_assignment(self, assignment_description, assignment_number, student_number,due_date):
         c = self.conn.cursor()
