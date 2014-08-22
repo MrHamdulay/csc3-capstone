@@ -50,13 +50,15 @@ class View(FlaskView):
     def list_submissions(self, assignment_num):
         database = DatabaseManager() # TODO: do we want to make the databaseManager a class attribute?
         submissions = database.fetch_submissions(assignment_num)
-        return render_template('submissions.html', submissions=submissions, assignment_num=assignment_num)
+        return render_template('submissions.html',
+                submissions=submissions, assignment_num=assignment_num)
 
     @route('/<assignment_num>/<submission_id>')
     def list_of_submissions(self, assignment_num, submission_id):
         database = DatabaseManager() # TODO: do we want to make the databaseManager a class attribute?
-        submission = database.fetch_submission(assignment_num, submission_id)
-        return render_template('submission.html', submission=submission, assignment_num=assignment_num)
+        submission = database.fetch_a_submission(assignment_num, submission_id)
+        return render_template('submission.html',
+                submission=submission, assignment_num=assignment_num)
 
 if __name__ == '__main__':
     View.register(app)
