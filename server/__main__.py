@@ -50,7 +50,8 @@ class View(FlaskView):
     def list_submissions(self, assignment_num):
         database = DatabaseManager() # TODO: do we want to make the databaseManager a class attribute?
         submissions = database.fetch_submissions(assignment_num)
-        return render_template('submissions.html', submissions=submissions, assignment_num=assignment_num)
+        return render_template('submissions.html',
+                submissions=submissions, assignment_num=assignment_num)
 
     @route('/<assignment_num>/<submission_id>')
     def list_diff(self, assignment_num, submission_id):

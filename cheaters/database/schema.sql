@@ -21,7 +21,7 @@ CREATE TABLE if not exists Submissions(
   AssignmentNumber INT,
   ProgramSource TEXT,
   SubmissionDate DATE DEFAULT CURRENT_DATE,
-  FOREIGN KEY (StudentId) REFERENCES Students(ID),
+  FOREIGN KEY (StudentId) REFERENCES Students(StudentNumber),
   FOREIGN KEY (AssignmentNumber) REFERENCES Assignments(Id)
 
 );
@@ -34,13 +34,16 @@ CREATE TABLE if not exists Submissions(
   FOREIGN KEY (SubmissionId) REFERENCES Submissions(Id)
  );
 
+CREATE INDEX IF NOT EXISTS signature_submission ON Signatures (SubmissionId);
+
 
 CREATE TABLE if not exists Matches(
   Id INTEGER PRIMARY KEY AUTOINCREMENT,
-  SubmissionId INT,
-  MatchSubmissionId INT,
-  LinesMatched INT,
+  SubmissionIdMine INT,
+  StartLineMine INT,
+  SubmissionIdTheirs INT,
+  StartLineTheirs INT,
   LengthOfMatch INT,
-  FOREIGN KEY (SubmissionId) REFERENCES Submissions(Id),
-  FOREIGN KEY (SubmissionId) REFERENCES Submissions(Id)
+  FOREIGN KEY (SubmissionIdMine) REFERENCES Submissions(Id),
+  FOREIGN KEY (SubmissionIdTheirs) REFERENCES Submissions(Id)
 );

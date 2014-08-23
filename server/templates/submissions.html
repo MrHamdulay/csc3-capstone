@@ -3,10 +3,10 @@
 {% block content %}
 <ul>
     {% for submission in submissions %}
-        <li><a href="/{{assignment.number}}/{{submission.id}}">{{submission.by}} - {{submission.confidence}} {{submission.ref}}</a></li>
+        <li><a href="/{{assignment_num}}/{{submission.id}}">{{submission.student_number}} - {{submission.confidence}} {{submission.ref}}</a></li>
     {% else %}
         <li>No Assignments found.</li>
-        <a href="/submit">Submit</a
+        <a href="/submit">Submit</a>
     {% endfor %}
 </ul>
 {% endblock %}

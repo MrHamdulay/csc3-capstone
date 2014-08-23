@@ -22,25 +22,29 @@ class Grouper:
             document_matches = []
 
             current_signature_run = 0
-            current_line = document_signatures[0].line_number
-            start_line = document_signatures[0].line_number
+            current_line = document_signatures[0].line_number_mine
+            start_line_mine = document_signatures[0].line_number_mine
+            start_line_theirs = document_signatures[0].line_number_theirs
+
 
             for signature in document_signatures:
-                if signature.line_number - current_line <= 1:
+                if signature.line_number_mine - current_line <= 1:
                     current_signature_run += 1
                     current_line = signature.line_number
                 else:
-                    if current_line - start_line >= MIN_MATCH_LENGTH:
+                    if current_line - start_line_mine >= MIN_MATCH_LENGTH:
                         match = Match(submission_id,
-                                      start_line,
-                                      current_line - start_line,
+                                      start_line_mine,
+                                      start_line_theirs,
+                                      current_line - start_line_mine,
                                       current_signature_run)
                         document_matches[submission_id].append(match)
 
                     # reset everything
                     current_line_run = 0
                     current_signature_run = 0
-                    current_line = signature.line_number
-                    start_line = signature.line_number
+                    current_line = signature.line_number_mine
+                    start_line_mine = signature.line_number_mine
+                    start_line_theirs = signature.line_number_theirs
 
         return document_matches
