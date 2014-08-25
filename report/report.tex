@@ -49,9 +49,20 @@
                        % footers (ie just the page number as footer).
 
 \section*{Abstract}
-First you should have an executive summary (or abstract) just a single
-paragraph saying what the results of the project are (at most 200
-words).
+The purpose of this project is to identify cheating among Computer Science
+students when submitting their assignments. It is estimated that
+30\% of students will cheat in an assignment, often sharing the code in groups amongst themselves.
+ Our goal is to detect such occurrences and display the results for lecturer administration. 
+We began by building a prototype, basing the algorithm on the proprietary JMoss system, 
+but using only Python. We found our implementation worked well but failed in that it detected single lines 
+of common and insignificant code, also, the initial UI could not display the high number of results
+being listed. After refactoring our solution was to perform String matching, generating 
+signatures on the text and filtering them for multiple lines of
+recurring code, further comparing it with as an abstract syntax tree for subtree pattern matching. 
+To test the algorithm was run against 18658 python assignments, yielding the same 30\% mean
+of students cheating and deviating on the confidence interval with each occurrence by just 0.5\%
+as given by the JMoss system. In conclusion our solution performs alongside JMoss, yet differs in its UI by
+grouping cheaters to recurring code blocks, a more convenient view to administer cheating.
 
 \section{Introduction}
 \label{s:introduction}
