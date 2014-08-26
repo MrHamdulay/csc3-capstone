@@ -67,6 +67,48 @@ grouping cheaters to recurring code blocks, a more convenient view to administer
 \section{Introduction}
 \label{s:introduction}
 
+The purpose of this project is to detect cheating among Computer Science
+assignment hand-ins. The detection system plugs in to the student submission process on
+Vula and will extract the source files to generate signatures on the source code and match
+it with existing signatures. A front end web UI was built to list the offending students and
+provide administration functionality for the convening lecturer to take action when needed. The web UI
+is accessed from an iframe within the Vula dashboard, accessible by convening lecturers.
+In general a lecturer will use this facility to verify code diffs against
+students' code which has been marked as cheated and assign them zero for the assignment.
+
+In some cases an assignment will be used over consecutive years, largely unchanged, if at all.
+We therefore need the ability to compare code against not just the current year of submission
+but also previous years.
+
+The programming languages used for assignments differ from year to year, differing in some cases
+even within the same year. It was therefore necessary to detect the appropriate programming language 
+used with each submission. The Computer Science department makes extensive use of Python and Java for
+assignments and so these are provided as plugins by default. The system has a plugin sub-system
+which can be used to write parsers for additional languages, extending the scope of languages used
+to detect cheating from within the department and allowing flexibility in terms of language support for
+the future.
+
+The software engineering methods used were traditional analysis followed by design and
+implementation. An evolutionary prototype was constructed and presented to the stakeholders
+for review, after which we analyzed the feedback and made use of Extreme programming to iterate over the product to get it into its
+final state. Pair programming was used to ensure members were all on the same page and had
+a shared working knowledge of the code and state of the project. This was advantageous especially
+when refactoring code because during development small, technical issues would become
+apparent. We were able to discuss such issues immediately, design and implement alternate
+solutions, and modify existing methods or classes. The source code was checked out from
+a git repository and the team members could then conveniently update their source code copies
+after a peer programming session and work on the files individually, safely pushing detailed
+commits with changes for other team members to remain up to date.
+
+The core of the system, the algorithm detection, is based largely on the proprietary
+JMoss system and was referenced while building the Winnowing algorithm as part of the
+signature generation and matching. We were able to use the output from a provided database of
+over 18000 python assignment files from the 1st year Computer Science course and compare
+our implementation to the results given by JMoss on the same files. This was used also for
+tweaking parameters to the system and gaining accuracy.
+
+[TODO: insert reference, http://theory.stanford.edu/~aiken/publications/papers/sigmod03.pdf]
+
 Your introduction provides the context for the project and should
 contain the statement of the scope of the project (which may have
 changed since you first wrote it). Someone reading your introduction
