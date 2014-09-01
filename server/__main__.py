@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 from flask.ext.classy import FlaskView, route
 import sys
 import os
@@ -41,13 +41,27 @@ class View(FlaskView):
             -List of submissions, e.g. DBRJAR001 (90%)
                 - 2 way diffs
     '''
+
+    @route('/createAssignment', methods = ['POST','GET'])
+    def create_assignments(self):
+        if request.form:
+            detector = Detector()
+            courseCode = request.form['courseCode']
+            dateDue = request.form['dueDate']
+            assignmentDescription = request.form['description']
+            detector.runAssignment(assignmentDescription,dateDue,courseCode)
+            return redirect('/')
+        return render_template('createAssignment.html')
+
+
+
     @route('/')
     def list_assignments(self):
         database = DatabaseManager()
         assignments = database.fetch_current_assignments()
         return render_template('assignments.html' , assignments=assignments)
 
-    @route('/<assignment_num>')
+    @route('/<int:assignment_num>')
     def list_submissions(self, assignment_num):
         database = DatabaseManager() # TODO: do we want to make the databaseManager a class attribute?
         submissions = database.fetch_submissions(assignment_num)

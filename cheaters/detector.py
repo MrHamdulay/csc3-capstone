@@ -62,3 +62,8 @@ class Detector:
 
     def super_amazing_feature(self):
         pass
+
+    def runAssignment(self,description, dueDate,courseCode):
+        database = DatabaseManager()
+        database.store_assignment(description,dueDate,courseCode)
+        print('stored')

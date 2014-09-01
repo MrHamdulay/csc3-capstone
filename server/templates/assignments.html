@@ -6,7 +6,8 @@
         <li><a href="/{{assignment.id}}">{{assignment.description}}</a></li>
     {% else %}
         <li>No Assignments found.</li>
-        <a href="/submit">Submit</a
+        <a href="/submit">Submit</a>
     {% endfor %}
+    <a href = '/createAssignment'>Create an assignment</a>
 </ul>
 {% endblock %}
