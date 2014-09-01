@@ -8,13 +8,13 @@
 <div class="row">
     <div class="col-md-6 col-sm-6 col-xs-6">
         <h3>{{submission.student_number}}</h3>
-        <pre><code class="language-python">
+        <pre data-line="{{submission_match_string}}"><code class="language-python">
 {{submission.program_source}}
         </code></pre>
     </div>
     <div class="col-md-6 col-sm-6 col-xs-6">
         <h3>{{other_submission.student_number}}</h3>
-        <pre><code class="language-python">
+        <pre data-line="{{other_submission_match_string}}"><code class="language-python">
 {{other_submission.program_source}}
 </code></pre>
 

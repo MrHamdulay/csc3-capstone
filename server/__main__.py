@@ -64,9 +64,20 @@ class View(FlaskView):
         # get the submission_id of the group with the most number of matches
         other_submission_id = max(groups.iteritems(), key=lambda x: len(x[1]))[0]
         other_submission = database.fetch_a_submission(assignment_num, other_submission_id)
-        raise Exception()
 
-        return render_template('diff.html', submission=submission, other_submission=other_submission, assignment_num=assignment_num)
+        submission_match_string = ','.join(
+                '%d-%d'%(m.start_line_mine, m.start_line_mine+m.match_length)
+                    for m in groups[other_submission_id])
+        other_submission_match_string = ','.join(
+                '%d-%d'%(m.start_line_mine, m.start_line_mine+m.match_length)
+                    for m in groups[other_submission_id])
+
+        return render_template('diff.html',
+                submission=submission,
+                submission_match_string=submission_match_string,
+                other_submission=other_submission,
+                other_submission_match_string=other_submission_match_string,
+                assignment_num=assignment_num)
 
 if __name__ == '__main__':
     View.register(app)
