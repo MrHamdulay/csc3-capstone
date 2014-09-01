@@ -38,7 +38,7 @@ class Detector:
         signatures = cheating_algorithm.generate_signatures()
         submission_id = database.store_submission(concatenated_file, assignment_number)
         database.store_signatures(signatures, submission_id)
-        database.lookup_signatures(submission_id)
+        database.lookup_my_signatures(submission_id)
 
 
     def set_language_handler(self, zip_file):

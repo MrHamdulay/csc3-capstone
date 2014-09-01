@@ -60,7 +60,9 @@ class View(FlaskView):
         submission = database.fetch_a_submission(assignment_num, submission_id)
 
         signatures = database.lookup_matching_signatures(submission_id)
+        print '\n'.join(str(x) for x in signatures)
         groups = Grouper().group(signatures)
+        print '\n'.join(str(x) for x in groups[2])
         # get the submission_id of the group with the most number of matches
         other_submission_id = max(groups.iteritems(), key=lambda x: len(x[1]))[0]
         other_submission = database.fetch_a_submission(assignment_num, other_submission_id)

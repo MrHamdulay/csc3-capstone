@@ -76,8 +76,8 @@ class DatabaseManager:
     def lookup_matching_signatures(self, submission_id):
         c = self.conn.cursor()
         c.execute('SELECT s1.SubmissionId, s1.LineNumber, s2.LineNumber, s1.NgramHash, s2.SubmissionId FROM Signatures as s1 '
-                'JOIN Signatures as s2 ON s1.NgramHash = s2.NgramHash WHERE s1.SubmissionId = ? AND s2.SubmissionId != ?',
-                (submission_id, submission_id))
+                'JOIN Signatures as s2 ON s1.NgramHash = s2.NgramHash WHERE s1.SubmissionId = ? AND s2.SubmissionId != s1.SubmissionId',
+                (submission_id, ))
         signatures = [Signature(row[3], row[0], row[1], row[4], row[2])  for row in c]
         c.close()
         return signatures
