@@ -6,7 +6,7 @@
         <li><a href="/{{assignment_num}}/{{submission.id}}">{{submission.student_number}} - {{submission.confidence}} {{submission.ref}}</a></li>
     {% else %}
         <li>No Assignments found.</li>
-        <a href="/submit">Submit</a>
     {% endfor %}
+    <a href="/submit">Submit</a>
 </ul>
 {% endblock %}

@@ -12,4 +12,4 @@ class Match:
         self.number_of_signatures = number_of_signatures
 
     def __repr__(self):
-        return '<Match submission_id:%s start_line:%s match_length:%s>' % (self.submission_id, self.start_line, self.match_length)
+        return '<Match submission_id:%s start_line:%s match_length:%s>' % (self.submission_id, self.start_line_mine, self.match_length)

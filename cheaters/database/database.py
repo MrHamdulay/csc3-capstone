@@ -64,9 +64,16 @@ class DatabaseManager:
         c.close()
         self.conn.commit()
 
+    def lookup_my_signatures(self, submission_id):
+        c = self.conn.cursor()
+        c.execute('SELECT LineNumber, NgramHash FROM Signatures WHERE SubmissionId = ?', (submission_id,))
+        signatures = [Signature(x[1], submission_id, x[0]) for x in c]
+        c.close()
+        return signatures
+
 
     '''Lookup_signatures looks up signatures which will be used to check for potential cheating or copied code. '''
-    def lookup_signatures(self, submission_id):
+    def lookup_matching_signatures(self, submission_id):
         c = self.conn.cursor()
         c.execute('SELECT s1.SubmissionId, s1.LineNumber, s2.LineNumber, s1.NgramHash, s2.SubmissionId FROM Signatures as s1 '
                 'JOIN Signatures as s2 ON s1.NgramHash = s2.NgramHash WHERE s1.SubmissionId = ? AND s2.SubmissionId != ?',

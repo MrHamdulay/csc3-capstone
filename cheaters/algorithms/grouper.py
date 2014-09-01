@@ -11,15 +11,14 @@ class Grouper:
         # first group by document
         group_by_document = defaultdict(list)
         for signature in signatures:
-            group_by_document[signature.submission_id].append(signature)
+            group_by_document[signature.submission_id_theirs].append(signature)
 
         document_matches = defaultdict(list)
 
         # find consecutive matches
         for submission_id, document_signatures in group_by_document.iteritems():
             # sort by line number
-            document_signatures.sort(key=lambda x: x.line_number)
-            document_matches = []
+            document_signatures.sort(key=lambda x: x.line_number_mine)
 
             current_signature_run = 0
             current_line = document_signatures[0].line_number_mine
@@ -30,7 +29,7 @@ class Grouper:
             for signature in document_signatures:
                 if signature.line_number_mine - current_line <= 1:
                     current_signature_run += 1
-                    current_line = signature.line_number
+                    current_line = signature.line_number_mine
                 else:
                     if current_line - start_line_mine >= MIN_MATCH_LENGTH:
                         match = Match(submission_id,

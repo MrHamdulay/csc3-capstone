@@ -7,49 +7,15 @@
 <h2>Confidence of cheating: 97%</h2>
 <div class="row">
     <div class="col-md-6 col-sm-6 col-xs-6">
-        <h3>julbky002</h3>
-        <pre><code class="language-python">#ordered strings
-#julia breakey
-#1 may 2014
-
-#create strings list
-strings=[]
-string=input("Enter strings (end with DONE):\n")
-while string!="DONE":
-    strings.append(string)
-    string=input("")
-
-#print list of unique values
-print("")
-print("Unique list:")    
-unistrings=[]
-for i in strings:
-    if i in unistrings:
-        continue
-    else:
-        print(i)
-        unistrings.append(i)</code></pre>
+        <h3>{{submission.student_number}}</h3>
+        <pre><code class="language-python">
+{{submission.program_source}}
+        </code></pre>
     </div>
     <div class="col-md-6 col-sm-6 col-xs-6">
-        <h3>ethjck001</h3>
-        <pre><code class="language-python">#Program to print a user's entered list in same order without duplicates
-#Ethan Jackson
-#28 April 2014
-
-print("Enter strings (end with DONE):")
-names =''
-lis = []
-while names != "DONE":
-    names = input("")
-    if names not in lis:
-        lis.append(names)       #only adds the item to the list if it's the first occurence of that item
-        #therefore it will never add a duplicate item
-        
-lis.remove("DONE")
-print("\nUnique list:")
-for i in lis:
-    print(i)
-    
+        <h3>{{other_submission.student_number}}</h3>
+        <pre><code class="language-python">
+{{other_submission.program_source}}
 </code></pre>
 
     </div>

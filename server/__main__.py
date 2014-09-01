@@ -55,19 +55,18 @@ class View(FlaskView):
                 submissions=submissions, assignment_num=assignment_num)
 
     @route('/<assignment_num>/<submission_id>')
-    def list_of_submissions(self, assignment_num, submission_id):
+    def list_diff(self, assignment_num, submission_id):
         database = DatabaseManager() # TODO: do we want to make the databaseManager a class attribute?
         submission = database.fetch_a_submission(assignment_num, submission_id)
-        groups = Grouper().group(signatures)
-        return render_template('submission.html',
-                submission=submission, assignment_num=assignment_num)
 
-    def list_diff(self, assignment_num, submission_id):
-        # database = DatabaseManager() # TODO: do we want to make the databaseManager a class attribute?
-        # submission = database.fetch_submission(assignment_num, submission_id)
-        assignment_num = None
-        submission = None
-        return render_template('diff.html', submission=submission, assignment_num=assignment_num)
+        signatures = database.lookup_matching_signatures(submission_id)
+        groups = Grouper().group(signatures)
+        # get the submission_id of the group with the most number of matches
+        other_submission_id = max(groups.iteritems(), key=lambda x: len(x[1]))[0]
+        other_submission = database.fetch_a_submission(assignment_num, other_submission_id)
+        raise Exception()
+
+        return render_template('diff.html', submission=submission, other_submission=other_submission, assignment_num=assignment_num)
 
 if __name__ == '__main__':
     View.register(app)
