@@ -6,6 +6,7 @@ sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../cheaters')
 
 from detector import Detector
 from database import DatabaseManager
+from algorithms.grouper import Grouper
 
 app = Flask(__name__)
 
@@ -57,6 +58,7 @@ class View(FlaskView):
     def list_of_submissions(self, assignment_num, submission_id):
         database = DatabaseManager() # TODO: do we want to make the databaseManager a class attribute?
         submission = database.fetch_a_submission(assignment_num, submission_id)
+        groups = Grouper().group(signatures)
         return render_template('submission.html',
                 submission=submission, assignment_num=assignment_num)
 

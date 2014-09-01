@@ -40,9 +40,6 @@ class Detector:
         database.store_signatures(signatures, submission_id)
         matches = database.lookup_signatures(submission_id)
 
-        grouped_matches = Grouper().group(matches)
-        database.store_matches(grouped_matches, submission_id)
-
 
     def set_language_handler(self, zip_file):
         '''
