@@ -38,10 +38,7 @@ class Detector:
         signatures = cheating_algorithm.generate_signatures()
         submission_id = database.store_submission(concatenated_file, assignment_number)
         database.store_signatures(signatures, submission_id)
-        matches = database.lookup_signatures(submission_id)
-
-        grouped_matches = Grouper().group(matches)
-        database.store_matches(grouped_matches, submission_id)
+        database.lookup_signatures(submission_id)
 
 
     def set_language_handler(self, zip_file):
