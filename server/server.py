@@ -8,28 +8,35 @@ from detector import Detector
 from database import DatabaseManager
 from algorithms.grouper import Grouper
 
-app = Flask(__name__)
 
 class View(FlaskView):
 
-    '''
-    Web form to submit assignments. This is the starting point.
-    @GET /submit
-    @render submit.html
-    '''
+    @route('/')
+    def index_page(self):
+        ''' List assignments on the home page
+        @GET /
+        @render assignments.html
+        '''
+        database = DatabaseManager()
+        assignments = database.fetch_current_assignments()
+        return render_template('assignments.html' , assignments=assignments)
+
     @route('/submit')
-    def index(self):
+    def view_submit_form(self):
+        ''' Web form to submit assignments.
+        @GET /submit
+        @render submit.html
+        '''
         database = DatabaseManager()
         assignments = database.fetch_current_assignments()
         return render_template('submit.html', assignments=assignments)
 
-    '''
-    Receive and Process assignments submitted from the web form
-    @POST /submit
-    @render :)
-    '''
     @route('/submit', methods=['POST'])
-    def upload_file(self):
+    def post_submit_form(self):
+        ''' Receive and Process assignments submitted from the web form
+        @POST /submit
+        @render :)
+        '''
         submission = request.files['submission']
         assignment_id = request.form['assignment_id']
         Detector().run(submission, assignment_id)
@@ -55,11 +62,6 @@ class View(FlaskView):
 
 
 
-    @route('/')
-    def list_assignments(self):
-        database = DatabaseManager()
-        assignments = database.fetch_current_assignments()
-        return render_template('assignments.html' , assignments=assignments)
 
     @route('/<int:assignment_num>')
     def list_submissions(self, assignment_num):
@@ -96,5 +98,6 @@ class View(FlaskView):
                 assignment_num=assignment_num)
 
 if __name__ == '__main__':
+    app = Flask(__name__)
     View.register(app)
     app.run(debug=True)
