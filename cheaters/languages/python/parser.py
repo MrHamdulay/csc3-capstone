@@ -9,6 +9,15 @@ from programsubmission import ProgramSubmission
 from algorithms.base import SectionMatch
 
 
+CO_FUTURE_DIVISION   = 0x2000   # division
+CO_FUTURE_ABSOLUTE_IMPORT = 0x4000 # perform absolute imports by default
+CO_FUTURE_WITH_STATEMENT  = 0x8000   # with statement
+CO_FUTURE_PRINT_FUNCTION  = 0x10000   # print function
+CO_FUTURE_UNICODE_LITERALS = 0x20000 # unicode string literals
+
+PYTHON3_FLAGS = CO_FUTURE_DIVISION | CO_FUTURE_ABSOLUTE_IMPORT | CO_FUTURE_WITH_STATEMENT | CO_FUTURE_PRINT_FUNCTION | CO_FUTURE_UNICODE_LITERALS | ast.PyCF_ONLY_AST
+
+
 class RenamerTransform(ast.NodeTransformer):
     ''' ast transform that removes variable names,
     strings and function names to make matching easier
@@ -49,12 +58,16 @@ class RenamerTransform(ast.NodeTransformer):
 
 
 class PythonLanguageHandler(ProgramSubmission):
+  PYTHON3_CONVERSION = 'from __future__ import print_function\n'
   file_types = ['py']
 
   def parse_file(self, program_source, filename=''):
     ProgramSubmission.parse_file(self, program_source, filename)
-    program_source = 'from __future__ import print_function\n'+program_source
-    self.ast = ast.parse(program_source)
+    # let's try to compile python 3 code first
+    try:
+        self.ast = compile(program_source, '<unknown>', 'exec', PYTHON3_FLAGS)
+    except SyntaxError:
+        self.ast = ast.parse(program_source)
 
 
   '''

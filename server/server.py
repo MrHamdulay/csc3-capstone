@@ -72,7 +72,7 @@ class View(FlaskView):
         return render_template('submissions.html',
                 submissions=submissions, assignment_num=assignment_num)
 
-    @route('/<int:assignment_num>/<submission_id>')
+    @route('/<int:assignment_num>/<int:submission_id>')
     def view_diff(self, assignment_num, submission_id):
         ''' View code diffs against the given submission
         @GET /{assignment_num}/{submission_id}
