@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block title %}Create assignment{% endblock %}
+{% block content %}
+<form action="/createAssignment" method = "POST">
+
+<p>
+    <h1>Create Assignment</h1>
+
+
+</p>
+
+<p>
+<label>Course Code:</label>
+<input name = "courseCode" type="text" required="true" />
+</p>
+<p>
+<label>Due Date:</label>
+<input name = "dueDate" type="date" required="true" />
+
+</p>
+
+
+<p>
+<label>Description:</label>
+<textarea name = "description" type="text" required="true" rows = 6></textarea>
+
+</p>
+<input type="submit"/></a>
+
+</form>
+
+{% endblock %}

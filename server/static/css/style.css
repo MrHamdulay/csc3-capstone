@@ -1,0 +1,25 @@
+/* prism overrides */
+
+pre {
+    float: left;
+    width: 47%;
+}
+
+.gap {
+    float: left;
+    width: 6%;
+    height: 100%;
+
+    margin: 0.5em 0;
+    padding: 1em 0 1em;
+}
+
+path {
+    fill: hsla(250, 95%, 72%, 0.21);
+    stroke: hsla(24, 20%, 50%,.38);
+    stroke-width: 1px;
+}
+
+.line-highlight {
+    background: hsla(250, 95%, 72%, 0.31);
+}

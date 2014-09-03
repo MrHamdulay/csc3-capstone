@@ -132,15 +132,16 @@ class DatabaseManager:
     def fetch_matches(self, submission_id):
         c = self.conn.cursor()
         c.execute('SELECT MatchSubmissionId, LinesMatched, LengthOfMatch')
-
-    def store_assignment(self, assignment_description, assignment_number, student_number,due_date):
+    #I've taken out student_number as a variable passed to the method as the lecturer will specify courseCode. It's only
+    #when students submit an assignment then student_number will be necessary.
+    def store_assignment(self, assignment_description,due_date,courseCode):
         c = self.conn.cursor()
 
-        courseCode = c.execute('SELECT CourseCode FROM Students where StudentNumber = ?', (student_number, ))
+       # courseCode = c.execute('SELECT CourseCode FROM Students where StudentNumber = ?', (student_number, ))
 
-        assignmentValues = (assignment_number,assignment_description,due_date,courseCode)
+        assignmentValues = (assignment_description,due_date,courseCode)
 
-        c.execute('INSERT INTO Assignments (Id, AssignmentDescription,DueDate,CourseCode) VALUES (?,?,?)',assignmentValues)
+        c.execute('INSERT INTO Assignments (AssignmentDescription,DueDate,CourseCode) VALUES (?,?,?)',assignmentValues)
         c.close()
         self.conn.commit()
 

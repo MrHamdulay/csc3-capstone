@@ -1,61 +1,82 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 from flask.ext.classy import FlaskView, route
 import sys
 import os
-sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../cheaters')
 
+sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../cheaters')
 from detector import Detector
 from database import DatabaseManager
 from algorithms.grouper import Grouper
 
-app = Flask(__name__)
-
 class View(FlaskView):
 
-    '''
-    Web form to submit assignments. This is the starting point.
-    @GET /submit
-    @render submit.html
-    '''
-    @route('/submit')
-    def index(self):
-        database = DatabaseManager()
-        assignments = database.fetch_current_assignments()
-        return render_template('submit.html', assignments=assignments)
-
-    '''
-    Receive and Process assignments submitted from the web form
-    @POST /submit
-    @render :)
-    '''
-    @route('/submit', methods=['POST'])
-    def upload_file(self):
-        submission = request.files['submission']
-        assignment_id = request.form['assignment_id']
-        Detector().run(submission, assignment_id)
-        return ':)'
-
-    '''
-    Display results:
-        -Assignment
-            -List of submissions, e.g. DBRJAR001 (90%)
-                - 2 way diffs
-    '''
     @route('/')
-    def list_assignments(self):
+    def index_page(self):
+        ''' List assignments on the home page
+        @GET /
+        @render assignments.html
+        '''
         database = DatabaseManager()
         assignments = database.fetch_current_assignments()
         return render_template('assignments.html' , assignments=assignments)
 
-    @route('/<assignment_num>')
-    def list_submissions(self, assignment_num):
-        database = DatabaseManager() # TODO: do we want to make the databaseManager a class attribute?
+    @route('/submit')
+    def view_submit_form(self):
+        ''' Web form to submit assignments.
+        @GET /submit
+        @render submit.html
+        '''
+        database = DatabaseManager()
+        assignments = database.fetch_current_assignments()
+        return render_template('submit.html', assignments=assignments)
+
+    @route('/submit', methods=['POST'])
+    def post_submit_form(self):
+        ''' Receive and Process assignments submitted from the web form
+        @POST /submit
+        @redirect /{assignment_id}
+        '''
+        submission = request.files['submission']
+        assignment_id = request.form['assignment_id']
+        Detector().run(submission, assignment_id)
+        return redirect('/' + assignment_id)
+
+    @route('/createAssignment')
+    def view_create_assignment(self):
+        ''' View the Assignment submission form
+        @GET /createAssignment
+        @render createAssignment.html
+        '''
+        return render_template('createAssignment.html')
+
+    @route('/createAssignment', methods=['POST'])
+    def post_create_assignment(self):
+        ''' Create an assignment and persist it to the database
+        @POST /createAssignment
+        @redirect /
+        '''
+        detector = Detector()
+        courseCode = request.form['courseCode']
+        dateDue = request.form['dueDate']
+        assignmentDescription = request.form['description']
+        detector.runAssignment(assignmentDescription,dateDue,courseCode)
+        return redirect('/')
+
+    @route('/<int:assignment_num>')
+    def view_submissions(self, assignment_num):
+        ''' Lists submissions in a given assignment_num
+        @GET /{assignment_num}'
+        @render submissions.html'''
+        database = DatabaseManager()
         submissions = database.fetch_submissions(assignment_num)
         return render_template('submissions.html',
                 submissions=submissions, assignment_num=assignment_num)
 
-    @route('/<assignment_num>/<submission_id>')
-    def list_diff(self, assignment_num, submission_id):
+    @route('/<int:assignment_num>/<submission_id>')
+    def view_diff(self, assignment_num, submission_id):
+        ''' View code diffs against the given submission
+        @GET /{assignment_num}/{submission_id}
+        @render diff.html'''
         database = DatabaseManager() # TODO: do we want to make the databaseManager a class attribute?
         submission = database.fetch_a_submission(assignment_num, submission_id)
 
@@ -81,5 +102,6 @@ class View(FlaskView):
                 assignment_num=assignment_num)
 
 if __name__ == '__main__':
+    app = Flask(__name__)
     View.register(app)
     app.run(debug=True)
