@@ -87,7 +87,7 @@ class View(FlaskView):
         submission = database.fetch_a_submission(assignment_num, submission_id)
 
         signatures = database.lookup_matching_signatures(submission_id)
-        groups = Grouper().group(signatures)
+        groups = Grouper().group(signatures, submission.program_source)
         print '\n'.join(str(x) for x in groups[2])
         # get the submission_id of the group with the most number of matches
         other_submission_id = max(groups.iteritems(), key=lambda x: len(x[1]))[0]
@@ -99,6 +99,7 @@ class View(FlaskView):
         other_submission_match_string = ','.join(
                 '%d-%d'%(m.start_line_theirs+1, m.start_line_theirs+m.match_length+1)
                     for m in groups[other_submission_id])
+        print submission_match_string, other_submission_match_string
 
         return render_template('diff.html',
                 submission=submission,

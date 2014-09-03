@@ -5,8 +5,9 @@ MIN_MATCH_LENGTH = 3
 
 ''' Given a list of signatures find patterns and groups of common code '''
 class Grouper:
-    def group(self, signatures):
+    def group(self, signatures, program_source):
         ''' given a list of signatures group and return a list of matches '''
+        program_source = program_source.split('\n')
 
         # first group by document
         group_by_document = defaultdict(list)
@@ -19,31 +20,28 @@ class Grouper:
         for submission_id, document_signatures in group_by_document.iteritems():
             # sort by line number
             document_signatures.sort(key=lambda x: x.line_number_mine)
+            print submission_id, document_signatures
+            print ' '.join(str(s.line_number_mine) for s in document_signatures)
+            print ' '.join(str(s.line_number_theirs) for s in document_signatures)
 
-            current_signature_run = 0
-            current_line = document_signatures[0].line_number_mine
-            start_line_mine = document_signatures[0].line_number_mine
-            start_line_theirs = document_signatures[0].line_number_theirs
+            run_start = 0
+            last_line = 0
+            for i, signature in enumerate(document_signatures):
 
+                # if we no longer matching consecutive signatures
+                if signature.line_number_mine - last_line > 1 and i - run_start > 3:
+                    start_signature = document_signatures[run_start]
+                    match = Match(submission_id,
+                                  start_signature.line_number_mine,
+                                  start_signature.line_number_theirs,
+                                  signature.line_number_mine - start_signature.line_number_mine,
+                                  i - run_start)
+                    document_matches[submission_id].append(match)
+                    run_start = i
 
-            for signature in document_signatures:
-                if signature.line_number_mine - current_line <= 1:
-                    current_signature_run += 1
-                    current_line = signature.line_number_mine
-                else:
-                    if current_line - start_line_mine >= MIN_MATCH_LENGTH:
-                        match = Match(submission_id,
-                                      start_line_mine,
-                                      start_line_theirs,
-                                      current_line - start_line_mine,
-                                      current_signature_run)
-                        document_matches[submission_id].append(match)
-
-                    # reset everything
-                    current_line_run = 0
-                    current_signature_run = 0
-                    current_line = signature.line_number_mine
-                    start_line_mine = signature.line_number_mine
-                    start_line_theirs = signature.line_number_theirs
+                last_line = signature.line_number_mine
+                # we are nice and ignore empty lines for signatures
+                while program_source[last_line].strip() == '':
+                    last_line += 1
 
         return document_matches

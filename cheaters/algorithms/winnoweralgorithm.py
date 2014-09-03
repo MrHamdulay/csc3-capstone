@@ -3,7 +3,7 @@ from model.signature import Signature
 from collections import deque, defaultdict
 
 WINDOW_LENGTH = 11
-NGRAM_LENGTH = 5
+NGRAM_LENGTH = 7
 
 
 '''
