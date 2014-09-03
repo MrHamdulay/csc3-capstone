@@ -14,7 +14,8 @@ class Signature:
         self.submission_id_mine = submission_id_mine
         self.line_number_mine = line_number
         self.submission_id_theirs = submission_id_theirs
-        self.line_number_theirs = line_number
+        self.line_number_theirs = line_number_theirs
+        assert submission_id_mine != submission_id_theirs
 
 
     def __repr__(self):
