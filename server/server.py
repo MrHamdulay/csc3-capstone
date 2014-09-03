@@ -38,7 +38,13 @@ class View(FlaskView):
         '''
         submission = request.files['submission']
         assignment_id = request.form['assignment_id']
-        Detector().run(submission, assignment_id)
+        if request.form['student_number']:
+            student_number = request.form['student_number'].replace('.zip','')
+        else:
+            student_number = submission.filename
+
+        Detector().run(submission, assignment_id, student_number.upper())
+
         return redirect('/' + assignment_id)
 
     @route('/createAssignment')

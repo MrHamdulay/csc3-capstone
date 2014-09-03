@@ -22,7 +22,7 @@ class Detector:
     language_handler = None
 
 
-    def run(self, submission, assignment_number):
+    def run(self, submission, assignment_number, student_number):
         '''
         @param submission, File posted through web form
         @param assignment_number, Number of assignment
@@ -36,7 +36,7 @@ class Detector:
         database = DatabaseManager()
         cheating_algorithm = WinnowerAlgorithm(self.language_handler)
         signatures = cheating_algorithm.generate_signatures()
-        submission_id = database.store_submission(concatenated_file, assignment_number)
+        submission_id = database.store_submission(concatenated_file, assignment_number, student_number)
         database.store_signatures(signatures, submission_id)
         database.lookup_my_signatures(submission_id)
 
