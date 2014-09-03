@@ -1,4 +1,5 @@
 import ast
+from keyword import kwlist as PYTHON_KWLIST
 from collections import defaultdict
 from utils import Counter
 from languages.python.ast_utils import getLineLimits
@@ -97,4 +98,8 @@ class PythonLanguageHandler(ProgramSubmission):
   def strip_unstable_atrributes(self):
     buf = StringIO()
     external.unparser.Unparser(self.canonicalised_ast, buf)
-    return buf.getvalue()
+    result = buf.getvalue()
+    # shorten python keywords so ngrams aren't affected by keywords like 'print'
+    for key in PYTHON_KWLIST:
+        result = result.replace(key, key[:3])
+    return result
