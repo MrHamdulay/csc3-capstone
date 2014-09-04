@@ -37,8 +37,11 @@ class View(FlaskView):
         @redirect /{assignment_id}
         '''
         submission = request.files['submission']
+        student_number = request.form['student_number']
+        if not student_number:
+            student_number = submission.filename
         assignment_id = request.form['assignment_id']
-        Detector().run(submission, assignment_id)
+        Detector().run(submission, assignment_id, student_number)
         return redirect('/' + assignment_id)
 
     @route('/createAssignment')
@@ -82,17 +85,21 @@ class View(FlaskView):
 
         signatures = database.lookup_matching_signatures(submission_id)
         groups = Grouper().group(signatures, submission.program_source)
-        print '\n'.join(str(x) for x in groups[2])
+
         # get the submission_id of the group with the most number of matches
         other_submission_id = max(groups.iteritems(), key=lambda x: len(x[1]))[0]
         other_submission = database.fetch_a_submission(assignment_num, other_submission_id)
+
+        inverted_signatures = map(lambda x: x.reverse(), signatures)
+        inverted_groups = Grouper().group(inverted_signatures, other_submission.program_source)
+        print inverted_groups[int(submission_id)]
 
         submission_match_string = ','.join(
                 '%d-%d'%(m.start_line_mine, m.start_line_mine+m.match_length)
                     for m in groups[other_submission_id])
         other_submission_match_string = ','.join(
                 '%d-%d'%(m.start_line_mine, m.start_line_mine+m.match_length)
-                    for m in groups[other_submission_id])
+                    for m in inverted_groups[int(submission_id)])
 
         return render_template('diff.html',
                 submission=submission,
@@ -100,6 +107,36 @@ class View(FlaskView):
                 other_submission=other_submission,
                 other_submission_match_string=other_submission_match_string,
                 assignment_num=assignment_num)
+
+    @route('/test/<int:assignment_num>/<submission_id>')
+    def test_diff(self, assignment_num, submission_id):
+        database = DatabaseManager()
+        submission = database.fetch_a_submission(assignment_num, submission_id)
+
+        signatures = database.lookup_matching_signatures(submission_id)
+
+        # first group by document
+        from collections import defaultdict
+        group_by_document = defaultdict(list)
+        for signature in signatures:
+            group_by_document[signature.submission_id_theirs].append(signature)
+
+        document_matches = defaultdict(list)
+
+        result = ''
+
+        # find consecutive matches
+        for submission_id, document_signatures in group_by_document.iteritems():
+            # sort by line number
+            document_signatures.sort(key=lambda x: x.line_number_mine)
+            result += '<h1>%s</h1><pre>' % str(submission_id)
+            for s in document_signatures:
+                result += '%s %s %s\n' % (s.ngram_hash.ljust(10), str(s.line_number_mine).ljust(10), str(s.line_number_theirs))
+            result += '</pre>'
+
+
+        return result
+
 
 if __name__ == '__main__':
     app = Flask(__name__)
