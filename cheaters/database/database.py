@@ -42,11 +42,11 @@ class DatabaseManager:
         c.close()
         self.conn.commit()
     '''store_submissions stores the submissions sent to the program which is used to be checked against other submissions. '''
-    def store_submission(self,concatenated_file, assignment_number, student_number):
+    def store_submission(self,concatenated_file, assignment_number, student_number, langauge):
         c = self.conn.cursor()
-        submission_value = (student_number, assignment_number, concatenated_file)
+        submission_value = (student_number, assignment_number, concatenated_file, language)
 
-        c.execute("INSERT INTO Submissions (StudentId,AssignmentNumber, ProgramSource) VALUES (?,?,?)",submission_value)
+        c.execute("INSERT INTO Submissions (StudentId,AssignmentNumber, ProgramSource, ProgrammingLanguage) VALUES (?,?,?,?)",submission_value)
         submission_id = c.lastrowid
         c.close()
         self.conn.commit()

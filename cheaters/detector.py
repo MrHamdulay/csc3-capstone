@@ -28,7 +28,7 @@ class Detector:
         @param assignment_number, Number of assignment
         '''
         zip_file = zipfile.ZipFile(submission)
-        self.set_language_handler(zip_file)
+        language = self.set_language_handler(zip_file)
         concatenated_file = self.concatenate_files(zip_file)
 
         self.language_handler.parse_file(concatenated_file)
@@ -36,7 +36,7 @@ class Detector:
         database = DatabaseManager()
         cheating_algorithm = WinnowerAlgorithm(self.language_handler)
         signatures = cheating_algorithm.generate_signatures()
-        submission_id = database.store_submission(concatenated_file, assignment_number, student_number)
+        submission_id = database.store_submission(concatenated_file, assignment_number, student_number, language)
         database.store_signatures(signatures, submission_id)
 
 
@@ -47,9 +47,8 @@ class Detector:
             extension = filename.split('.')[-1]
             if extension in Detector.LANGUAGES:
                 self.language_handler = Detector.LANGUAGES[extension]()
-                break
-        else:
-            raise UnknownLanguageException()
+                return extension
+        raise UnknownLanguageException()
 
     def concatenate_files(self, zip_file):
         concatenated_file = ''

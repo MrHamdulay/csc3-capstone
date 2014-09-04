@@ -84,15 +84,30 @@ class View(FlaskView):
         submission = database.fetch_a_submission(assignment_num, submission_id)
 
         signatures = database.lookup_matching_signatures(submission_id)
-        groups = Grouper().group(signatures, submission.program_source)
+        groups, left_group = Grouper().group(signatures, submission.program_source)
 
         # get the submission_id of the group with the most number of matches
         other_submission_id = max(groups.iteritems(), key=lambda x: len(x[1]))[0]
         other_submission = database.fetch_a_submission(assignment_num, other_submission_id)
 
         inverted_signatures = map(lambda x: x.reverse(), signatures)
-        inverted_groups = Grouper().group(inverted_signatures, other_submission.program_source)
+        inverted_groups, right_group = Grouper().group(inverted_signatures, other_submission.program_source)
         print inverted_groups[int(submission_id)]
+
+        # print signature densities
+        left_group = left_group[other_submission_id]
+        left_group_counts = [0]*len(submission.program_source)
+        right_group = right_group[int(submission_id)]
+        right_group_counts = [0]*len(other_submission.program_source)
+        for s in left_group:
+            left_group_counts[s.line_number_mine] += 1
+        for s in right_group:
+            right_group_counts[s.line_number_mine] += 1
+        # add signature densities to program source
+        submission.program_source = '\n'.join('%.2d: %s' % (left_group_counts[i], line) for i, line in enumerate(submission.program_source.split('\n')))
+        other_submission.program_source = '\n'.join('%.2d: %s' % (right_group_counts[i], line) for i, line in enumerate(other_submission.program_source.split('\n')))
+
+
 
         submission_match_string = ','.join(
                 '%d-%d'%(m.start_line_mine, m.start_line_mine+m.match_length)

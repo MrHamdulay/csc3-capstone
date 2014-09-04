@@ -7,6 +7,7 @@ class Grouper:
         ''' given a list of signatures group and return a list of matches '''
         program_source = program_source.split('\n')
 
+
         # first group by document
         group_by_document = defaultdict(list)
         for signature in signatures:
@@ -26,11 +27,22 @@ class Grouper:
                 # if we no longer matching consecutive signatures
                 if signature.line_number_mine - last_line > 1 :
                     start_signature = document_signatures[run_start]
+                    number_of_signatures = i - run_start
+                    number_of_expected_lines = signature.line_number_mine - start_signature.line_number_mine
+                    # don't count blank lines
+                    number_of_lines = 0
+                    for line_number in xrange(start_signature.line_number_mine, signature.line_number_mine):
+                        if program_source[line_number].strip() != '':
+                            number_of_lines += 1
+
+                    density = 0 if number_of_lines == 0 else float(number_of_signatures) / number_of_lines
+                    print 'density', density
                     match = Match(submission_id,
                                   start_signature.line_number_mine,
                                   signature.line_number_mine - start_signature.line_number_mine,
                                   i - run_start)
-                    if i - run_start > 3:
+                    # if more than a few matches
+                    if density > 3 and number_of_lines > 3:
                         document_matches[submission_id].append(match)
                     run_start = i
 
@@ -39,4 +51,4 @@ class Grouper:
                 while last_line < len(program_source)-1 and program_source[last_line].strip() == '':
                     last_line += 1
 
-        return document_matches
+        return document_matches, group_by_document

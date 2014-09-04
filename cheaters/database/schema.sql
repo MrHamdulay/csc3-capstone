@@ -21,6 +21,7 @@ CREATE TABLE if not exists Submissions(
   AssignmentNumber INT,
   ProgramSource TEXT,
   SubmissionDate DATE DEFAULT CURRENT_DATE,
+  ProgrammingLanguage TEXT,
   FOREIGN KEY (StudentId) REFERENCES Students(StudentNumber),
   FOREIGN KEY (AssignmentNumber) REFERENCES Assignments(Id)
 
