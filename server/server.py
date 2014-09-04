@@ -90,14 +90,13 @@ class View(FlaskView):
         other_submission_id = max(groups.iteritems(), key=lambda x: len(x[1]))[0]
         other_submission = database.fetch_a_submission(assignment_num, other_submission_id)
 
-        inverted_signatures = map(lambda x: x.reverse(), signatures)
-        inverted_groups, right_group = Grouper().group(inverted_signatures, other_submission.program_source)
-        print inverted_groups[int(submission_id)]
+        inverted_signatures = map(lambda x: x.reverse(), left_group[other_submission_id])
+        inverted_groups, right_group_groups = Grouper().group(inverted_signatures, other_submission.program_source)
 
         # print signature densities
         left_group = left_group[other_submission_id]
         left_group_counts = [0]*len(submission.program_source)
-        right_group = right_group[int(submission_id)]
+        right_group = right_group_groups[int(submission_id)]
         right_group_counts = [0]*len(other_submission.program_source)
         for s in left_group:
             left_group_counts[s.line_number_mine] += 1
