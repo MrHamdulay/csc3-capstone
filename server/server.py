@@ -38,13 +38,7 @@ class View(FlaskView):
         '''
         submission = request.files['submission']
         assignment_id = request.form['assignment_id']
-        if request.form['student_number']:
-            student_number = request.form['student_number'].replace('.zip','')
-        else:
-            student_number = submission.filename
-
-        Detector().run(submission, assignment_id, student_number.upper())
-
+        Detector().run(submission, assignment_id)
         return redirect('/' + assignment_id)
 
     @route('/createAssignment')
@@ -78,12 +72,12 @@ class View(FlaskView):
         return render_template('submissions.html',
                 submissions=submissions, assignment_num=assignment_num)
 
-    @route('/<int:assignment_num>/<int:submission_id>')
+    @route('/<int:assignment_num>/<submission_id>')
     def view_diff(self, assignment_num, submission_id):
         ''' View code diffs against the given submission
         @GET /{assignment_num}/{submission_id}
         @render diff.html'''
-        database = DatabaseManager() # TODO: do we want to make the databaseManager a class attribute?
+        database = DatabaseManager()
         submission = database.fetch_a_submission(assignment_num, submission_id)
 
         signatures = database.lookup_matching_signatures(submission_id)
@@ -94,10 +88,10 @@ class View(FlaskView):
         other_submission = database.fetch_a_submission(assignment_num, other_submission_id)
 
         submission_match_string = ','.join(
-                '%d-%d'%(m.start_line_mine+1, m.start_line_mine+m.match_length+1)
+                '%d-%d'%(m.start_line_mine, m.start_line_mine+m.match_length)
                     for m in groups[other_submission_id])
         other_submission_match_string = ','.join(
-                '%d-%d'%(m.start_line_theirs+1, m.start_line_theirs+m.match_length+1)
+                '%d-%d'%(m.start_line_mine, m.start_line_mine+m.match_length)
                     for m in groups[other_submission_id])
 
         return render_template('diff.html',
