@@ -99,7 +99,7 @@ class PythonLanguageHandler(ProgramSubmission):
     buf = StringIO()
     external.unparser.Unparser(self.canonicalised_ast, buf)
     result = buf.getvalue()
-    # shorten python keywords so ngrams aren't affected by keywords like 'print'
+    # shorten python keywords so ngrams aren't affected by keywords like 'print' with 'pri'
     for key in PYTHON_KWLIST:
         result = result.replace(key, key[:3])
     return result

@@ -1,8 +1,6 @@
 from collections import defaultdict
 from model.match import Match
 
-MIN_MATCH_LENGTH = 3
-
 ''' Given a list of signatures find patterns and groups of common code '''
 class Grouper:
     def group(self, signatures, program_source):
@@ -20,9 +18,6 @@ class Grouper:
         for submission_id, document_signatures in group_by_document.iteritems():
             # sort by line number
             document_signatures.sort(key=lambda x: x.line_number_mine)
-            print submission_id, document_signatures
-            print ' '.join(str(s.line_number_mine) for s in document_signatures)
-            print ' '.join(str(s.line_number_theirs) for s in document_signatures)
 
             run_start = 0
             last_line = 0

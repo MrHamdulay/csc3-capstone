@@ -99,7 +99,6 @@ class View(FlaskView):
         other_submission_match_string = ','.join(
                 '%d-%d'%(m.start_line_theirs+1, m.start_line_theirs+m.match_length+1)
                     for m in groups[other_submission_id])
-        print submission_match_string, other_submission_match_string
 
         return render_template('diff.html',
                 submission=submission,
