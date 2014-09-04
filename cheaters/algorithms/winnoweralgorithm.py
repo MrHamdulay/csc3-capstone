@@ -1,10 +1,13 @@
+import hashlib
+
 from algorithms.base import BaseAlgorithm, SectionMatch
 from model.signature import Signature
 from collections import deque, defaultdict
 
-WINDOW_LENGTH = 11
-NGRAM_LENGTH = 7
+WINDOW_LENGTH = 13
+NGRAM_LENGTH = 8
 
+hash_function = lambda s: int(hashlib.sha1(s).hexdigest(), 16)
 
 '''
 algorithm that implements the winnower search method described
@@ -61,7 +64,7 @@ class WinnowerAlgorithm(BaseAlgorithm):
   '''
   def ngrams_hashes(self, string, ngram_length):
     for line_number, ngram in self.ngrams(string, ngram_length):
-      yield line_number, hash(ngram)
+      yield line_number, hash_function(ngram)
 
 
   '''

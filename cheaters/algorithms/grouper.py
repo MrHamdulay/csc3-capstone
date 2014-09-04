@@ -24,19 +24,19 @@ class Grouper:
             for i, signature in enumerate(document_signatures):
 
                 # if we no longer matching consecutive signatures
-                if signature.line_number_mine - last_line > 1 and i - run_start > 3:
+                if signature.line_number_mine - last_line > 1 :
                     start_signature = document_signatures[run_start]
                     match = Match(submission_id,
                                   start_signature.line_number_mine,
-                                  start_signature.line_number_theirs,
                                   signature.line_number_mine - start_signature.line_number_mine,
                                   i - run_start)
-                    document_matches[submission_id].append(match)
+                    if i - run_start > 3:
+                        document_matches[submission_id].append(match)
                     run_start = i
 
                 last_line = signature.line_number_mine
                 # we are nice and ignore empty lines for signatures
-                while program_source[last_line].strip() == '':
+                while last_line < len(program_source)-1 and program_source[last_line].strip() == '':
                     last_line += 1
 
         return document_matches

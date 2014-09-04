@@ -38,7 +38,6 @@ class Detector:
         signatures = cheating_algorithm.generate_signatures()
         submission_id = database.store_submission(concatenated_file, assignment_number, student_number)
         database.store_signatures(signatures, submission_id)
-        database.lookup_my_signatures(submission_id)
 
 
     def set_language_handler(self, zip_file):
@@ -55,7 +54,10 @@ class Detector:
     def concatenate_files(self, zip_file):
         concatenated_file = ''
         for filename in zip_file.namelist():
+            if '__MACOSX' in filename:
+                continue
             extension = filename.split('.')[-1]
+            print filename, extension, extension in self.language_handler.file_types
             if extension in self.language_handler.file_types:
                 concatenated_file += zip_file.read(filename)
         return concatenated_file
