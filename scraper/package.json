@@ -1,0 +1,23 @@
+{
+  "name": "scraper",
+  "version": "0.0.0",
+  "description": "Tool to scrape JMOSS results and generate json file",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jarred de Beer",
+  "license": "ISC",
+  "dependencies": {
+    "cheerio": "^0.17.0",
+    "promise": "^5.0.0",
+    "request": "^2.40.0"
+  },
+  "devDependencies": {
+    "connect": "^3.1.1",
+    "gulp": "^3.8.7",
+    "gulp-livereload": "^2.1.1",
+    "gulp-watch": "^1.0.0",
+    "serve-static": "^1.5.4"
+  }
+}
