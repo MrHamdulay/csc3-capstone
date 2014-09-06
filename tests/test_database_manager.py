@@ -81,7 +81,7 @@ class DatabaseManagerTests(unittest.TestCase):
     def test_submission_table(self):
         # db.store_submission
         # db.fetch_a_submission
-        # db.fetch_submissions
+        # db.fetch_a_submissions
 
     def test_signatures_table:
         # db.store_signatures method

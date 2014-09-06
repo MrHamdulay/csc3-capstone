@@ -68,7 +68,7 @@ class View(FlaskView):
         @GET /{assignment_num}'
         @render submissions.html'''
         database = DatabaseManager()
-        submissions = database.fetch_submissions(assignment_num)
+        submissions = database.fetch_a_submissions(assignment_num)
         return render_template('submissions.html',
                 submissions=submissions, assignment_num=assignment_num)
 
