@@ -57,7 +57,7 @@ class DatabaseManager:
         for document_submission_id, document_matches in grouped_matches.iteritems():
             for match in document_matches:
                 c.execute('INSERT INTO Matches (SubmissionIdMine, SubmissionIdTheirs, StartLineMine,'
-                    ', StartLineTheirs, LengthOfMatch) VALUES (?, ?, ?, ?)',
+                    ' StartLineTheirs, LengthOfMatch) VALUES (?, ?, ?, ?)',
                     (submission_id, match.submission_id, match.start_line_mine, match.start_line_theirs,
                      match.match_length))
 
@@ -83,6 +83,20 @@ class DatabaseManager:
         c.close()
         self.conn.commit()
 
+    def fetch_an_assignment(self,assignmentNumber):
+        c = self.conn.cursor()
+        c.execute('SELECT Id, CourseCode, AssignmentDescription FROM Assignments WHERE Id = ?' ,(assignmentNumber, ))
+        assignment = None
+        for x in c:
+            assignment = Assignment(
+                id = x[0],
+                course_code = x[1],
+                description = x[2]
+            )
+        c.close()
+        return assignment
+
+
     def fetch_current_assignments(self):
         c = self.conn.cursor()
         c.execute('SELECT Id, CourseCode, AssignmentDescription FROM Assignments')# WHERE DueDate >= CURRENT_DATE')
@@ -107,7 +121,7 @@ class DatabaseManager:
         return submission
 
 
-    def fetch_submissions(self, assignment_id):
+    def fetch_a_submissions(self, assignment_id):
         c = self.conn.cursor()
         submissions = []
         c.execute('SELECT Id, StudentId, AssignmentNumber, ProgramSource, SubmissionDate FROM Submissions WHERE AssignmentNumber = ?' ,(assignment_id, ))
@@ -138,3 +152,33 @@ class DatabaseManager:
         c.close()
         self.conn.commit()
 
+    def delete_student(self,studentId):
+        c = self.conn.cursor()
+        c.execute('DELETE FROM Students where StudentNumber = ?' ,(studentId, ))
+        c.close()
+        self.conn.commit()
+
+    def delete_assignment(self, assignmentNumber):
+        c = self.conn.cursor()
+        c.execute('DELETE FROM Assignments where Id =?' ,(assignmentNumber, ))
+        c.close()
+
+        self.conn.commit()
+
+    def delete_submissions(self,submissionId):
+        c = self.conn.cursor()
+        c.execute('DELETE FROM Submissions where Id = ?' ,(submissionId, ))
+        c.close()
+        self.conn.commit()
+
+    def delete_matches(self,matchId):
+        c = self.conn.cursor()
+        c.execute('DELETE FROM Matches where Id = ?' ,(matchId, ))
+        c.close()
+        self.conn.commit()
+
+    def delete_signatures(self,signatureId):
+        c = self.conn.cursor()
+        c.execute('DELETE FROM Signatures where Id = ?' ,(signatureId, ))
+        c.close()
+        self.conn.commit()

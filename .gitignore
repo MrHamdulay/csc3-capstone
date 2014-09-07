@@ -9,4 +9,6 @@ report.pdf
 titlesec.pdf
 fancyhdr.pdf
 *.zip
+node_modules
+public/data/*.js
 

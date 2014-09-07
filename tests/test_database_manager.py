@@ -74,14 +74,14 @@ class DatabaseManagerTests(unittest.TestCase):
         student = self.db.fetch_student(student_number, course_code)
         self.failUnless(student == None)
 
-    def test_assignment_table:
+    def test_assignment_table(self):
         # db.store_assignment
         # db.fetch_current_assignments
 
-    def test_submission_table:
+    def test_submission_table(self):
         # db.store_submission
         # db.fetch_a_submission
-        # db.fetch_submissions
+        # db.fetch_a_submissions
 
     def test_signatures_table:
         # db.store_signatures method
