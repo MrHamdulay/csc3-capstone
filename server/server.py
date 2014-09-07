@@ -52,6 +52,17 @@ class View(FlaskView):
         '''
         return render_template('createAssignment.html')
 
+    @route('/deleteAssignment')
+    def view_deleteAssignment(self):
+        return render_template('deleteAssignment.html')
+
+    @route('/deleteAssignment', methods = ['POST'])
+    def delete_assignment(self):
+        detector = Detector()
+        assignment_number = request.form['assignmentNumber']
+        detector.delete_assignment(assignment_number)
+        return redirect('/')
+
     @route('/createAssignment', methods=['POST'])
     def post_create_assignment(self):
         ''' Create an assignment and persist it to the database

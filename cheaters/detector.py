@@ -50,6 +50,11 @@ class Detector:
                 return extension
         raise UnknownLanguageException()
 
+    def delete_assignment(self,assignmentNumber):
+        db = DatabaseManager()
+        db.delete_assignment(assignmentNumber)
+        print('Assignment deleted')
+
     def concatenate_files(self, zip_file):
         concatenated_file = ''
         for filename in zip_file.namelist():
