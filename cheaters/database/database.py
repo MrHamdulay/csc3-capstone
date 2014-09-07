@@ -9,9 +9,11 @@ Database used was sqlite3.
 #__author__ = 'Merishka Lalla'
 import os
 import sqlite3
+import time
 from model.signature import Signature
 from model.assignment import Assignment
 from model.submissions import Submission
+from model.match import Match
 
 class DatabaseManager:
     conn = None
@@ -44,7 +46,7 @@ class DatabaseManager:
     '''store_submissions stores the submissions sent to the program which is used to be checked against other submissions. '''
     def store_submission(self,concatenated_file, assignment_number, student_number, langauge):
         c = self.conn.cursor()
-        submission_value = (student_number, assignment_number, concatenated_file, language)
+        submission_value = (student_number, assignment_number, concatenated_file, langauge)
 
         c.execute("INSERT INTO Submissions (StudentId,AssignmentNumber, ProgramSource, ProgrammingLanguage) VALUES (?,?,?,?)",submission_value)
         submission_id = c.lastrowid
@@ -99,7 +101,8 @@ class DatabaseManager:
 
     def fetch_current_assignments(self):
         c = self.conn.cursor()
-        c.execute('SELECT Id, CourseCode, AssignmentDescription FROM Assignments')# WHERE DueDate >= CURRENT_DATE')
+        date = time.strftime('%x')
+        c.execute('SELECT Id, CourseCode, AssignmentDescription FROM Assignments WHERE DueDate >= ?',(date,))
         assignments = []
         for row in c:
             assignments.append(Assignment(*row))
@@ -136,15 +139,19 @@ class DatabaseManager:
         c.close()
         return submissions
 
-    def fetch_matches(self, submission_id):
+    def fetch_matches(self,submissionId):
         c = self.conn.cursor()
-        c.execute('SELECT MatchSubmissionId, LinesMatched, LengthOfMatch')
-    #I've taken out student_number as a variable passed to the method as the lecturer will specify courseCode. It's only
-    #when students submit an assignment then student_number will be necessary.
-    def store_assignment(self, assignment_description,due_date,courseCode):
-        c = self.conn.cursor()
+        c.execute('SELECT MatchSubmissionId, LinesMatched, LengthOfMatch from  Matches Where SubmissionIdMine = ? AND '
+                  'StartLineMine == StartLineTheirs', (submissionId))
+        matches = []
+        for x in c:
+            matches.append(Match(*x))
+        c.close()
+        return matches
 
-       # courseCode = c.execute('SELECT CourseCode FROM Students where StudentNumber = ?', (student_number, ))
+
+    def store_assignment(self,courseCode, assignment_description,due_date):
+        c = self.conn.cursor()
 
         assignmentValues = (assignment_description,due_date,courseCode)
 
@@ -182,3 +189,12 @@ class DatabaseManager:
         c.execute('DELETE FROM Signatures where Id = ?' ,(signatureId, ))
         c.close()
         self.conn.commit()
+
+    def update_assignment(self,id, courseCode, description, dueDate):
+        self.conn.execute('UPDATE Assignments SET CourseCode = ?, AssignmentDescription = ?, DueDate = ? Where Id = ?',
+                          (courseCode,description,dueDate,id))
+        self.conn.commit()
+        self.conn.close()
+
+
+

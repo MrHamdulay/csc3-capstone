@@ -4,6 +4,7 @@ import unittest
 sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../cheaters')
 from database import DatabaseManager
 
+
 ''' Extend DatabaseManager with functionality to empty the tables
 so we can test on an empty database'''
 class DatabaseManager(DatabaseManager):
@@ -24,41 +25,12 @@ class DatabaseManagerTests(unittest.TestCase):
     db_file = os.getcwd() + '/test.db'
     db = DatabaseManager(db_file)
 
+
+
     def empty_tables(self):
         '''Start with an empty database'''
         self.db.empty_tables()
 
-# Hey Merishka =)
-
-# The stuff for testing the database manager is below,
-# the thing above is just to override it so that we have
-# a method to empty the test database, which would be dangerous
-# to have in the real manager.
-
-# Small note on method names for the database manager:
-#     It would be easier standardising the database methods
-#     to CRUD related method names. So for example:
-#        db.store_student vs db.data_populate
-#        db.fetch_signatures vs db.lookup_my_signatures
-#        db.fetch_assignments vs db.fetch_current_assignments
-#        db.fetch_assignment (singular form of the above)
-#        db.fetch_submission vs db.fetch_a_submission
-
-# We also need delete methods for the tables,
-# As these will be needed for cleaning up, and administration, so:
-#       db.delete_student
-#       db.delete_assignment
-#       db.delete_submission
-#       db.delete_matches
-#       db.delete_signatures
-
-# So we'll need those added in please.
-# There's a test case for the student table below, as an example.
-# It inserts something, finds it, deletes it, then tries to find it again.
-# If it stumbles on any of the steps then it should fail. i.e. if it finds it
-# after having deleted it.
-
-# Thanks
 
     def test_student_table(self):
         course_code = 'CRS1000F'
@@ -75,23 +47,37 @@ class DatabaseManagerTests(unittest.TestCase):
         self.failUnless(student == None)
 
     def test_assignment_table(self):
-        # db.store_assignment
-        # db.fetch_current_assignments
+        course_code = 'CRS1000F'
+        description = 'assignment 1 for the course'
+        due = '9/2/2014'
+        self.db.store_assignment(course_code,description,due)
+        assignment = self.db.fetch_current.assignments()
+        self.failUnless(assignment == None)
+
 
     def test_submission_table(self):
-        # db.store_submission
-        # db.fetch_a_submission
-        # db.fetch_a_submissions
+        # self.db.store_submission()
+        subId = 1
+        assignmentId = 1
+        submission = self.db.fetch_a_submission(subId, assignmentId)
+        self.failUnless(submission == None)
+        submissions = self.db.fetch_a_submissions(assignmentId)
+        self.failUnless(submissions == None)
 
-    def test_signatures_table:
-        # db.store_signatures method
-        # db.lookup_my_signatures
-        # db.lookup_matching_signatures (may be a little bit more complicated)
+    def test_signatures_table(self):
+        # db.store_signatures()
+        submissionId = 1
+        signatures = self.db.lookup_my_signatures(submissionId)
+        self.failUnless(signatures== None)
 
-    def test_match_table:
-        # db.store_matches
-        # db.fetch_matches
+        signatureList = self.db.lookup_matching_signatures (submissionId)
+        self.failUnless(signatureList == None)
 
+    def test_match_table(self):
+        #db.store_matches
+
+        matches =self.db.fetch_matches()
+        self.failUnless(matches == None)
 
 
 
