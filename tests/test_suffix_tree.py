@@ -43,6 +43,11 @@ class SuffixTreeTest(unittest.TestCase):
         self.assertEqual(st.find_substring('ukkonen'), 1498)
         self.assertEqual(st.find_substring('Optimal'), 1830)
 
+    def test_lcs(self):
+        st = SuffixTree(['yaseen hamdulay is a something something',
+            'aalia hamdulay likes maths sometimes'])
+        self.assertEqual(st.longest_common_substring(), ' hamdulay ')
+
     def test_repr(self):
         st = SuffixTree("t")
         output = '\tStart \tEnd \tSuf \tFirst \tLast \tString\n\t0 \t1 \t-1 \t0 \t0 \tt\n'

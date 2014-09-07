@@ -4,9 +4,18 @@ class Node(object):
     suffix_node
         the index of a node with a matching suffix, representing a suffix link.
         -1 indicates this node has no suffix link.
+
+    strings_contained
+        bitstring of strings the substring defined by the partial path
+        of this edge is contained within
+
+        e.g. if the path from root - current edge is 'aham'
+        and 'aham' is in string 1 and string 2 the first bit and
+        second bit will be set
     """
     def __init__(self):
         self.suffix_node = -1
+        self.strings_contained = -1
 
     def __repr__(self):
         return "Node(suffix link: %d)"%self.suffix_node
@@ -25,6 +34,7 @@ class Edge(object):
 
     dest_node_index
         index of destination node of edge
+
     """
     def __init__(self, first_char_index, last_char_index, source_node_index, dest_node_index):
         self.first_char_index = first_char_index
@@ -80,7 +90,19 @@ class SuffixTree(object):
         """
         string
             the string for which to construct a suffix tree
+            or a list of strings if this is a generalised
+            suffix tree
         """
+        self.original_strings = [string]
+        if isinstance(string, list):
+            self.original_strings = string
+            self.string_endpoints = []
+            new_string = ''
+            for i, s in enumerate(string):
+                new_string += s+chr(i)
+                self.string_endpoints.append(new_string.find(chr(i)))
+            string = new_string
+
         self.string = string
         self.case_insensitive = case_insensitive
         self.N = len(string) - 1
@@ -91,6 +113,10 @@ class SuffixTree(object):
             self.string = self.string.lower()
         for i in range(len(string)):
             self._add_prefix(i)
+
+        if len(self.original_strings) > 1:
+            # precalculate LCS stuff
+            self._precalculate_common_substrings()
 
     def __repr__(self):
         """
@@ -180,6 +206,25 @@ class SuffixTree(object):
                 suffix.source_node_index = e.dest_node_index
                 self._canonize_suffix(suffix)
 
+    def _precalculate_common_substrings(self, curr_node=0):
+        """ returns bit string of contained strings """
+        if self.nodes[curr_node].strings_contained != -1:
+            return self.nodes[curr_node].strings_contained
+
+        common = 0
+        for edge in self.edges[curr_node].itervalues():
+            if not edge:
+                continue
+            common |= self._precalculate_common_substrings(edge.dest_node_index)
+            for i, point in enumerate(self.string_endpoints):
+                if edge.first_char_index <= point <= edge.last_char_index:
+                    common |= 1 << i
+
+
+        self.nodes[curr_node].strings_contained = common
+        return common
+
+
 
     # Public methods
     def find_substring(self, substring):
@@ -205,6 +250,24 @@ class SuffixTree(object):
 
     def has_substring(self, substring):
         return self.find_substring(substring) != -1
+
+    def longest_common_substring(self, current_node=0):
+        strings_contained = 0
+        for i in xrange(len(self.original_strings)):
+            strings_contained |= 1<<i
+
+        longest = ''
+        for edge in self.edges[current_node].itervalues():
+            if not edge:
+                continue
+            if self.nodes[edge.dest_node_index].strings_contained == strings_contained:
+                edge_string = self.longest_common_substring(edge.dest_node_index)
+                if len(edge_string) + edge.length + 1 > len(longest):
+                    longest = self.string[edge.first_char_index:edge.last_char_index]+edge_string
+
+        return longest
+
+
 
 if __name__ == '__main__':
     # around ~3.4s initially
