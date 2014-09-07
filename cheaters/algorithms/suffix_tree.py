@@ -36,19 +36,22 @@ class Edge(object):
         index of destination node of edge
 
     """
-    def __init__(self, first_char_index, last_char_index, source_node_index, dest_node_index):
+    def __init__(self, string, first_char_index, last_char_index, source_node_index, dest_node_index):
+        self.string = string
         self.first_char_index = first_char_index
         self.last_char_index = last_char_index
         self.source_node_index = source_node_index
         self.dest_node_index = dest_node_index
+        self.strings_contained = -1
 
     @property
     def length(self):
         return self.last_char_index - self.first_char_index
 
     def __repr__(self):
-        return 'Edge(%d, %d, %d, %d)'% (self.source_node_index, self.dest_node_index
-                                        ,self.first_char_index, self.last_char_index )
+        return 'Edge(%d, %d, %d, %d, "%s")'% (self.source_node_index, self.dest_node_index
+                                        ,self.first_char_index, self.last_char_index,
+                                        self.string[self.first_char_index:min(self.last_char_index+1, 10)])
 
 
 class Suffix(object):
@@ -94,13 +97,14 @@ class SuffixTree(object):
             suffix tree
         """
         self.original_strings = [string]
+        special = '$#'
         if isinstance(string, list):
             self.original_strings = string
             self.string_endpoints = []
             new_string = ''
             for i, s in enumerate(string):
-                new_string += s+chr(i)
-                self.string_endpoints.append(new_string.find(chr(i)))
+                new_string += s+special[i]
+                self.string_endpoints.append(new_string.find(special[i]))
             string = new_string
 
         self.string = string
@@ -160,7 +164,7 @@ class SuffixTree(object):
 
             self.nodes.append(Node())
             self.edges.append({})
-            e = Edge(last_char_index, self.N, parent_node, len(self.nodes) - 1)
+            e = Edge(self.string, last_char_index, self.N, parent_node, len(self.nodes) - 1)
             self._insert_edge(e)
 
             if last_parent_node > 0:
@@ -186,7 +190,7 @@ class SuffixTree(object):
     def _split_edge(self, edge, suffix):
         self.nodes.append(Node())
         self.edges.append({})
-        e = Edge(edge.first_char_index, edge.first_char_index + suffix.length, suffix.source_node_index, len(self.nodes) - 1)
+        e = Edge(self.string, edge.first_char_index, edge.first_char_index + suffix.length, suffix.source_node_index, len(self.nodes) - 1)
         self._remove_edge(edge)
         self._insert_edge(e)
         self.nodes[e.dest_node_index].suffix_node = suffix.source_node_index  ### need to add node for each edge
@@ -215,11 +219,15 @@ class SuffixTree(object):
         for edge in self.edges[curr_node].itervalues():
             if not edge:
                 continue
-            common |= self._precalculate_common_substrings(edge.dest_node_index)
+            new_common = 0
+            new_common |= self._precalculate_common_substrings(edge.dest_node_index)
+            edge.strings_contained = new_common
+            # only choose the lowest i
             for i, point in enumerate(self.string_endpoints):
                 if edge.first_char_index <= point <= edge.last_char_index:
-                    common |= 1 << i
-
+                    new_common |= 1 << i
+                    break
+            common |= new_common
 
         self.nodes[curr_node].strings_contained = common
         return common
@@ -227,6 +235,9 @@ class SuffixTree(object):
 
 
     # Public methods
+    def edge_string(self, edge):
+        return self.string[edge.first_char_index:edge.last_char_index+1]
+
     def find_substring(self, substring):
         """Returns the index of substring in string or -1 if it
         is not found.
@@ -260,19 +271,22 @@ class SuffixTree(object):
         for edge in self.edges[current_node].itervalues():
             if not edge:
                 continue
-            if self.nodes[edge.dest_node_index].strings_contained == strings_contained:
+            if edge.strings_contained == strings_contained:
+                potential_longest = self.string[edge.first_char_index:edge.last_char_index+1]
                 edge_string = self.longest_common_substring(edge.dest_node_index)
-                if len(edge_string) + edge.length + 1 > len(longest):
-                    longest = self.string[edge.first_char_index:edge.last_char_index]+edge_string
+                if len(potential_longest) + len(edge_string) > len(longest):
+                    longest = potential_longest+edge_string
+
 
         return longest
 
+    def substrings_longer_than(self, min_length, current_node=0):
 
+        for edge in self.edges[current_node].itervalues():
+            if not edge or edge.strings_contained != strings_contained:
+                continue
+            edge_begin = self.string[edge.first_char_index:edge.last_char_index+1]
 
-if __name__ == '__main__':
-    # around ~3.4s initially
-    alphabet = 'abcdefghijklmnoprqstuvwxyz'
-    string = (alphabet+alphabet[::-1])*20000
-
-    su=SuffixTree(string)
-    print len(string)
+            for edge_potential in self.substrings_longer_than(min_length - edge.length-1, edge.dest_node_index):
+                if len(edge_potential) + edge.length+1 >= min_length:
+                    yield end_begin + edge_potential
