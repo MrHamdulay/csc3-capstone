@@ -48,6 +48,12 @@ class SuffixTreeTest(unittest.TestCase):
             'aalia hamdulay likes maths sometimes'])
         self.assertEqual(st.longest_common_substring(), ' hamdulay ')
 
+    def test_long_strings(self):
+        st = SuffixTree(['abcdefghijkl', 'z;kdiowghijklabc12'])
+        self.assertEqual(list(st.common_substrings_longer_than(3)), ['abc', 'ghijkl', 'ijkl', 'hijkl', 'jkl'])
+        st = SuffixTree(['aaaaaaaa', 'aaa'])
+        self.assertEqual(list(st.common_substrings_longer_than(2)), ['aaa'])
+
     def test_repr(self):
         st = SuffixTree("t")
         output = '\tStart \tEnd \tSuf \tFirst \tLast \tString\n\t0 \t1 \t-1 \t0 \t0 \tt\n'

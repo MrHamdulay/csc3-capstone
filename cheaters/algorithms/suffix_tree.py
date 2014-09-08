@@ -280,13 +280,21 @@ class SuffixTree(object):
 
         return longest
 
-    def substrings_longer_than(self, min_length, current_node=0):
+    def common_substrings_longer_than(self, min_length, current_node=0):
+        strings_contained = 0
+        for i in xrange(len(self.original_strings)):
+            strings_contained |= 1<<i
 
         for edge in self.edges[current_node].itervalues():
             if not edge or edge.strings_contained != strings_contained:
                 continue
             edge_begin = self.string[edge.first_char_index:edge.last_char_index+1]
 
-            for edge_potential in self.substrings_longer_than(min_length - edge.length-1, edge.dest_node_index):
+            found = 0
+            for edge_potential in self.common_substrings_longer_than(min_length - edge.length-1, edge.dest_node_index):
                 if len(edge_potential) + edge.length+1 >= min_length:
-                    yield end_begin + edge_potential
+                    yield edge_begin + edge_potential
+                    found += 1
+
+            if found == 0 and len(edge_begin) >= min_length:
+                yield edge_begin
