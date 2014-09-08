@@ -66,10 +66,7 @@ class Detector:
                 concatenated_file += zip_file.read(filename)
         return concatenated_file
 
-    def super_amazing_feature(self):
-        pass
-
     def runAssignment(self,description, dueDate,courseCode):
         database = DatabaseManager()
-        database.store_assignment(description,dueDate,courseCode)
+        database.store_assignment(courseCode, description,dueDate)
         print('stored')

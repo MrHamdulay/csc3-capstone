@@ -12,8 +12,8 @@ INSERT OR REPLACE INTO Students VALUES (1, 'hmdyas001', 'mam3000w');
   DueDate DATE
  );
 
-INSERT OR REPLACE INTO Assignments VALUES (1, 'CSC3002W', 'Capstone Project', date(2015, 1, 1));
-INSERT OR REPLACE INTO Assignments VALUES (2, 'MAM3000W', 'Final math project', date(2016, 1, 1));
+INSERT OR REPLACE INTO Assignments VALUES (1, 'CSC3002W', 'Capstone Project', '2015-01-01');
+INSERT OR REPLACE INTO Assignments VALUES (2, 'MAM3000W', 'Final math project', '2015-01-01');
 
 CREATE TABLE if not exists Submissions(
   Id INTEGER PRIMARY KEY AUTOINCREMENT,

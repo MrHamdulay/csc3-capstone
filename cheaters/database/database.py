@@ -101,11 +101,11 @@ class DatabaseManager:
 
     def fetch_current_assignments(self):
         c = self.conn.cursor()
-        date = time.strftime('%x')
-        c.execute('SELECT Id, CourseCode, AssignmentDescription FROM Assignments WHERE DueDate >= ?',(date,))
+        date = time.strftime('%Y-%m-%d')
+        c.execute('SELECT Id, CourseCode, AssignmentDescription, DueDate FROM Assignments WHERE DueDate >= ?',(date,))
         assignments = []
         for row in c:
-            assignments.append(Assignment(*row))
+            assignments.append(Assignment(row[0], row[1], row[2], row[3]))
         c.close()
         return assignments
 
