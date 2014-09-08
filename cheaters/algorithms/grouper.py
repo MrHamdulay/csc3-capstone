@@ -13,7 +13,7 @@ class Grouper:
             group_by_document[key].sort(key=lambda x: x.line_number_mine)
         return group_by_document
 
-    def find_document_matches(self, document_signatures, program_source):
+    def find_document_matches(self, submission_id, document_signatures, program_source):
         # precondition: all signatures need to come from the same document
 
         document_matches = []
@@ -40,7 +40,7 @@ class Grouper:
                               i - run_start)
                 # if more than a few matches
                 if density > 3 and number_of_lines > 3:
-                    document_matches[submission_id].append(match)
+                    document_matches.append(match)
                 run_start = i
 
             last_line = signature.line_number_mine
@@ -60,6 +60,6 @@ class Grouper:
 
         # find consecutive matches
         for submission_id, document_signatures in group_by_document.iteritems():
-            document_matches[submission_id] = self.find_document_matches(document_signatures, program_source)
+            document_matches[submission_id] = self.find_document_matches(submission_id, document_signatures, program_source)
 
         return document_matches, group_by_document
