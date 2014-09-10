@@ -37,4 +37,12 @@ CREATE TABLE if not exists Submissions(
 
 CREATE INDEX IF NOT EXISTS signature_submission ON Signatures (SubmissionId);
 
-
+CREATE TABLE IF NOT EXISTS SubmissionMatches(
+  Id INTEGER PRIMARY KEY AUTOINCREMENT,
+  SubmissionId INTEGER UNIQUE NOT NULL,
+  MatchSubmissionId INTEGER,
+  NumberSignaturesMatched INTEGER,
+  Confidence FLOAT NOT NULL,
+  FOREIGN KEY (SubmissionId) REFERENCES Submissions(Id),
+  FOREIGN KEY (MatchSubmissionId) REFERENCES Submissions(Id)
+);
