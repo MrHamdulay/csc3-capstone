@@ -1,17 +1,97 @@
-/* prism overrides */
+.container {
+    margin-top: 20px;
+    width: 98%;
+}
+.container > .row {
+    height: 100%;
+}
+#flow {
+    padding-left: 0;
+}
+#flow tr.selected {
+    background: #d9edf7;
+}
+#code-block {
+    padding: 0;
+}
+#code-block pre {
+    background: #fdfdfd;
+    border: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 15px;
+    padding-right: 0;
+    padding-bottom: 0;
+}
+h3.a {
+    padding: 0;
+    float: left;
+    margin: 0 0 15px 25px;
+}
+h3.b {
+    padding: 0;
+    float: right;
+    margin: 0 25px 15px 0;
+}
+.confidence {
+    text-align: center;
+    position: absolute;
+    left: 50%;
+    -webkit-transform: translate3d(-50%, 0, 0);
+    -moz-transform: translate3d(-50%, 0, 0);
+    -ms-transform: translate3d(-50%, 0, 0);
+    -o-transform: translate3d(-50%, 0, 0);
+    transform: translate3d(-50%, 0, 0);
+}
+.confidence h3 {
+    padding: 0;
+    margin: 0;
+}
+
+#graph {
+    width: 100%;
+    height: 250px;
+    background: url('/img/placeholder_graph.jpg') 0 0 no-repeat;
+}
+
+#diff {
+    width: 100%;
+    overflow: auto;
+}
 
 pre {
     float: left;
-    width: 47%;
+    width: 48%;
+    padding-top: 20px;
+}
+
+pre code {
+    word-wrap: normal;
+}
+
+pre h3 {
+    position: absolute;
+    top: 6px;
+    left: 15px;
+    margin: 0;
+    padding: 0;
 }
 
 .gap {
     float: left;
-    width: 6%;
+    width: 4%;
     height: 100%;
 
-    margin: 0.5em 0;
+    margin: 0;
     padding: 1em 0 1em;
+}
+.gap svg {
+    background: none;
+}
+
+svg {
+    background: #fdfdfd;
 }
 
 path {
@@ -20,6 +100,114 @@ path {
     stroke-width: 1px;
 }
 
+path.link.strong {
+    stroke: #C52B2B;
+}
+path.link.medium {
+    stroke: #2B4AC5;
+}
+path.link.weak {
+    stroke: #3DC52B;
+}
+path.link.strong:hover {
+    stroke: #F5A2A2;
+}
+path.link.medium:hover {
+    stroke: #A8B6EE;
+}
+path.link.weak:hover {
+    stroke: #BCF5B5;
+}
+
 .line-highlight {
     background: hsla(250, 95%, 72%, 0.31);
+}
+
+
+/* D3 Styles */
+
+.link {
+  fill: none;
+  stroke: #666;
+  stroke-width: 8px;
+}
+
+#licensing {
+  fill: green;
+}
+
+.link.licensing {
+  stroke: green;
+}
+
+.link.resolved {
+  stroke-dasharray: 0,2 1;
+}
+
+circle {
+  fill: #ccc;
+  stroke: #333;
+  stroke-width: 1.5px;
+}
+circle:hover {
+    fill: lightsteelblue;
+}
+
+text {
+  font: 10px sans-serif;
+  pointer-events: none;
+  text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+}
+
+.line-numbers .line-numbers-rows {
+    left: -210px;
+}
+
+/* Bootstrap overrides */
+
+.header-fixed {
+    margin-bottom: 0;
+}
+.header-fixed > thead,
+.header-fixed > tbody,
+.header-fixed > thead > tr,
+.header-fixed > tbody > tr,
+.header-fixed > thead > tr > th,
+.header-fixed > tbody > tr > td {
+    display: block;
+}
+
+.header-fixed > tbody > tr:after,
+.header-fixed > thead > tr:after {
+    content: ' ';
+    display: block;
+    visibility: hidden;
+    clear: both;
+}
+
+.header-fixed > tbody {
+    overflow-y: auto;
+}
+.header-fixed > tbody > tr > td,
+.header-fixed > thead > tr > th {
+    float: left;
+}
+.header-fixed > tbody > tr > td:nth-child(1),
+.header-fixed > thead > tr > th:nth-child(1) {
+    width: 15%;
+    float: left;
+}
+.header-fixed > tbody > tr > td:nth-child(2),
+.header-fixed > thead > tr > th:nth-child(2) {
+    width: 85%;
+    float: left;
+}
+
+/* prism overrides */
+
+.line-numbers .line-numbers-rows {
+    border-right: 1px solid #eee;
+}
+.line-numbers .line-numbers-rows span:before {
+    color: #ccc;
 }
