@@ -98,6 +98,8 @@ class PythonLanguageHandler(ProgramSubmission):
     buf = StringIO()
     external.unparser.Unparser(self.canonicalised_ast, buf)
     result = buf.getvalue()
+    # remove tab indentation, we don't care about that
+    result = '\n'.join(x.strip() for x in result.split('\n'))
     # shorten python keywords so ngrams aren't affected by keywords like 'print' with 'pri'
     for key in PYTHON_KWLIST:
         result = result.replace(key, key[:3])
