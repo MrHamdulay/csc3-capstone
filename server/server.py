@@ -7,6 +7,7 @@ sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../cheaters')
 from detector import Detector
 from database import DatabaseManager
 from algorithms.grouper import Grouper
+from algorithms.suffixtreealgorithm import SuffixTreeAlgorithm
 
 class View(FlaskView):
 
@@ -92,7 +93,7 @@ class View(FlaskView):
         submission = database.fetch_a_submission(assignment_num, submission_id)
         other_submission = Detector.find_most_similar_submission(submission)
 
-        Detector.calculate_document_similarity(submission, other_submission)
+        SuffixTreeAlgorithm.calculate_document_similarity(submission, other_submission)
 
         return 'workish'
 
