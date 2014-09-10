@@ -13,13 +13,14 @@ import time
 from model.signature import Signature
 from model.assignment import Assignment
 from model.submissions import Submission
+from model.signaturematch import SignatureMatch
 
 class DatabaseManager:
     conn = None
 
     '''A initiator method to allow the database to connect to the class for further database handling.'''
     def __init__(self, database_file='cheaters.db'):
-        self.conn = sqlite3.connect(database_file)
+        self.conn = sqlite3.connect(os.path.dirname(os.path.realpath(__file__))+'/../../'+database_file)
         '''The initialise database method connects a cursor and reads a sql script. The script is read and executed.
         Once executed, tables with relevant columns is created and initiated. There after the cursor is closed and the
         changes are committed.'''
@@ -175,5 +176,43 @@ class DatabaseManager:
         self.conn.commit()
         self.conn.close()
 
+    def fetch_max_submission_id(self):
+        c = self.conn.cursor()
+        c.execute('SELECT MAX(Id) FROM Submissions')
+        max_id = c.fetchone()[0]
+        c.close()
+        return max_id
 
+    def fetch_max_submission_match_id(self):
+        c = self.conn.cursor()
+        c.execute('SELECT MAX(SubmissionId) FROM SubmissionMatches')
+        max_id = c.fetchone()[0]
+        c.close()
+        return max_id
+
+    def fetch_submission_match(self, submission_id):
+        c = self.conn.cursor()
+        c.execute('SELECT Id, SubmissionId, MatchSubmissionId, NumberSignaturesMatched, Confidence '
+                'FROM SubmissionMatches WHERE SubmissionId = ?', (submission_id, ))
+        row = c.fetchone()
+        match = None
+        if row:
+            match = SignatureMatch(*row)
+        c.close()
+
+        return match
+
+    def update_submission_match(self, signature_match, match_submission_id, number_signatures_matched):
+        c = self.conn.cursor()
+        c.execute('UPDATE SubmissionMatches SET MatchSubmissionId = ?, NumberSignaturesMatched = ? WHERE SubmissionId = ?',
+                (match_submission_id, number_signatures_matched, signature_match.submission_id))
+        c.close()
+        self.conn.commit()
+
+    def store_submission_match(self, submission_id, other_submission_id, number_signatures_match):
+        c = self.conn.cursor()
+        c.execute('INSERT INTO SubmissionMatches (SubmissionId, MatchSubmissionId, NumberSignaturesMatched, Confidence) VALUES (?, ?, ?, 0)',
+                (submission_id, other_submission_id, number_signatures_match))
+        c.close()
+        self.conn.commit()
 
