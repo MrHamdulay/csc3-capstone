@@ -13,7 +13,6 @@ import time
 from model.signature import Signature
 from model.assignment import Assignment
 from model.submissions import Submission
-from model.match import Match
 
 class DatabaseManager:
     conn = None
@@ -54,17 +53,6 @@ class DatabaseManager:
         self.conn.commit()
         return submission_id
 
-    def store_matches(self,grouped_matches, submission_id):
-        c = self.conn.cursor()
-        for document_submission_id, document_matches in grouped_matches.iteritems():
-            for match in document_matches:
-                c.execute('INSERT INTO Matches (SubmissionIdMine, SubmissionIdTheirs, StartLineMine,'
-                    ' StartLineTheirs, LengthOfMatch) VALUES (?, ?, ?, ?)',
-                    (submission_id, match.submission_id, match.start_line_mine, match.start_line_theirs,
-                     match.match_length))
-
-        c.close()
-        self.conn.commit()
 
 
     '''Lookup_signatures looks up signatures which will be used to check for potential cheating or copied code. '''
@@ -127,7 +115,7 @@ class DatabaseManager:
         return submission
 
 
-    def fetch_a_submissions(self, assignment_id):
+    def fetch_submissions(self, assignment_id):
         c = self.conn.cursor()
         submissions = []
         c.execute('SELECT Id, StudentId, AssignmentNumber, ProgramSource, SubmissionDate, '
@@ -144,15 +132,6 @@ class DatabaseManager:
         c.close()
         return submissions
 
-    def fetch_matches(self,submissionId):
-        c = self.conn.cursor()
-        c.execute('SELECT MatchSubmissionId, LinesMatched, LengthOfMatch from  Matches Where SubmissionIdMine = ? AND '
-                  'StartLineMine == StartLineTheirs', (submissionId))
-        matches = []
-        for x in c:
-            matches.append(Match(*x))
-        c.close()
-        return matches
 
 
     def store_assignment(self,courseCode, assignment_description,due_date):
@@ -183,11 +162,6 @@ class DatabaseManager:
         c.close()
         self.conn.commit()
 
-    def delete_matches(self,matchId):
-        c = self.conn.cursor()
-        c.execute('DELETE FROM Matches where Id = ?' ,(matchId, ))
-        c.close()
-        self.conn.commit()
 
     def delete_signatures(self,signatureId):
         c = self.conn.cursor()

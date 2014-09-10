@@ -38,13 +38,3 @@ CREATE TABLE if not exists Submissions(
 CREATE INDEX IF NOT EXISTS signature_submission ON Signatures (SubmissionId);
 
 
-CREATE TABLE if not exists Matches(
-  Id INTEGER PRIMARY KEY AUTOINCREMENT,
-  SubmissionIdMine INT,
-  StartLineMine INT,
-  SubmissionIdTheirs INT,
-  StartLineTheirs INT,
-  LengthOfMatch INT,
-  FOREIGN KEY (SubmissionIdMine) REFERENCES Submissions(Id),
-  FOREIGN KEY (SubmissionIdTheirs) REFERENCES Submissions(Id)
-);
