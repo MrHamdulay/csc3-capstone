@@ -52,7 +52,7 @@ h3.b {
 #graph {
     width: 100%;
     height: 250px;
-    background: url('/img/placeholder_graph.jpg') 0 0 no-repeat;
+    background: url('/static/img/placeholder_graph.jpg') 0 0 no-repeat;
 }
 
 #diff {
