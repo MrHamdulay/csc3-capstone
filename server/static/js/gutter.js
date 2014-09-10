@@ -1,11 +1,15 @@
-setTimeout(function() {
+setTimeout(set_gutter, 1);
 
-    var height = $($('pre')[0]).height()
-      , h_left = $('.left .line-highlight')
-      , h_right = $('.right .line-highlight')
+var set_gutter = function() {
+
+    var height = $('.code-left').height()
+      , h_left = $('.code-left .line-highlight')
+      , h_right = $('.code-right .line-highlight')
       , $gap = $('.gap')
       , width = $gap.width()
       , paths = [];
+
+    $gap.empty();
 
     var top_l, top_r, bot_r, bot_l, $el_r, $el_l;
     for (var i = 0; i < h_left.length; i++) {
@@ -27,5 +31,4 @@ setTimeout(function() {
     }
     svg += '</svg>';
     $gap.append(svg);
-
-}, 1);
+}
