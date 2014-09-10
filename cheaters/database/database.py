@@ -111,7 +111,9 @@ class DatabaseManager:
 
     def fetch_a_submission(self, assignment_id, submission_id):
         c = self.conn.cursor()
-        c.execute('SELECT Id, StudentId, AssignmentNumber, ProgramSource, SubmissionDate FROM Submissions WHERE AssignmentNumber = ? AND Id = ?' ,(assignment_id, submission_id))
+        c.execute('SELECT Id, StudentId, AssignmentNumber, ProgramSource, SubmissionDate, '
+                'ProgrammingLangauge FROM Submissions WHERE AssignmentNumber = ? AND Id = ?',
+                (assignment_id, submission_id))
         submission = None
         for x in c:
             submission = Submission(
@@ -119,7 +121,8 @@ class DatabaseManager:
                     student_number=x[1],
                     program_source=x[3],
                     assignment_id=x[2],
-                    submission_date=x[4])
+                    submission_date=x[4],
+                    language=x[5])
         c.close()
         return submission
 
@@ -127,7 +130,8 @@ class DatabaseManager:
     def fetch_a_submissions(self, assignment_id):
         c = self.conn.cursor()
         submissions = []
-        c.execute('SELECT Id, StudentId, AssignmentNumber, ProgramSource, SubmissionDate FROM Submissions WHERE AssignmentNumber = ?' ,(assignment_id, ))
+        c.execute('SELECT Id, StudentId, AssignmentNumber, ProgramSource, SubmissionDate, '
+                'ProgrammingLanguage FROM Submissions WHERE AssignmentNumber = ?' ,(assignment_id, ))
         for x in c:
             submissions.append(
                 Submission(
@@ -135,7 +139,8 @@ class DatabaseManager:
                     student_number=x[1],
                     program_source=x[3],
                     assignment_id=x[2],
-                    submission_date=x[4]))
+                    submission_date=x[4],
+                    language=x[5]))
         c.close()
         return submissions
 

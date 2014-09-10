@@ -5,6 +5,7 @@ from languages.java import JavaLanguageHandler
 from database.database import DatabaseManager
 from algorithms.winnoweralgorithm import WinnowerAlgorithm
 from algorithms.grouper import Grouper
+from algorithms.suffix_tree import SuffixTree
 
 class UnknownLanguageException(Exception):
     pass
@@ -70,3 +71,39 @@ class Detector:
         database = DatabaseManager()
         database.store_assignment(courseCode, description,dueDate)
         print('stored')
+
+    @staticmethod
+    def find_most_similar_submission(submission):
+        database = DatabaseManager()
+        grouper = Grouper()
+
+        # TODO: this can probably be done in one sql query without post processing
+        signatures = database.lookup_matching_signatures(submission.id)
+        grouped_signatures = grouper.group_signatures_by_document(signatures)
+
+        while True:
+            closest_submission_id = max(grouped_signatures.iteritems(), key=lambda x: len(x[1]))[0]
+            other_submission = database.fetch_a_submission(submission.assignment_id,
+                    closest_submission_id)
+            # it only makes sense to compare the same language
+            if other_submission.language != submission.language:
+                del grouped_signatures[closest_submission_id]
+            else:
+                return other_submission
+        return None
+
+    @staticmethod
+    def canonicalise_submission(submission):
+        language_handler = Detector.LANGUAGES[submission.language]()
+        language_handler.parse_file(submission.program_source)
+        return language_handler.strip_unstable_attributes()
+
+
+    @staticmethod
+    def calculate_document_similarity(submission1, submission2):
+        assert submission1.language == submission2.language
+        submission1_canonicalised = Detector.canonicalise_submission(submission1)
+        submission2_canonicalised = Detector.canonicalise_submission(submission2)
+
+        st = SuffixTree([submission1_canonicalised, submission2_canonicalised])
+        common_substrings = st.common_substrings_longer_than(10)

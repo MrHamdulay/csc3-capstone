@@ -86,6 +86,14 @@ class View(FlaskView):
         return render_template('submissions.html',
                 submissions=submissions, assignment_num=assignment_num)
 
+    @route('/<int:assignment_num>/<submission_id>/new')
+    def new_view_diff(self, assignment_num, submission_id):
+        database = DatabaseManager()
+        submission = database.fetch_a_submission(assignment_num, submission_id)
+        other_submission = Detector.find_most_similar_submission(submission)
+
+        Detector.calculate_document_similarity(submission, other_submission)
+
     @route('/<int:assignment_num>/<submission_id>')
     def view_diff(self, assignment_num, submission_id):
         ''' View code diffs against the given submission

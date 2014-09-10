@@ -59,7 +59,6 @@ class RenamerTransform(ast.NodeTransformer):
 
 
 class PythonLanguageHandler(ProgramSubmission):
-  PYTHON3_CONVERSION = 'from __future__ import print_function\n'
   file_types = ['py']
 
   def parse_file(self, program_source, filename=''):
