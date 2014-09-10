@@ -11,7 +11,6 @@ class DatabaseManager(DatabaseManager):
 
     def empty_tables(self):
         c = self.conn.cursor()
-        c.execute('DELETE * FROM Matches')
         c.execute('DELETE * FROM Students')
         c.execute('DELETE * FROM Signatures')
         c.execute('DELETE * FROM Assignments')
@@ -72,14 +71,6 @@ class DatabaseManagerTests(unittest.TestCase):
 
         signatureList = self.db.lookup_matching_signatures (submissionId)
         self.failUnless(signatureList == None)
-
-    def test_match_table(self):
-        #db.store_matches
-
-        matches =self.db.fetch_matches()
-        self.failUnless(matches == None)
-
-
 
 if __name__ == '__main__':
     unittest.main()

@@ -55,7 +55,7 @@ class DataGenerator:
                     print('zipping: ' + file)
                 zip.close()
                 detector = Detector()
-                detector.run(output_file, assignment_number)
+                detector.run(output_file, assignment_number,student_number)
 
 if __name__ == '__main__':
     g = DataGenerator()
