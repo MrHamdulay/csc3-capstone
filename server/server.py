@@ -55,7 +55,9 @@ class View(FlaskView):
 
     @route('/deleteAssignment')
     def view_deleteAssignment(self):
-        return render_template('deleteAssignment.html')
+        database = DatabaseManager()
+        assignments = database.fetch_current_assignments()
+        return render_template('deleteAssignment.html', assignments=assignments)
 
     @route('/deleteAssignment', methods = ['POST'])
     def delete_assignment(self):
