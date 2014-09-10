@@ -1,5 +1,6 @@
 from detector import Detector
 from algorithms.suffix_tree import SuffixTree
+from model.match import Match
 
 class SuffixTreeAlgorithm:
 
@@ -34,11 +35,10 @@ class SuffixTreeAlgorithm:
 
 
     @staticmethod
-    def calculate_document_similarity(submission1, submission2):
-        assert submission1.language == submission2.language
-        canonicalised = [
-                Detector.canonicalise_submission(submission1),
-                Detector.canonicalise_submission(submission2)]
+    def calculate_document_similarity(*submissions):
+        assert len(submissions) == 2
+        assert submissions[0].language == submissions[1].language
+        canonicalised = map(Detector.canonicalise_submission, submissions)
 
         st = SuffixTree(canonicalised)
         common_substrings = list(st.common_substrings_longer_than(20))
@@ -57,6 +57,11 @@ class SuffixTreeAlgorithm:
 
             line_numbers = SuffixTreeAlgorithm.string_indexes_to_line_numbers(canonicalised[i], string_indexes)
 
-            document_matches.append(line_numbers)
+            matches = []
+            for begin, end in line_numbers:
+                matches.append(Match(submissions[i].id, begin, end - begin, 0))
 
-        raise Exception
+
+            document_matches.append(matches)
+
+        return document_matches

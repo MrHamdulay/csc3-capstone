@@ -93,9 +93,21 @@ class View(FlaskView):
         submission = database.fetch_a_submission(assignment_num, submission_id)
         other_submission = Detector.find_most_similar_submission(submission)
 
-        SuffixTreeAlgorithm.calculate_document_similarity(submission, other_submission)
+        submission_matches = SuffixTreeAlgorithm.calculate_document_similarity(submission, other_submission)
 
-        return 'workish'
+        match_strings = []
+        for matches in submission_matches:
+            match_string = ','.join(
+                    '%d-%d'%(m.start_line_mine, m.start_line_mine+m.match_length)
+                        for m in matches)
+            match_strings.append(match_string)
+
+        return render_template('diff.html',
+                submission=submission,
+                submission_match_string=match_strings[0],
+                other_submission=other_submission,
+                other_submission_match_string=match_strings[1],
+                assignment_num=assignment_num)
 
     @route('/<int:assignment_num>/<submission_id>')
     def view_diff(self, assignment_num, submission_id):
