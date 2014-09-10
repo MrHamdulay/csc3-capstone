@@ -112,7 +112,7 @@ class DatabaseManager:
     def fetch_a_submission(self, assignment_id, submission_id):
         c = self.conn.cursor()
         c.execute('SELECT Id, StudentId, AssignmentNumber, ProgramSource, SubmissionDate, '
-                'ProgrammingLangauge FROM Submissions WHERE AssignmentNumber = ? AND Id = ?',
+                'ProgrammingLanguage FROM Submissions WHERE AssignmentNumber = ? AND Id = ?',
                 (assignment_id, submission_id))
         submission = None
         for x in c:

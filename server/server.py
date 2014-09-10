@@ -94,6 +94,8 @@ class View(FlaskView):
 
         Detector.calculate_document_similarity(submission, other_submission)
 
+        return 'workish'
+
     @route('/<int:assignment_num>/<submission_id>')
     def view_diff(self, assignment_num, submission_id):
         ''' View code diffs against the given submission
