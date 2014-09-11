@@ -279,8 +279,9 @@ var set_line_numbers = function(lines) {
 
 }
 
-d3.json('data/2014_1015_assignment_1_code.json', function(error, json) {
+d3.json('/api/' + assignment_number + '/code', function(error, json) {
     code = json;
+    console.log(code);
 });
 
 
