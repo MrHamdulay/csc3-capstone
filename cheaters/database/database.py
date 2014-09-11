@@ -14,6 +14,7 @@ from model.signature import Signature
 from model.assignment import Assignment
 from model.submissions import Submission
 from model.signaturematch import SignatureMatch
+from signaturemanager import SignatureManager
 
 class DatabaseManager:
     conn = None
@@ -26,6 +27,7 @@ class DatabaseManager:
         Once executed, tables with relevant columns is created and initiated. There after the cursor is closed and the
         changes are committed.'''
         self.initialise_database()
+        self.initialise_signature_manager()
 
     def initialise_database(self):
         c = self.conn.cursor()
@@ -33,6 +35,17 @@ class DatabaseManager:
         c.executescript(file.read())
         c.close()
         self.conn.commit()
+
+    def initialise_signature_manager(self):
+        self.signature_manager = SignatureManager()
+        c = self.conn.cursor()
+        c.execute('SELECT NgramHash, SubmissionId, LineNumber FROM Signatures')
+        result = []
+        for row in c:
+            self.signature_manager.store_signature(Signature(*row), row[1])
+        c.close()
+
+
     '''Store_signatures stores the signatures which have been generated. These signatures show the aspects of code which
       are suspected to be copied or cheated. The generated signatures are stored in the database using the insert method.
       Signatures is a list and is stored element by element before cursor is closed.'''
@@ -42,8 +55,10 @@ class DatabaseManager:
         for s in signatures:
             signature_values = (s.line_number_mine,s.ngram_hash, submission_id)
             c.execute("INSERT INTO Signatures(LineNumber,NgramHash,SubmissionId) VALUES(?,?,?)",signature_values)
+            self.signature_manager.store_signature(s, submission_id)
         c.close()
         self.conn.commit()
+
     '''store_submissions stores the submissions sent to the program which is used to be checked against other submissions. '''
     def store_submission(self,concatenated_file, assignment_number, student_number, langauge):
         c = self.conn.cursor()
@@ -59,13 +74,7 @@ class DatabaseManager:
 
     '''Lookup_signatures looks up signatures which will be used to check for potential cheating or copied code. '''
     def lookup_matching_signatures(self, submission_id):
-        c = self.conn.cursor()
-        c.execute('SELECT s1.SubmissionId, s1.LineNumber, s2.LineNumber, s1.NgramHash, s2.SubmissionId FROM Signatures as s1 '
-                'JOIN Signatures as s2 ON s1.NgramHash = s2.NgramHash WHERE s1.SubmissionId = ? AND s2.SubmissionId != s1.SubmissionId',
-                (submission_id, ))
-        signatures = [Signature(row[3], row[0], row[1], row[4], row[2])  for row in c]
-        c.close()
-        return signatures
+        return self.signature_manager.lookup_matching_signatures(submission_id)
 
     '''Data populate is a method used to insert students into the database for testing.'''
     def data_populate(self,student_number, course_code):

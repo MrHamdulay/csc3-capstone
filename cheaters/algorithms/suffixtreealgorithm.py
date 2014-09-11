@@ -50,8 +50,6 @@ class SuffixTreeAlgorithm:
         st = SuffixTree(canonicalised)
         common_substrings = list(st.common_substrings_longer_than(20))
         common_substrings = filter(SuffixTreeAlgorithm.filter_substrings, common_substrings)
-        print 'common substrings'
-        print '\n'.join('START\n%s\n END'%x for x in  common_substrings)
         # longest to shortest
         common_substrings.sort(key=lambda x: len(x), reverse=True)
 
@@ -63,11 +61,9 @@ class SuffixTreeAlgorithm:
             for substring in common_substrings:
                 index = canonicalised[i].index(substring)
                 string_indexes.append((index, index + len(substring)))
-            print 'string indexes', string_indexes
 
             temp = SuffixTreeAlgorithm.string_indexes_to_line_numbers(canonicalised[i], string_indexes)
             line_numbers = SuffixTreeAlgorithm.remove_overlapping_ranges(temp)
-            print 'line numbers', line_numbers
 
             matches = []
             for begin, end in line_numbers:
