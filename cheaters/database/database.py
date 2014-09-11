@@ -133,7 +133,15 @@ class DatabaseManager:
         c.close()
         return submissions
 
-
+    def fetch_source_codes(self, assignment_id):
+        c = self.conn.cursor()
+        source_codes = {}
+        c.execute('SELECT StudentId, ProgramSource '
+                'ProgrammingLanguage FROM Submissions WHERE AssignmentNumber = ?' ,(assignment_id, ))
+        for x in c:
+            source_codes[x[0]] = x[1]
+        c.close()
+        return source_codes
 
     def store_assignment(self,courseCode, assignment_description,due_date):
         c = self.conn.cursor()
@@ -215,4 +223,6 @@ class DatabaseManager:
                 (submission_id, other_submission_id, number_signatures_match))
         c.close()
         self.conn.commit()
+
+
 
