@@ -39,7 +39,7 @@ class SuffixTreeAlgorithm:
     def filter_substrings(substring):
         lines = [x.strip() for x in substring.split('\n')]
         lines = filter(None, lines)
-        return len(lines)>2
+        return len(lines)>3
 
     @staticmethod
     def calculate_document_similarity(*submissions):

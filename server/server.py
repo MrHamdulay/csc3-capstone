@@ -104,7 +104,7 @@ class View(FlaskView):
         match_strings = []
         for matches in submission_matches:
             match_string = ','.join(
-                    '%d-%d'%(m.start_line_mine, m.start_line_mine+m.match_length)
+                    '%d-%d'%(m.start_line_mine+1, m.start_line_mine+m.match_length+1)
                         for m in matches)
             match_strings.append(match_string)
         return jsonify(source=match_strings[0], target=match_strings[1])
