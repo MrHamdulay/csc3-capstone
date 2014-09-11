@@ -42,6 +42,10 @@ class RenamerTransform(ast.NodeTransformer):
         #self.generic_visit(node)
         return ast.copy_location(ast.Str(s='s'), node)
 
+    def visit_keyword(self, node):
+        self.generic_visit(node)
+        return ast.copy_location(ast.keyword(arg='k', value=node.value), node)
+
     def visit_FunctionDef(self, node):
         self.generic_visit(node)
         return ast.copy_location(
