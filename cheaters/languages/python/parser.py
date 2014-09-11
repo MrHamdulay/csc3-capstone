@@ -115,7 +115,6 @@ class PythonLanguageHandler(ProgramSubmission):
   ''' return the program source with variable names etc removed'''
   def strip_unstable_atrributes(self, shorten_keywords=True):
     buf = StringIO()
-    print ast.dump(self.canonicalised_ast)
     external.unparser.Unparser(self.canonicalised_ast, buf)
     result = buf.getvalue()
     # remove tab indentation, we don't care about that
