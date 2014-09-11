@@ -246,7 +246,9 @@ class DatabaseManager:
         c = self.conn.cursor()
         c.execute('SELECT sm.Id, sm.SubmissionId, sm.MatchSubmissionId, NumberSignaturesMatched, Confidence, '
                 's.StudentId, s2.StudentId FROM SubmissionMatches sm'
-                ' JOIN Submissions s ON sm.SubmissionId = s.Id JOIN Submissions s2 ON sm.MatchSubmissionId = s2.Id')
+                ' JOIN Submissions s ON sm.SubmissionId = s.Id JOIN Submissions s2 ON sm.MatchSubmissionId = s2.Id WHERE s.AssignmentNumber = ? AND s2.AssignmentNumber = ?'
+                ' ORDER BY NumberSignaturesMatched DESC',
+                (assignment_num, assignment_num))
         results = []
         for row in c:
             results.append(SignatureMatch(*row))

@@ -19,7 +19,7 @@ while True:
     for submission_id in xrange(max_submission_match_id+1, max_submission_id+1):
         print 'Processing', submission_id
         matching_signatures = database.lookup_matching_signatures(submission_id)
-        signatures_by_document = grouper.group_signatures_by_document(matching_signatures)
+        signatures_by_document = grouper.group_signatures_by_document(matching_signatures, False)
 
         other_submission_id = max(signatures_by_document.iteritems(), key=lambda x: len(x[1]))[0]
         database.store_submission_match(submission_id, other_submission_id, len(signatures_by_document[other_submission_id]))

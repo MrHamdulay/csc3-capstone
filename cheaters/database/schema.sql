@@ -25,6 +25,7 @@ CREATE TABLE if not exists Submissions(
   FOREIGN KEY (StudentId) REFERENCES Students(StudentNumber),
   FOREIGN KEY (AssignmentNumber) REFERENCES Assignments(Id)
 );
+CREATE INDEX IF NOT EXISTS submission_assignment_id ON Submissions(AssignmentNumber);
 
  CREATE TABLE if not exists Signatures(
   Id INTEGER PRIMARY KEY AUTOINCREMENT,

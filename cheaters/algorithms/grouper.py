@@ -3,14 +3,16 @@ from model.match import Match
 
 ''' Given a list of signatures find patterns and groups of common code '''
 class Grouper:
-    def group_signatures_by_document(self, signatures):
+    def group_signatures_by_document(self, signatures, sort=True):
         group_by_document = defaultdict(list)
         for signature in signatures:
+            assert signature.submission_id_theirs is not None
             group_by_document[signature.submission_id_theirs].append(signature)
 
-        for key in group_by_document:
-            # sort by line number
-            group_by_document[key].sort(key=lambda x: x.line_number_mine)
+        if sort:
+            for key in group_by_document:
+                # sort by line number
+                group_by_document[key].sort(key=lambda x: x.line_number_mine)
         return group_by_document
 
     def find_document_matches(self, submission_id, document_signatures, program_source):
