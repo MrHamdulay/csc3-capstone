@@ -30,14 +30,20 @@ class Detector:
         zip_file = zipfile.ZipFile(submission)
         language = self.set_language_handler(zip_file)
         concatenated_file = self.concatenate_files(zip_file)
+        try:
+            self.language_handler.parse_file(concatenated_file)
 
-        self.language_handler.parse_file(concatenated_file)
+            database = DatabaseManager()
+            cheating_algorithm = WinnowerAlgorithm(self.language_handler)
+            signatures = cheating_algorithm.generate_signatures()
+            submission_id = database.store_submission(concatenated_file, assignment_number, student_number, language)
+            database.store_signatures(signatures, submission_id)
+            print(str(assignment_number) + " " + student_number + " Saved")
+        except SyntaxError:
+            print(str(assignment_number) + " " + student_number + " Failed")
+            pass
 
-        database = DatabaseManager()
-        cheating_algorithm = WinnowerAlgorithm(self.language_handler)
-        signatures = cheating_algorithm.generate_signatures()
-        submission_id = database.store_submission(concatenated_file, assignment_number, student_number, language)
-        database.store_signatures(signatures, submission_id)
+
 
 
     def set_language_handler(self, zip_file):
@@ -63,7 +69,7 @@ class Detector:
             extension = filename.split('.')[-1]
             print filename, extension, extension in self.language_handler.file_types
             if extension in self.language_handler.file_types:
-                concatenated_file += zip_file.read(filename)
+                concatenated_file += zip_file.read(filename) + '\n'
         return concatenated_file
 
     def runAssignment(self,description, dueDate,courseCode):

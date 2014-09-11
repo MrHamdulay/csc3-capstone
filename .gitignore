@@ -12,3 +12,6 @@ fancyhdr.pdf
 node_modules
 public/data/*.js
 
+cheaters/lextab.py
+cheaters/parser.out
+cheaters/parsetab.py
