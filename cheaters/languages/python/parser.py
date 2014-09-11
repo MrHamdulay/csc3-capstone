@@ -34,7 +34,7 @@ class RenamerTransform(ast.NodeTransformer):
         #self.generic_visit(node)
         return ast.copy_location(
             ast.Name(
-              id='i',#self.name_map[node.id],
+              id='i',
               ctx=node.ctx),
             node)
 
@@ -46,11 +46,26 @@ class RenamerTransform(ast.NodeTransformer):
         self.generic_visit(node)
         return ast.copy_location(
             ast.FunctionDef(
-                'f',#self.name_map[node.name],
+                'f',
                 node.args,
                 node.body,
                 node.decorator_list),
             node)
+
+    def visit_ClassDef(self, node):
+        self.generic_visit(node)
+        return ast.copy_location(
+            ast.ClassDef(
+                name='c',
+                bases=node.bases,
+                body=node.body,
+                decorator_list=node.decorator_list),
+            node)
+
+    def visit_Attribute(self, node):
+        self.generic_visit(node)
+        return ast.copy_location(
+            ast.Attribute(attr='a', ctx=node.ctx, value=node.value), node)
 
     #this should strip out the function name when calling methods on a class
     #def visit_Call(self, node):
@@ -94,13 +109,15 @@ class PythonLanguageHandler(ProgramSubmission):
     return RenamerTransform().visit(self.ast)
 
   ''' return the program source with variable names etc removed'''
-  def strip_unstable_atrributes(self):
+  def strip_unstable_atrributes(self, shorten_keywords=True):
     buf = StringIO()
+    print ast.dump(self.canonicalised_ast)
     external.unparser.Unparser(self.canonicalised_ast, buf)
     result = buf.getvalue()
     # remove tab indentation, we don't care about that
     result = '\n'.join(x.strip() for x in result.split('\n'))
     # shorten python keywords so ngrams aren't affected by keywords like 'print' with 'pri'
-    for key in PYTHON_KWLIST:
-        result = result.replace(key, key[:3])
+    if shorten_keywords:
+        for key in PYTHON_KWLIST:
+            result = result.replace(key, key[:3])
     return result
