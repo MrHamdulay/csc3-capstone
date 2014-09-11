@@ -233,3 +233,13 @@ class DatabaseManager:
 
 
 
+    def fetch_all_submission_matches(self, assignment_num):
+        c = self.conn.cursor()
+        c.execute('SELECT sm.Id, sm.SubmissionId, sm.MatchSubmissionId, NumberSignaturesMatched, Confidence, '
+                's.StudentId, s2.StudentId FROM SubmissionMatches sm'
+                ' JOIN Submissions s ON sm.SubmissionId = s.Id JOIN Submissions s2 ON sm.MatchSubmissionId = s2.Id')
+        results = []
+        for row in c:
+            results.append(SignatureMatch(*row))
+        c.close()
+        return results

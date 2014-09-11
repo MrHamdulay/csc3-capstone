@@ -64,12 +64,12 @@ function set_scroll_position($from, $to) {
 
 
 function set_groups_list() {
-    d3.json('data/2014_1015_assignment_1_rows.json', function(error, json) {
+    d3.json('/api/' + assignment_number + '/matches', function(error, json) {
         var graph = new Graph();
-        for (var i = 0; i < json.length; i++) {
-            graph.add_edge(json[i].source, {
-                target: json[i].target,
-                confidence: json[i].tgt_cf,
+        for (var i = 0; i < json.matches.length; i++) {
+            graph.add_edge(json.matches[i].source, {
+                target: json.matches[i].target,
+                confidence: json.matches[i].confidence,
                 line_numbers: [ {source: {start: 10, end: 15}, target: {start: 17, end: 22}} ]
             });
         }
@@ -281,7 +281,6 @@ var set_line_numbers = function(lines) {
 
 d3.json('/api/' + assignment_number + '/code', function(error, json) {
     code = json;
-    console.log(code);
 });
 
 

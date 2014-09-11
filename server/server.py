@@ -115,6 +115,12 @@ class View(FlaskView):
         source_codes = database.fetch_source_codes(assignment_num)
         return jsonify(**source_codes)
 
+    @route('/api/<int:assignment_num>/matches')
+    def json_assignment_matches(self, assignment_num):
+        database = DatabaseManager()
+        matches = [x.apiify() for x in database.fetch_all_submission_matches(assignment_num)]
+        return jsonify({'matches': matches})
+
 
 if __name__ == '__main__':
     app = Flask(__name__)
