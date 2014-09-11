@@ -68,6 +68,8 @@ function set_groups_list() {
         var graph = new Graph();
         for (var i = 0; i < json.matches.length; i++) {
             graph.add_edge(json.matches[i].source, {
+                source_id: json.matches[i].source_id,
+                target_id: json.matches[i].target_id,
                 target: json.matches[i].target,
                 confidence: json.matches[i].confidence,
                 line_numbers: [ {source: {start: 10, end: 15}, target: {start: 17, end: 22}} ]
@@ -215,9 +217,11 @@ var refresh_graph = function(d) {
         d3.select('.confidence h3').text(d.confidence + '%');
         populate_code('left', d.source.name);
         populate_code('right', d.target.name);
-        set_line_numbers(d.line_numbers);
-        Prism.highlightAll();
-        set_gutter();
+        d3.json('/api/'+assignment_number+'/'+d.source_id+'/', function(error, json) {
+            set_line_numbers(json);
+            Prism.highlightAll();
+            set_gutter();
+        });
     });
 
     // Use elliptical arc path segments to doubly-encode directionality.
@@ -246,26 +250,10 @@ var populate_code = function(pos, student) {
 var set_line_numbers = function(lines) {
     var code_l = d3.select('pre.code-left');
     var code_r = d3.select('pre.code-right');
-    var data_line_l = '';
-    var data_line_r = '';
+    console.log(lines);
+    var data_line_l = lines.source;
+    var data_line_r = lines.target;
     var start, end;
-
-    for (var i = 0; i < lines.length; i++) {
-        // source (left)
-        start = lines[i].source.start;
-        end = lines[i].source.end;
-        if (end - start > 1)
-            data_line_l += start + '-' + end + ',';
-        else
-            data_line_l += start + ',';
-        // target (left)
-        start = lines[i].target.start;
-        end = lines[i].target.end;
-        if (end - start > 1)
-            data_line_r += start + '-' + end + ',';
-        else
-            data_line_r += start + ',';
-    }
 
     code_l.attr('data-line', data_line_l);
     code_r.attr('data-line', data_line_r);

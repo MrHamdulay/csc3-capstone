@@ -71,7 +71,9 @@ Graph.prototype.get_groups = function() {
                 source: key,
                 target: adj[i].target,
                 confidence: adj[i].confidence,
-                line_numbers: adj[i].line_numbers
+                line_numbers: adj[i].line_numbers,
+                source_id: adj[i].source_id,
+                target_id: adj[i].target_id
             });
         }
     }

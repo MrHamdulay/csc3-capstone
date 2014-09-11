@@ -8,6 +8,7 @@ sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../external')
 from detector import Detector
 from database import DatabaseManager
 from algorithms.grouper import Grouper
+from algorithms.suffixtreealgorithm import SuffixTreeAlgorithm
 
 class View(FlaskView):
 
@@ -74,35 +75,6 @@ class View(FlaskView):
         return render_template('submissions.html',
                 submissions=submissions, assignment_num=assignment_num)
 
-    @route('/<int:assignment_num>/<submission_id>')
-    def view_diff(self, assignment_num, submission_id):
-        ''' View code diffs against the given submission
-        @GET /{assignment_num}/{submission_id}
-        @render diff.html'''
-        database = DatabaseManager()
-        submission = database.fetch_a_submission(assignment_num, submission_id)
-
-        signatures = database.lookup_matching_signatures(submission_id)
-        groups = Grouper().group(signatures, submission.program_source)
-        print '\n'.join(str(x) for x in groups[2])
-        # get the submission_id of the group with the most number of matches
-        other_submission_id = max(groups.iteritems(), key=lambda x: len(x[1]))[0]
-        other_submission = database.fetch_a_submission(assignment_num, other_submission_id)
-
-        submission_match_string = ','.join(
-                '%d-%d'%(m.start_line_mine, m.start_line_mine+m.match_length)
-                    for m in groups[other_submission_id])
-        other_submission_match_string = ','.join(
-                '%d-%d'%(m.start_line_mine, m.start_line_mine+m.match_length)
-                    for m in groups[other_submission_id])
-
-        return render_template('diff.html',
-                submission=submission,
-                submission_match_string=submission_match_string,
-                other_submission=other_submission,
-                other_submission_match_string=other_submission_match_string,
-                assignment_num=assignment_num)
-
 
     # AJAX Requests
 
@@ -120,6 +92,22 @@ class View(FlaskView):
         database = DatabaseManager()
         matches = [x.apiify() for x in database.fetch_all_submission_matches(assignment_num)]
         return jsonify({'matches': matches})
+
+    @route('/api/<int:assignment_num>/<int:submission_id>/')
+    def json_submission_match_numbers(self, assignment_num, submission_id):
+        database = DatabaseManager()
+        submission = database.fetch_a_submission(assignment_num, submission_id)
+        other_submission = Detector.find_most_similar_submission(submission)
+
+        submission_matches = SuffixTreeAlgorithm.calculate_document_similarity(submission, other_submission)
+
+        match_strings = []
+        for matches in submission_matches:
+            match_string = ','.join(
+                    '%d-%d'%(m.start_line_mine, m.start_line_mine+m.match_length)
+                        for m in matches)
+            match_strings.append(match_string)
+        return jsonify(source=match_strings[0], target=match_strings[1])
 
 
 if __name__ == '__main__':
