@@ -21,6 +21,7 @@ class DatabaseManager:
     '''A initiator method to allow the database to connect to the class for further database handling.'''
     def __init__(self, database_file='cheaters.db'):
         self.conn = sqlite3.connect(os.path.dirname(os.path.realpath(__file__))+'/../../'+database_file)
+        self.conn.text_factory = str
         '''The initialise database method connects a cursor and reads a sql script. The script is read and executed.
         Once executed, tables with relevant columns is created and initiated. There after the cursor is closed and the
         changes are committed.'''
@@ -149,8 +150,10 @@ class DatabaseManager:
         assignmentValues = (assignment_description,due_date,courseCode)
 
         c.execute('INSERT INTO Assignments (AssignmentDescription,DueDate,CourseCode) VALUES (?,?,?)',assignmentValues)
+        assignment_id = c.lastrowid
         c.close()
         self.conn.commit()
+        return assignment_id
 
     def delete_student(self,studentId):
         c = self.conn.cursor()
@@ -212,15 +215,19 @@ class DatabaseManager:
 
     def update_submission_match(self, signature_match, match_submission_id, number_signatures_matched):
         c = self.conn.cursor()
-        c.execute('UPDATE SubmissionMatches SET MatchSubmissionId = ?, NumberSignaturesMatched = ? WHERE SubmissionId = ?',
-                (match_submission_id, number_signatures_matched, signature_match.submission_id))
+        c.execute('UPDATE SubmissionMatches SET MatchSubmissionId = ?, NumberSignaturesMatched = ?, '
+                  'Confidence=(SELECT ? / length(ProgramSource) FROM Submissions WHERE Id = ? LIMIT 1)'
+                'WHERE SubmissionId = ?',
+                (match_submission_id, number_signatures_matched, number_signatures_matched,
+                 signature_match.submission_id, signature_match.submission_id))
         c.close()
         self.conn.commit()
 
     def store_submission_match(self, submission_id, other_submission_id, number_signatures_match):
         c = self.conn.cursor()
-        c.execute('INSERT INTO SubmissionMatches (SubmissionId, MatchSubmissionId, NumberSignaturesMatched, Confidence) VALUES (?, ?, ?, 0)',
-                (submission_id, other_submission_id, number_signatures_match))
+        c.execute('INSERT INTO SubmissionMatches (SubmissionId, MatchSubmissionId, NumberSignaturesMatched, Confidence)'
+                ' VALUES (?, ?, ?, (SELECT ?*100 / length(ProgramSource) FROM Submissions WHERE id = ? LIMIT 1))',
+                (submission_id, other_submission_id, number_signatures_match, number_signatures_match, submission_id))
         c.close()
         self.conn.commit()
 

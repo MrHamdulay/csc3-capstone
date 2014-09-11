@@ -4,6 +4,7 @@ import sys
 import os
 
 sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../cheaters')
+sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../external')
 from detector import Detector
 from database import DatabaseManager
 from algorithms.grouper import Grouper

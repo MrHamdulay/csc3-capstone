@@ -24,7 +24,6 @@ CREATE TABLE if not exists Submissions(
   ProgrammingLanguage TEXT,
   FOREIGN KEY (StudentId) REFERENCES Students(StudentNumber),
   FOREIGN KEY (AssignmentNumber) REFERENCES Assignments(Id)
-
 );
 
  CREATE TABLE if not exists Signatures(
@@ -34,7 +33,7 @@ CREATE TABLE if not exists Submissions(
   SubmissionId INT,
   FOREIGN KEY (SubmissionId) REFERENCES Submissions(Id)
  );
-
+CREATE INDEX IF NOT EXISTS signature_hash ON Signatures (NgramHash);
 CREATE INDEX IF NOT EXISTS signature_submission ON Signatures (SubmissionId);
 
 CREATE TABLE IF NOT EXISTS SubmissionMatches(
@@ -46,3 +45,5 @@ CREATE TABLE IF NOT EXISTS SubmissionMatches(
   FOREIGN KEY (SubmissionId) REFERENCES Submissions(Id),
   FOREIGN KEY (MatchSubmissionId) REFERENCES Submissions(Id)
 );
+CREATE INDEX IF NOT EXISTS submission_match_id ON SubmissionMatches(SubmissionId);
+CREATE INDEX IF NOT EXISTS submission_match_id_id ON SubmissionMatches(MatchSubmissionId);

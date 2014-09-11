@@ -2,6 +2,7 @@ import os
 import zipfile
 from StringIO import StringIO
 from detector import Detector
+from database.database import DatabaseManager
 
 class DataGenerator:
 
@@ -41,9 +42,17 @@ class DataGenerator:
         '''Reads assignments from Assignment_* folders, student numbers from
            their Assignment_x folder, generates a zip of each students' code
            files and runs the Detector on it'''
+        assignment_id_map = {}
         assignments = self.get_folder_names(self.path)
+        database = DatabaseManager()
         for assignment in assignments:
-            assignment_number = self.get_assignment_number(assignment)
+            document_assignment_number = self.get_assignment_number(assignment)
+            if document_assignment_number != 6:
+                continue
+            if document_assignment_number not in assignment_id_map:
+                name = 'Assignment %d' % document_assignment_number
+                assignment_id_map[document_assignment_number] = database.store_assignment(name, name, '2015-01-01')
+            assignment_number = assignment_id_map[document_assignment_number]
             assignment_path = os.path.join(self.path, assignment)
             student_numbers = self.get_folder_names(assignment_path)
             for student_number in student_numbers:
