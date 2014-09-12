@@ -41,6 +41,8 @@ class View(FlaskView):
         submission = request.files['submission']
         assignment_id = request.form['assignment_id']
         student_number = request.form['student_number']
+        if not student_number:
+            student_number = submission.filename
         Detector().run(submission, assignment_id, student_number)
         return redirect('/' + assignment_id)
 
