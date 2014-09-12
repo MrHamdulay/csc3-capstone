@@ -34,8 +34,7 @@ class WinnowerAlgorithm(BaseAlgorithm):
 
     return signatures
 
-  @staticmethod
-  def whitespaced_stripped_with_line_numbers(string):
+  def whitespaced_stripped_with_line_numbers(self, string):
       WHITESPACE = ' \n\t'
       line_number = 0
       for char in string:
@@ -50,7 +49,7 @@ class WinnowerAlgorithm(BaseAlgorithm):
   length-grams of this string'''
   def ngrams(self, string, ngram_length):
     line_number = 0
-    string = list(WinnowerAlgorithm.whitespaced_stripped_with_line_numbers(string))
+    string = list(self.whitespaced_stripped_with_line_numbers(string))
     last_ngram = None
     for i in xrange(len(string)-ngram_length+1):
         ngram_pairs = string[i:i+ngram_length]

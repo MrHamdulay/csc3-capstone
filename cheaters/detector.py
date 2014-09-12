@@ -38,7 +38,7 @@ class Detector:
             signatures = cheating_algorithm.generate_signatures()
             submission_id = database.store_submission(concatenated_file, assignment_number, student_number, language)
             database.store_signatures(signatures, submission_id)
-            #self.store_and_update_closest_matches(submission_id)
+            self.store_and_update_closest_matches(submission_id)
             print(str(assignment_number) + " " + student_number + " Saved")
         except SyntaxError:
             print(str(assignment_number) + " " + student_number + " Failed")
