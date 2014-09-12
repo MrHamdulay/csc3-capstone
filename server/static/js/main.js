@@ -176,7 +176,6 @@ function select_pair(d) {
     d3.json('/api/'+assignment_number+'/'+d.source_id+'/', function(error, json) {
         set_line_numbers(json);
         Prism.highlightAll();
-        set_gutter();
     });
 }
 
@@ -259,7 +258,6 @@ var refresh_graph = function(d) {
         d3.json('/api/'+assignment_number+'/'+d.source_id+'/', function(error, json) {
             set_line_numbers(json);
             Prism.highlightAll();
-            set_gutter();
         });
     });
 
