@@ -72,6 +72,11 @@ function set_scroll_position($from, $to) {
 
 function set_groups_list() {
     d3.json('/api/' + assignment_number + '/matches', function(error, json) {
+
+        json.matches = $.grep(json.matches, function(m) {
+            return m.source != m.target
+        });
+
         var graph = new Graph();
         for (var i = 0; i < json.matches.length; i++) {
             graph.add_edge(json.matches[i].source, {
@@ -99,6 +104,7 @@ function set_groups_list() {
             select_pair(d);
             d3.select('#list table tbody').selectAll('tr').classed('selected', false);
             d3.select(this).classed('selected', true);
+            $('.line-highlight').remove();
         });
 
         // graph table
@@ -130,6 +136,7 @@ function set_groups_list() {
             refresh_graph(d);
             d3.select('#flow table tbody').selectAll('tr').classed('selected', false);
             d3.select(this).classed('selected', true);
+            $('.line-highlight').remove();
         });
     });
 }
@@ -173,9 +180,13 @@ function select_pair(d) {
     d3.select('.confidence h3').text(d.confidence + '%');
     populate_code('left', d.source);
     populate_code('right', d.target);
+    $code_l.addClass('loading');
+    $code_r.addClass('loading');
     d3.json('/api/'+assignment_number+'/'+d.source_id+'/', function(error, json) {
         set_line_numbers(json);
         Prism.highlightAll();
+        $code_l.removeClass('loading');
+        $code_r.removeClass('loading');
     });
 }
 
@@ -255,9 +266,13 @@ var refresh_graph = function(d) {
         d3.select('.confidence h3').text(d.confidence + '%');
         populate_code('left', d.source.name);
         populate_code('right', d.target.name);
+        $code_l.addClass('loading');
+        $code_r.addClass('loading');
         d3.json('/api/'+assignment_number+'/'+d.source_id+'/', function(error, json) {
             set_line_numbers(json);
             Prism.highlightAll();
+            $code_l.removeClass('loading');
+            $code_r.removeClass('loading');
         });
     });
 

@@ -40,6 +40,9 @@
     transform: translate3d(0, 0, 0);
 }
 
+table tr {
+    cursor: pointer;
+}
 
 #list {
     width: 100%;
@@ -105,6 +108,65 @@ pre {
     float: left;
     width: 49%;
     padding-top: 20px;
+}
+
+pre:before {
+    display: none;
+    content: "\e031";
+    z-index: 1;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: normal;
+    text-align: center;
+    color: rgb(79, 87, 148);
+    font-size: 100px;
+    position: absolute;
+    top: 250px;
+    left: 50%;
+    margin-left: -50px;
+
+    -webkit-animation: rotating 1s linear infinite;
+    -moz-animation: rotating 1s linear infinite;
+    -o-animation: rotating 1s linear infinite;
+    animation: rotating 1s linear infinite;
+
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+pre:after {
+    display: none;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+@-webkit-keyframes rotating {
+    from { -webkit-transform: rotate(0deg); }
+    to {   -webkit-transform: rotate(360deg); }
+}
+@-moz-keyframes rotating {
+    from { -moz-transform: rotate(0deg); }
+    to {   -moz-transform: rotate(360deg); }
+}
+@-ms-keyframes rotating {
+    from { -ms-transform: rotate(0deg); }
+    to {   -ms-transform: rotate(360deg); }
+}
+@-o-keyframes rotating {
+    from { -o-transform: rotate(0deg); }
+    to {   -o-transform: rotate(360deg); }
+}
+@keyframes rotating {
+    from { transform: rotate(0deg); }
+    to {   transform: rotate(360deg); }
+}
+
+pre.loading:before, pre.loading:after {
+    display: block;
 }
 
 pre code {
