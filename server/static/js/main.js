@@ -177,7 +177,7 @@ function select_pair(d) {
     console.log(d);
     d3.select('h3.a').text(d.source);
     d3.select('h3.b').text(d.target);
-    d3.select('.confidence h3').text(d.confidence + '%');
+    d3.select('.confidence h3').text(parseInt(d.confidence)/10 + '%');
     populate_code('left', d.source);
     populate_code('right', d.target);
     $code_l.addClass('loading');
@@ -263,7 +263,7 @@ var refresh_graph = function(d) {
     path.on('click', function(d, i) {
         d3.select('h3.a').text(d.source.name);
         d3.select('h3.b').text(d.target.name);
-        d3.select('.confidence h3').text(d.confidence + '%');
+        d3.select('.confidence h3').text( parseInt(d.confidence)/10 + '%');
         populate_code('left', d.source.name);
         populate_code('right', d.target.name);
         $code_l.addClass('loading');
