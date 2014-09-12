@@ -8,6 +8,9 @@ var $codes = $('#code-block');
 var $tbody = $('#groups tbody');
 var $code_l = $('#code-left');
 var $code_r = $('#code-right');
+var $left_col = $('#left-col');
+var $list_tbody = $('#list tbody');
+var $nav_lis = $('#left-col ul.nav li');
 
 function set_vertical_layout() {
 
@@ -24,6 +27,10 @@ function set_vertical_layout() {
 
     var flow_h = $flow.height();
     $codes.height(flow_h);
+
+    var left_col_h = $left_col.height();
+    var nav_h = $nav_lis.height();
+    $list_tbody.height(left_col_h - nav_h);
 
     var codes_h = $codes.height();
     var code_header_h = 41;
@@ -77,6 +84,24 @@ function set_groups_list() {
         }
 
         groups = graph.get_groups();
+
+        // list table
+
+        var tl = d3.select('#list table tbody').selectAll('tr')
+            .data(json.matches)
+            .enter().append('tr');
+
+        tl.append('td').text(function(d) { return d.source });
+        tl.append('td').text(function(d) { return d.target });
+        tl.append('td').text(function(d) { return d.confidence });
+
+        tl.on('click', function(d, i) {
+            select_pair(d);
+            d3.select('#list table tbody').selectAll('tr').classed('selected', false);
+            d3.select(this).classed('selected', true);
+        });
+
+        // graph table
 
         var tr = d3.select('#flow table tbody').selectAll('tr')
             .data(groups)
@@ -139,6 +164,20 @@ var width = $('#flow').width(),
 
 var num_students = function(d) {
     return d.length;
+}
+
+function select_pair(d) {
+    console.log(d);
+    d3.select('h3.a').text(d.source);
+    d3.select('h3.b').text(d.target);
+    d3.select('.confidence h3').text(d.confidence + '%');
+    populate_code('left', d.source);
+    populate_code('right', d.target);
+    d3.json('/api/'+assignment_number+'/'+d.source_id+'/', function(error, json) {
+        set_line_numbers(json);
+        Prism.highlightAll();
+        set_gutter();
+    });
 }
 
 // first get the groups
@@ -224,6 +263,7 @@ var refresh_graph = function(d) {
         });
     });
 
+
     // Use elliptical arc path segments to doubly-encode directionality.
     function tick() {
       path.attr("d", linkArc);
@@ -269,6 +309,25 @@ var set_line_numbers = function(lines) {
 
 d3.json('/api/' + assignment_number + '/code', function(error, json) {
     code = json;
+});
+
+
+// click nav tab
+
+$nav_lis.on('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    var $tgt = $(e.target).closest('li');
+    var idx = $nav_lis.index($tgt);
+    $nav_lis.removeClass('active');
+    var selected = $nav_lis[idx];
+    $(selected).addClass('active');
+
+    // update column class
+    var $l_col = $('#left-col > div');
+    $l_col.removeClass('active');
+    console.log($l_col[idx]);
+    $($l_col[idx]).addClass('active');
 });
 
 

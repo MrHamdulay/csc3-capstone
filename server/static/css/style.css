@@ -5,10 +5,49 @@
 .container > .row {
     height: 100%;
 }
+
+#left-col {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+}
+#left-col #flow, #left-col #list {
+    position: absolute;
+    top: 42px;
+    left: 0;
+    -webkit-transition: 0.3s transform ease;
+}
+#left-col #flow {
+    -webkit-transform: translate3d(-100%, 0, 0);
+    -moz-transform: translate3d(-100%, 0, 0);
+    -ms-transform: translate3d(-100%, 0, 0);
+    -o-transform: translate3d(-100%, 0, 0);
+    transform: translate3d(-100%, 0, 0);
+}
+#left-col #list {
+    -webkit-transform: translate3d(100%, 0, 0);
+    -moz-transform: translate3d(100%, 0, 0);
+    -ms-transform: translate3d(100%, 0, 0);
+    -o-transform: translate3d(100%, 0, 0);
+    transform: translate3d(100%, 0, 0);
+}
+#left-col #flow.active, #left-col #list.active {
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    -ms-transform: translate3d(0, 0, 0);
+    -o-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+}
+
+
+#list {
+    width: 100%;
+}
 #flow {
+    width: 100%;
     padding-left: 0;
 }
-#flow tr.selected {
+tr.selected {
     background: #d9edf7;
 }
 #code-block {
@@ -200,6 +239,48 @@ text {
 .header-fixed > tbody > tr > td:nth-child(2),
 .header-fixed > thead > tr > th:nth-child(2) {
     width: 85%;
+    float: left;
+}
+
+/* */
+
+#list .header-fixed {
+    margin-bottom: 0;
+}
+#list .header-fixed > thead,
+#list .header-fixed > tbody,
+#list .header-fixed > thead > tr,
+#list .header-fixed > tbody > tr,
+#list .header-fixed > thead > tr > th,
+#list .header-fixed > tbody > tr > td {
+    display: block;
+}
+
+#list .header-fixed > tbody > tr:after,
+#list .header-fixed > thead > tr:after {
+    content: ' ';
+    display: block;
+    visibility: hidden;
+    clear: both;
+}
+
+#list .header-fixed > tbody {
+    overflow-y: auto;
+}
+#list .header-fixed > tbody > tr > td,
+#list .header-fixed > thead > tr > th {
+    float: left;
+}
+#list .header-fixed > tbody > tr > td:nth-child(1),
+#list .header-fixed > thead > tr > th:nth-child(1),
+#list .header-fixed > tbody > tr > td:nth-child(2),
+#list .header-fixed > thead > tr > th:nth-child(2) {
+    width: 40%;
+    float: left;
+}
+#list .header-fixed > tbody > tr > td:nth-child(3),
+#list .header-fixed > thead > tr > th:nth-child(3) {
+    width: 20%;
     float: left;
 }
 
