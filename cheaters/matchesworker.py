@@ -21,7 +21,10 @@ while True:
         matching_signatures = database.lookup_matching_signatures(submission_id)
         signatures_by_document = grouper.group_signatures_by_document(matching_signatures, False)
 
-        other_submission_id = max(signatures_by_document.iteritems(), key=lambda x: len(x[1]))[0]
+        try:
+            other_submission_id = max(signatures_by_document.iteritems(), key=lambda x: len(x[1]))[0]
+        except:
+            pass
         database.store_submission_match(submission_id, other_submission_id, len(signatures_by_document[other_submission_id]))
 
         for other_submission_id, signatures in signatures_by_document.iteritems():
