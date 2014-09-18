@@ -6,55 +6,156 @@
     <link rel="stylesheet" type="text/css" href="/static/css/style.css" />
 {% endblock %}
 {% block content %}
-    <div class="row">
-        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12" id="left-col">
-            <ul class="nav nav-tabs" role="tablist">
-              <li class="active"><a href="#">List</a></li>
-              <li><a href="#">Graph</a></li>
-            </ul>
-            <div id="list" class="active">
-                <table class="table table-hover header-fixed">
-                    <thead>
-                        <tr>
-                            <th>Source</th>
-                            <th>Target</th>
-                            <th>Conf</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-            <div id="flow">
-                <div id="graph"></div>
-                <table class="table table-hover header-fixed" id="groups">
-                    <thead>
-                        <tr>
-                            <th>Size</th>
-                            <th>Students</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+
+<div id="administration" class="container">
+
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse">
+
+                <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown">Courses <span class="caret"></span></a>
+                      <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">CSC1015F</a></li>
+                        <li><a href="#">CSC1016S</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">CSC2014F</a></li>
+                        <li><a href="#">CSC2015S</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">CSC3002F</a></li>
+                        <li><a href="#">CSC3003S</a></li>
+                      </ul>
+                    </li>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown">Assignments <span class="caret"></span></a>
+                      <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">Assignment 1</a></li>
+                        <li><a href="#">Assignment 2</a></li>
+                        <li><a href="#">Assignment 3</a></li>
+                        <li><a href="#">Assignment 4</a></li>
+                      </ul>
+                    </li>
+                </ul>
             </div>
         </div>
-        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="code-block">
-            <div class="row">
-                <h3 class="a">Student A</h3>
-                <div class="confidence"><h3></h3></div>
-                <h3 class="b">Student B</h3>
-            </div>
-            <div id="diff">
-                <pre class="code-left line-numbers" id="code-left">
-                    <code class="language-python"></code>
-                </pre>
-                <!-- <div class="gap"></div> -->
-                <pre class="code-right line-numbers" id="code-right">
-                    <code class="language-python"></code>
-                </pre>
-            </div>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+            <ul class="nav nav-tabs" role="tablist">
+              <li data-view="pairs" class="active"><a href="#">Pairs of students</a></li>
+              <li data-view="groups"><a href="#">Groups of students</a></li>
+              <li data-view="code"><a href="#">Code view</a></li>
+            </ul>
+
+            <section id="subgroups">
+
+                <div id="pairs" class="active clearfix">
+                    <div class="list">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Student A</th>
+                                    <th>Student B</th>
+                                    <th>A %</th>
+                                    <th>B %</th>
+                                    <th>Lines</th>
+                                </tr>
+                            </thead>
+                        </table>
+                        <div class="scrollable">
+                            <table class="table table-hover">
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Confidence level Histogram</div>
+                        <div class="panel-body">
+                            <div class="diagram"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="groups" class="clearfix">
+                    <div class="list">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Size</th>
+                                    <th>Student A</th>
+                                    <th>Student B</th>
+                                    <th>A %</th>
+                                    <th>B %</th>
+                                    <th>Lines</th>
+                                </tr>
+                            </thead>
+                        </table>
+                        <div class="scrollable">
+                            <table class="table table-hover"></table>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Connections between students in the group</div>
+                        <div class="panel-body">
+                            <div class="diagram"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="code" class="clearfix">
+
+                    <div class="action-bar">
+                        <button class="btn btn-default back" data-view="pairs"><span class="glyphicon glyphicon-arrow-left"></span> Back</button>
+                        <div class="btn-group" id="shared-lines">
+                            <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-align-justify"></span> 10-15</button>
+                            <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-align-justify"></span> 34-50</button>
+                            <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-align-justify"></span> 100-125</button>
+                        </div>
+                        <button class="btn btn-danger pull-right"><span class="glyphicon glyphicon-screenshot"></span> Mark as Cheated</button>
+                    </div>
+
+                    <div class="panel panel-default A">
+                        <div class="panel-heading">
+                            <span class="id">Student A</span>
+                            <span class="confidence pull-right">95 lines</span>
+                        </div>
+                        <div class="panel-body">
+                            <pre class="line-numbers">
+                                <code class="language-python"></code>
+                            </pre>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default B">
+                        <div class="panel-heading">
+                            <span class="id">Student B</span>
+                            <span class="confidence pull-right">93 lines</span>
+                        </div>
+                        <div class="panel-body">
+                            <pre class="line-numbers">
+                                <code class="language-python"></code>
+                            </pre>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
         </div>
     </div>
-    <i class="glyphicon glyphicon-search" style="visibility: 0;"></i>
+
+</div>
+
+<i class="glyphicon glyphicon-search" style="width: 0px; height: 0px; display: block;"></i>
+
 {% endblock %}
 {% block scripts %}
     <script src="/static/js/jquery.js"></script>

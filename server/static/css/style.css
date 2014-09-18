@@ -1,38 +1,60 @@
-.container {
-    margin-top: 20px;
+#vula {
+    background: url('/static/img/vula.png') 0 0 no-repeat;
+    width: 100%;
+    height: 100%;
+}
+#vula > .inner {
+    margin-left: 200px;
+    margin-top: 100px;
+    margin-right: 50px;
+
+}
+#administration.container {
+    width: 100%;
+    margin-top: 15px;
+}
+#vula .container {
+    margin-top: 0;
     width: 98%;
 }
+
 .container > .row {
     height: 100%;
 }
 
-#left-col {
+#subgroups {
     position: relative;
-    height: 100%;
     overflow: hidden;
-    border-right: 1px solid #CCC;
 }
-#left-col #flow, #left-col #list {
+
+#pairs, #groups, #code {
     position: absolute;
-    top: 42px;
+    top: 0;
     left: 0;
+    width: 100%;
+    height: 100%;
     -webkit-transition: 0.3s transform ease;
+    -moz-transition: 0.3s transform ease;
+    -ms-transition: 0.3s transform ease;
+    -o-transition: 0.3s transform ease;
+    transition: 0.3s transform ease;
 }
-#left-col #flow {
+
+#pairs, #groups {
     -webkit-transform: translate3d(-100%, 0, 0);
     -moz-transform: translate3d(-100%, 0, 0);
     -ms-transform: translate3d(-100%, 0, 0);
     -o-transform: translate3d(-100%, 0, 0);
     transform: translate3d(-100%, 0, 0);
 }
-#left-col #list {
+#code {
     -webkit-transform: translate3d(100%, 0, 0);
     -moz-transform: translate3d(100%, 0, 0);
     -ms-transform: translate3d(100%, 0, 0);
     -o-transform: translate3d(100%, 0, 0);
     transform: translate3d(100%, 0, 0);
 }
-#left-col #flow.active, #left-col #list.active {
+#pairs.active, #groups.active, #code.active {
     -webkit-transform: translate3d(0, 0, 0);
     -moz-transform: translate3d(0, 0, 0);
     -ms-transform: translate3d(0, 0, 0);
@@ -40,33 +62,109 @@
     transform: translate3d(0, 0, 0);
 }
 
+#subgroups .list {
+    float: left;
+    width: 49.5%;
+    height: 100%;
+}
+
+#subgroups .scrollable {
+    height: 100%;
+    overflow: auto;
+}
+
+#subgroups .panel {
+    width: 49.5%;
+    float: left;
+    margin-bottom: 0;
+    margin-top: 0.4%;
+    margin-left: 0.4%;
+}
+#subgroups .panel .panel-body {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+#subgroups .diagram {
+    background: #efefef;
+    height: 100%;
+    width: 100%;
+}
+
+table tr th:nth-child(2),
+table tr th:nth-child(3),
+table tr td:nth-child(2),
+table tr td:nth-child(3) {
+    width: 30%;
+}
+
+table tr th:nth-child(1),
+table tr th:nth-child(4),
+table tr th:nth-child(5),
+table tr th:nth-child(6),
+table tr td:nth-child(1),
+table tr td:nth-child(4),
+table tr td:nth-child(5),
+table tr td:nth-child(6) {
+    width: 10%;
+}
+
+#groups table tr:not(:first-child) td:nth-child(1) {
+    border-top: 0;
+}
+#groups table tr td:nth-child(1) {
+    border-right: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+}
+
 table tr {
     cursor: pointer;
 }
 
-#list {
-    width: 100%;
-}
-#flow {
-    width: 100%;
-    padding-left: 0;
-}
 tr.selected {
     background: #d9edf7;
 }
-#code-block {
+
+.A {
+    width: 50%;
+    float: left;
+}
+
+.B {
+    width: 50%;
+    float: left;
+}
+
+.action-bar {
+    margin: 15px 0;
+}
+
+.action-bar #shared-lines {
+    margin-left: 10px;
+}
+
+.action-bar #shared-lines span.glyphicon {
+    padding-right: 5px;
+}
+
+#code .panel-body {
     padding: 0;
 }
-#code-block pre {
+
+#code pre {
+    margin: 0;
     height: 100%;
+    width: 100%;
     background: #fdfdfd;
     border: 0;
-    margin: 0 0 0 10px;
     padding-top: 15px;
     padding-right: 0;
     padding-bottom: 0;
+    padding-left: 45px;
     font-size: 14px;
 }
+
 h3.a {
     padding: 0;
     float: left;
@@ -76,20 +174,6 @@ h3.b {
     padding: 0;
     float: right;
     margin: 0 25px 15px 0;
-}
-.confidence {
-    text-align: center;
-    position: absolute;
-    left: 50%;
-    -webkit-transform: translate3d(-50%, 0, 0);
-    -moz-transform: translate3d(-50%, 0, 0);
-    -ms-transform: translate3d(-50%, 0, 0);
-    -o-transform: translate3d(-50%, 0, 0);
-    transform: translate3d(-50%, 0, 0);
-}
-.confidence h3 {
-    padding: 0;
-    margin: 0;
 }
 
 #graph {
@@ -231,10 +315,12 @@ path.link.weak:hover {
 
 /* D3 Styles */
 
+/* graph */
+
 .link {
   fill: none;
   stroke: #666;
-  stroke-width: 8px;
+  stroke-width: 15px;
 }
 
 #licensing {
@@ -259,96 +345,41 @@ circle:hover {
 }
 
 text {
-  font: 10px sans-serif;
+  font: 20px sans-serif;
   pointer-events: none;
   text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
 }
 
 .line-numbers .line-numbers-rows {
-    left: -210px;
+    left: -320px;
+}
+
+/* histogram */
+
+.bar rect {
+  fill: rgb(97, 154, 202);
+  shape-rendering: crispEdges;
+}
+
+.bar text {
+  fill: #fff;
+  font: 14px sans-serif;
+  font-weight: normal;
+  text-shadow: none;
+}
+
+.axis text {
+    font-size: 14px;
+}
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
 }
 
 /* Bootstrap overrides */
 
-.header-fixed {
-    margin-bottom: 0;
-}
-.header-fixed > thead,
-.header-fixed > tbody,
-.header-fixed > thead > tr,
-.header-fixed > tbody > tr,
-.header-fixed > thead > tr > th,
-.header-fixed > tbody > tr > td {
-    display: block;
-}
-
-.header-fixed > tbody > tr:after,
-.header-fixed > thead > tr:after {
-    content: ' ';
-    display: block;
-    visibility: hidden;
-    clear: both;
-}
-
-.header-fixed > tbody {
-    overflow-y: auto;
-}
-.header-fixed > tbody > tr > td,
-.header-fixed > thead > tr > th {
-    float: left;
-}
-.header-fixed > tbody > tr > td:nth-child(1),
-.header-fixed > thead > tr > th:nth-child(1) {
-    width: 15%;
-    float: left;
-}
-.header-fixed > tbody > tr > td:nth-child(2),
-.header-fixed > thead > tr > th:nth-child(2) {
-    width: 85%;
-    float: left;
-}
-
-/* */
-
-#list .header-fixed {
-    margin-bottom: 0;
-}
-#list .header-fixed > thead,
-#list .header-fixed > tbody,
-#list .header-fixed > thead > tr,
-#list .header-fixed > tbody > tr,
-#list .header-fixed > thead > tr > th,
-#list .header-fixed > tbody > tr > td {
-    display: block;
-}
-
-#list .header-fixed > tbody > tr:after,
-#list .header-fixed > thead > tr:after {
-    content: ' ';
-    display: block;
-    visibility: hidden;
-    clear: both;
-}
-
-#list .header-fixed > tbody {
-    overflow-y: auto;
-}
-#list .header-fixed > tbody > tr > td,
-#list .header-fixed > thead > tr > th {
-    float: left;
-}
-#list .header-fixed > tbody > tr > td:nth-child(1),
-#list .header-fixed > thead > tr > th:nth-child(1),
-#list .header-fixed > tbody > tr > td:nth-child(2),
-#list .header-fixed > thead > tr > th:nth-child(2) {
-    width: 40%;
-    float: left;
-}
-#list .header-fixed > tbody > tr > td:nth-child(3),
-#list .header-fixed > thead > tr > th:nth-child(3) {
-    width: 20%;
-    float: left;
-}
 
 /* prism overrides */
 
