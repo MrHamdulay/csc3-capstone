@@ -302,6 +302,8 @@ var set_pairs_table = function(pairs) {
 
     set_group_row(tr);
     tr.on('click', function(d) {
+        $(subgroups_selector + ' tr.selected').removeClass('selected');
+        $(this).addClass('selected');
         populate_code_view(d);
         toggle_view('code');
     });
@@ -314,7 +316,11 @@ var set_groups_table = function(list) {
         .enter()
         .append('tbody');
 
-    tbody.on('click', draw_graph_diagram);
+    tbody.on('click', function(d) {
+        $(subgroups_selector + ' tr.selected').removeClass('selected');
+        $(this).find('tr').addClass('selected');
+        draw_graph_diagram(d);
+    });
 
     var tr = tbody.selectAll('tr')
         .data(function(d) { return d })
