@@ -166,13 +166,15 @@ class DatabaseManager:
 
     def delete_student(self,studentId):
         c = self.conn.cursor()
-        c.execute('DELETE FROM Students where StudentNumber = ?' ,(studentId, ))
+        c.execute('DELETE FROM Students where StudentNumber=?' ,(studentId, ))
         c.close()
         self.conn.commit()
 
     def delete_assignment(self, assignmentNumber):
         c = self.conn.cursor()
-        c.execute('DELETE FROM Assignments where Id =?' ,(assignmentNumber, ))
+        print("======")
+        print(assignmentNumber)
+        c.execute('DELETE FROM Assignments where Id=?' ,(assignmentNumber, ))
         c.close()
 
         self.conn.commit()

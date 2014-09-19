@@ -28,9 +28,7 @@ class View(FlaskView):
         @GET /submit
         @render submit.html
         '''
-        database = DatabaseManager()
-        assignments = database.fetch_current_assignments()
-        return render_template('submit.html', assignments=assignments)
+        return render_template('submit.html')
 
     @route('/submit', methods=['POST'])
     def post_submit_form(self):
@@ -67,6 +65,28 @@ class View(FlaskView):
         detector.runAssignment(assignmentDescription,dateDue,courseCode)
         return redirect('/')
 
+    @route('/deleteAssignment')
+    def view_delete_assignment(self):
+        ''' View the Assignment submission form
+        @GET /createAssignment
+        @render createAssignment.html
+        '''
+        database = DatabaseManager()
+        assignments = database.fetch_current_assignments()
+        return render_template('deleteAssignment.html', assignments=assignments)
+
+    @route('/deleteAssignment', methods=['POST'])
+    def post_delete_assignment(self):
+        ''' Delete an assignment
+        @POST /createAssignment
+        @redirect /
+        '''
+        database = DatabaseManager()
+        assignment_num = request.form['assignmentNumber']
+        print(assignment_num)
+        database.delete_assignment(assignment_num)
+        return redirect('/')
+
     @route('/<int:assignment_num>')
     def view_submissions(self, assignment_num):
         ''' Lists submissions in a given assignment_num
@@ -74,8 +94,9 @@ class View(FlaskView):
         @render submissions.html'''
         database = DatabaseManager()
         submissions = database.fetch_submissions(assignment_num)
+        assignments = database.fetch_current_assignments()
         return render_template('submissions.html',
-                submissions=submissions, assignment_num=assignment_num)
+                submissions=submissions, assignment_num=assignment_num, assignments=assignments)
 
 
     # AJAX Requests
