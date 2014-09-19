@@ -105,7 +105,8 @@ class DatabaseManager:
         c.execute('SELECT Id, CourseCode, AssignmentDescription, DueDate, DueDate < ? FROM Assignments',(date,))
         assignments = []
         for row in c:
-            assignments.append(Assignment(row[0], row[1], row[2], row[3], row[4]))
+            count = self.count_submissions(row[0])
+            assignments.append(Assignment(row[0], row[1], row[2], row[3], row[4], count))
         c.close()
         return assignments
 
@@ -207,6 +208,12 @@ class DatabaseManager:
         c.close()
         self.conn.commit()
 
+    def count_submissions(self, assignment_num):
+        c = self.conn.cursor()
+        c.execute('SELECT Count(*) FROM Submissions WHERE AssignmentNumber=?' ,(assignment_num, ))
+        count = c.fetchone()[0]
+        c.close()
+        return count
 
     def delete_signatures(self,signatureId):
         c = self.conn.cursor()
