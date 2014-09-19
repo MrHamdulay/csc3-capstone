@@ -434,7 +434,7 @@ var set_vertical_layout = function() {
 
     var navbar_h = $(navbar_selector).innerHeight(),
         navbar_bot = get_css_val('margin-bottom', navbar_selector),
-        navtabs_h = $(navtabs_selector).innerHeight(),
+        navtabs_h = $(navtabs_selector).innerHeight() + get_css_val('margin-bottom', navtabs_selector),
         subgroups_h = container_h - navbar_h - navbar_bot - navtabs_h;
 
     $(subgroups_selector).height(subgroups_h);
@@ -515,6 +515,11 @@ var run = function() {
 }
 
 run();
+
+var easing, e, pos;
+$(function(){
+  // Get the click event
+});
 
 /*
 

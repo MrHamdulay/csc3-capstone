@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, jsonify
+from flask import Flask, render_template, request, redirect, jsonify, flash
 from flask.ext.classy import FlaskView, route
 import sys
 import os
@@ -60,32 +60,75 @@ class View(FlaskView):
         '''
         detector = Detector()
         courseCode = request.form['courseCode']
-        dateDue = request.form['dueDate']
+        dueDate = request.form['dueDate']
         assignmentDescription = request.form['description']
-        detector.runAssignment(assignmentDescription,dateDue,courseCode)
-        return redirect('/')
+        detector.runAssignment(assignmentDescription,dueDate,courseCode)
+        flash('Assignment created.', 'success')
+        return redirect('/editAssignments')
 
     @route('/deleteAssignment')
     def view_delete_assignment(self):
         ''' View the Assignment submission form
-        @GET /createAssignment
-        @render createAssignment.html
+        @GET /deleteAssignment
+        @render deleteAssignment.html
         '''
         database = DatabaseManager()
         assignments = database.fetch_current_assignments()
         return render_template('deleteAssignment.html', assignments=assignments)
 
-    @route('/deleteAssignment', methods=['POST'])
-    def post_delete_assignment(self):
-        ''' Delete an assignment
-        @POST /createAssignment
+    @route('/editAssignments')
+    def view_edit_assignments(self):
+        ''' Update assignment details
+        @GET /editAssignments
+        @render editAssignments.html
+        '''
+        database = DatabaseManager()
+        assignments = database.fetch_current_assignments()
+        return render_template('editAssignments.html', assignments=assignments)
+
+    @route('/editAssignments', methods=['POST'])
+    def edit_assignments(self):
+        ''' Either delete or update an assignment
+        @OPTIONS
+        @redirect / OR @redirect /editAssignment
+        '''
+        assignment_num = request.form['assignmentNumber']
+        database = DatabaseManager()
+
+        if (request.form['submitBtn'] == 'Edit Selected'):
+            return redirect('/editAssignments/' + assignment_num)
+
+        elif (request.form['submitBtn'] == 'Delete Selected'):
+            database.delete_assignment(assignment_num)
+            flash('Assignment ' + assignment_num + ' deleted.', 'success')
+            return redirect('/editAssignments')
+
+        flash('Please select an Assignment', 'warning')
+        return redirect('/editAssignments')
+
+    @route('/editAssignments/<int:assignment_num>')
+    def view_edit_assignment(self, assignment_num):
+        ''' Edit assignment form
+        @GET /editAssignment
         @redirect /
         '''
         database = DatabaseManager()
-        assignment_num = request.form['assignmentNumber']
-        print(assignment_num)
-        database.delete_assignment(assignment_num)
-        return redirect('/')
+        a = database.fetch_an_assignment(assignment_num)
+        return render_template('editAssignment.html', assignment=a)
+
+    @route('/editAssignments/<int:assignment_num>', methods=['POST'])
+    def update_assignment(self, assignment_num):
+        ''' Update assignment
+        @PUT /editAssignment
+        @redirect /
+        '''
+        database = DatabaseManager()
+        courseCode = request.form['courseCode']
+        dueDate = request.form['dueDate']
+        assignmentDescription = request.form['description']
+        database.update_assignment(assignment_num, courseCode, assignmentDescription, dueDate)
+        flash('Assignment ' + str(assignment_num) + ' updated.', 'success')
+        return redirect('/editAssignments')
 
     @route('/<int:assignment_num>')
     def view_submissions(self, assignment_num):
@@ -136,4 +179,5 @@ class View(FlaskView):
 if __name__ == '__main__':
     app = Flask(__name__)
     View.register(app)
+    app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
     app.run(debug=True)
