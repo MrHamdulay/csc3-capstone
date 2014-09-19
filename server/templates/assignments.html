@@ -2,19 +2,19 @@
 {% block title %}Assignments List{% endblock %}
 {% block content %}
 <style>
-table           {
-    border-collapse:collapse 
+table {
+    border-collapse:collapse
 }
-tr.strikeout td { 
-    position:relative; 
-    color: #ccc;        
-} 
-tr.strikeout td:before {                     
-  content: " ";                              
-  position: absolute;                        
-  left: 0; top: 50%; width: 100%;            
-  border-bottom: 1px solid #ccc;             
-}    
+tr.strikeout td {
+    position:relative;
+    color: #ccc;
+}
+tr.strikeout td:before {
+  content: " ";
+  position: absolute;
+  left: 0; top: 50%; width: 100%;
+  border-bottom: 1px solid #ccc;
+}
 </style>
 <h3>Assignments</h3>
 <table class="table table-hover">
@@ -32,7 +32,6 @@ tr.strikeout td:before {
                 <td>{{assignment.dueDate}}</td>
                 <td>{{assignment.description}}</td>
                 {% if not assignment.completed %}
-                <td><a href="/submit">Submit</a></td>
                 {% endif %}
             </tr>
         {% else %}
