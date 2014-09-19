@@ -30,6 +30,10 @@
     height: 100%;
 }
 
+.navbar-brand img {
+    margin-top: -10px;
+}
+
 .nav-tabs {
     margin-bottom: 15px;
 }
@@ -74,19 +78,17 @@
     transform: translate3d(0, 0, 0);
 }
 
-#subgroups .list {
-    float: left;
-    width: 49.5%;
-    height: 100%;
+#subgroups .panel:first-child .panel-body {
+    overflow: hidden;
 }
 
-#subgroups .list > table:first-child {
+#subgroups .list .panel-body > table:first-child {
     margin-bottom: 0;
 }
 
 #subgroups .scrollable {
-    height: 100%;
     overflow: auto;
+    position: relative;
 }
 
 #subgroups .panel {
@@ -96,33 +98,106 @@
     margin-top: 0.4%;
     margin-left: 0.4%;
 }
+
 #subgroups .panel .panel-body {
-    height: 100%;
     padding: 0;
     margin: 0;
+    overflow: hidden;
 }
 
 #subgroups .diagram {
     background: #efefef;
     height: 100%;
     width: 100%;
+    position: relative;
 }
 
-table tr th:nth-child(2),
-table tr th:nth-child(3),
-table tr td:nth-child(2),
-table tr td:nth-child(3) {
+#subgroups .diagram:before,
+#subgroups .list .scrollable:before,
+#subgroups .panel-body .howto,
+.loading {
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    display: none;
+    transform: translateX(-50%) translateY(-50%);
+    color: #999;
+}
+
+#subgroups.initializing .diagram:before,
+#subgroups.initializing .list .scrollable:before {
+    display: block;
+}
+
+#subgroups #pairs .diagram:before,
+#subgroups .list .scrollable:before {
+    content: 'Loading...';
+}
+
+#subgroups #groups .diagram:before {
+    content: 'Click a group to render the graph';
+    display: block;
+}
+
+#subgroups #groups .diagram.rendered:before {
+    display: none;
+}
+
+#subgroups .panel-body .howto {
+    display: block;
+    z-index: 1;
+    width: 300px;
+}
+#subgroups .panel-body.rendered .howto {
+    display: none;
+}
+
+#subgroups .panel-body .howto:before {
+    content: 'Select a pair of students to view code';
+}
+
+#subgroups .panel-body .instruction {
+    display: block;
+}
+
+.loading {
+    display: none;
+    width: 100px;
+    height: 40px;
+    color: #d9534f;
+    font-size: 24px;
+    z-index: 1;
+}
+.loading:before {
+    content: 'Loading...';
+}
+.panel-body.fetching .loading {
+    display: block;
+}
+.panel-body.fetching code {
+    color: #c5c5c5;
+}
+
+#subgroups table {
+    margin-bottom: 0;
+}
+
+#subgroups table tr th:nth-child(2),
+#subgroups table tr th:nth-child(3),
+#subgroups table tr td:nth-child(2),
+#subgroups table tr td:nth-child(3) {
     width: 30%;
 }
 
-table tr th:nth-child(1),
-table tr th:nth-child(4),
-table tr th:nth-child(5),
-table tr th:nth-child(6),
-table tr td:nth-child(1),
-table tr td:nth-child(4),
-table tr td:nth-child(5),
-table tr td:nth-child(6) {
+#subgroups table tr th:nth-child(1),
+#subgroups table tr th:nth-child(4),
+#subgroups table tr th:nth-child(5),
+#subgroups table tr th:nth-child(6),
+#subgroups table tr td:nth-child(1),
+#subgroups table tr td:nth-child(4),
+#subgroups table tr td:nth-child(5),
+#subgroups table tr td:nth-child(6) {
     width: 10%;
 }
 
@@ -153,7 +228,7 @@ tr.selected {
 }
 
 .action-bar {
-    margin: 15px 0;
+    margin: 0 0 10px 0;
 }
 
 .action-bar #shared-lines {
@@ -166,6 +241,7 @@ tr.selected {
 
 #code .panel-body {
     padding: 0;
+    position: relative;
 }
 
 #code pre {
@@ -179,6 +255,10 @@ tr.selected {
     padding-bottom: 0;
     padding-left: 45px;
     font-size: 14px;
+}
+
+#code pre code {
+    word-wrap: normal;
 }
 
 h3.a {
@@ -271,9 +351,6 @@ pre.loading:before, pre.loading:after {
     display: block;
 }
 
-pre code {
-    word-wrap: normal;
-}
 
 pre h3 {
     position: absolute;
@@ -324,8 +401,8 @@ path.link.weak:hover {
     stroke: #BCF5B5;
 }
 
-.line-highlight {
-    background: hsla(242, 54%, 73%, 0.15);
+#code .line-highlight {
+    background: rgba(255, 0, 0, 0.15);
 }
 
 
@@ -366,7 +443,7 @@ text {
   text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
 }
 
-.line-numbers .line-numbers-rows {
+.line-numbers span.line-numbers-rows {
     left: -252px;
 }
 

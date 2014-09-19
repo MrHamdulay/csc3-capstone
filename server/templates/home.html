@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
         <div class="panel panel-default">
-            <div class="panel-heading">View Cheating by Assignment</div>
+            <div class="panel-heading">View cheaters by assignment</div>
             <div class="panel-body">
 
                 <table class="table table-hover">
@@ -20,6 +20,7 @@
                     <thead>
                         <tr>
                             <th>Name</th>
+                            <th>Submissions</th>
                             <th>Due</th>
                             <th>Description</th>
                         </tr>
@@ -29,6 +30,7 @@
                         {% for assignment in assignments %}
                         <tr class="{% if assignment.completed %}strikeout{% endif %}">
                                 <td><a href="/cheaters/{{assignment.id}}">Assignment {{assignment.id}}</a></td>
+                                <td>{{assignment.submissions_count}}</td>
                                 <td>{{assignment.dueDate}}</td>
                                 <td>{{assignment.description}}</td>
                                 {% if not assignment.completed %}
@@ -36,7 +38,7 @@
                             </tr>
                         {% else %}
                             <tr>
-                                <td>No Reports found.</td>
+                                <td>No assignments found.</td>
                                 <td></td>
                                 <td></td>
                             </tr>
@@ -63,7 +65,9 @@
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th># Students</th>
+                            <th>Cheaters</th>
+                            <th>%</th>
+                            <th>Students</th>
                         </tr>
                     </thead>
 
@@ -72,12 +76,14 @@
                         <tr class="{% if assignment.completed %}strikeout{% endif %}">
                                 <td><a href="/report/{{assignment.id}}">Assignment {{assignment.id}}</a></td>
                                 <td>154</td>
+                                <td>0.15</td>
+                                <td>750</td>
                                 {% if not assignment.completed %}
                                 {% endif %}
                             </tr>
                         {% else %}
                             <tr>
-                                <td>No Assignments found.</td>
+                                <td>No reports found</td>
                                 <td></td>
                                 <td></td>
                             </tr>

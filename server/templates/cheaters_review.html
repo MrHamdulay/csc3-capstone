@@ -3,7 +3,6 @@
 {% block styles %}
     <link rel="stylesheet" type="text/css" href="/static/css/prism.css" />
     <link rel="stylesheet" type="text/css" href="/static/css/prism-line-numbers.css" />
-    <link rel="stylesheet" type="text/css" href="/static/css/style.css" />
 {% endblock %}
 
 {% block navbar %}
@@ -27,30 +26,33 @@
         <li data-view="code"><a href="#">Code view</a></li>
     </ul>
 
-    <section id="subgroups">
+    <section id="subgroups" class="initializing">
 
         <div id="pairs" class="active clearfix">
-            <div class="list">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Student A</th>
-                            <th>Student B</th>
-                            <th>A %</th>
-                            <th>B %</th>
-                            <th>Lines</th>
-                        </tr>
-                    </thead>
-                </table>
-                <div class="scrollable">
-                    <table class="table table-hover">
-                        <tbody></tbody>
+            <div class="panel panel-default list">
+                <div class="panel-heading">List of student pairs</div>
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Student A</th>
+                                <th>Student B</th>
+                                <th>A %</th>
+                                <th>B %</th>
+                                <th>Lines</th>
+                            </tr>
+                        </thead>
                     </table>
+                    <div class="scrollable">
+                        <table class="table table-hover">
+                            <tbody></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
             <div class="panel panel-default">
-                <div class="panel-heading">Confidence level Histogram</div>
+                <div class="panel-heading">Histogram of confidence levels</div>
                 <div class="panel-body">
                     <div class="diagram"></div>
                 </div>
@@ -58,21 +60,24 @@
         </div>
 
         <div id="groups" class="clearfix">
-            <div class="list">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Size</th>
-                            <th>Student A</th>
-                            <th>Student B</th>
-                            <th>A %</th>
-                            <th>B %</th>
-                            <th>Lines</th>
-                        </tr>
-                    </thead>
-                </table>
-                <div class="scrollable">
-                    <table class="table table-hover"></table>
+            <div class="panel panel-default list">
+                <div class="panel-heading">Groups of students</div>
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Size</th>
+                                <th>Student A</th>
+                                <th>Student B</th>
+                                <th>A %</th>
+                                <th>B %</th>
+                                <th>Lines</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div class="scrollable">
+                        <table class="table table-hover"></table>
+                    </div>
                 </div>
             </div>
             <div class="panel panel-default">
@@ -94,9 +99,11 @@
             <div class="panel panel-default A">
                 <div class="panel-heading">
                     <span class="id">Student A</span>
-                    <span class="confidence pull-right">95 lines</span>
+                    <span class="confidence pull-right"># lines</span>
                 </div>
                 <div class="panel-body">
+                    <div class="howto"></div>
+                    <div class="loading"></div>
                     <pre class="line-numbers">
                         <code class="language-python"></code>
                     </pre>
@@ -106,9 +113,11 @@
             <div class="panel panel-default B">
                 <div class="panel-heading">
                     <span class="id">Student B</span>
-                    <span class="confidence pull-right">93 lines</span>
+                    <span class="confidence pull-right"># lines</span>
                 </div>
                 <div class="panel-body">
+                    <div class="howto"></div>
+                    <div class="loading"></div>
                     <pre class="line-numbers">
                         <code class="language-python"></code>
                     </pre>
