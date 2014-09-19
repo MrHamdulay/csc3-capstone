@@ -16,21 +16,21 @@ class View(FlaskView):
     def index_page(self):
         ''' List assignments on the home page
         @GET /
-        @render assignments.html
+        @render home.html
         '''
         database = DatabaseManager()
         assignments = database.fetch_current_assignments()
-        return render_template('assignments.html' , assignments=assignments)
+        return render_template('home.html' , assignments=assignments)
 
-    @route('/submit')
+    @route('/student/submit')
     def view_submit_form(self):
         ''' Web form to submit assignments.
         @GET /submit
-        @render submit.html
+        @render student_submit.html
         '''
-        return render_template('submit.html')
+        return render_template('student_submit.html')
 
-    @route('/submit', methods=['POST'])
+    @route('/student/submit', methods=['POST'])
     def post_submit_form(self):
         ''' Receive and Process assignments submitted from the web form
         @POST /submit
@@ -44,18 +44,18 @@ class View(FlaskView):
         Detector().run(submission, assignment_id, student_number)
         return redirect('/' + assignment_id)
 
-    @route('/createAssignment')
+    @route('/assignments/create')
     def view_create_assignment(self):
         ''' View the Assignment submission form
-        @GET /createAssignment
-        @render createAssignment.html
+        @GET /assignment/create
+        @render assignment_create.html
         '''
-        return render_template('createAssignment.html')
+        return render_template('assignment_create.html')
 
-    @route('/createAssignment', methods=['POST'])
+    @route('/assignments/create', methods=['POST'])
     def post_create_assignment(self):
         ''' Create an assignment and persist it to the database
-        @POST /createAssignment
+        @POST /assignment/create
         @redirect /
         '''
         detector = Detector()
@@ -64,63 +64,53 @@ class View(FlaskView):
         assignmentDescription = request.form['description']
         detector.runAssignment(assignmentDescription,dueDate,courseCode)
         flash('Assignment created.', 'success')
-        return redirect('/editAssignments')
+        return redirect('/assignments/manage')
 
-    @route('/deleteAssignment')
-    def view_delete_assignment(self):
-        ''' View the Assignment submission form
-        @GET /deleteAssignment
-        @render deleteAssignment.html
-        '''
-        database = DatabaseManager()
-        assignments = database.fetch_current_assignments()
-        return render_template('deleteAssignment.html', assignments=assignments)
-
-    @route('/editAssignments')
-    def view_edit_assignments(self):
+    @route('/assignments/manage')
+    def view_manage_assignments(self):
         ''' Update assignment details
-        @GET /editAssignments
-        @render editAssignments.html
+        @GET /assignments_edit
+        @render assignments_edit.html
         '''
         database = DatabaseManager()
         assignments = database.fetch_current_assignments()
-        return render_template('editAssignments.html', assignments=assignments)
+        return render_template('assignments_manage.html', assignments=assignments)
 
-    @route('/editAssignments', methods=['POST'])
-    def edit_assignments(self):
+    @route('/assignments/manage', methods=['POST'])
+    def manage_assignments(self):
         ''' Either delete or update an assignment
         @OPTIONS
-        @redirect / OR @redirect /editAssignment
+        @redirect / OR @redirect /assignment_edit
         '''
         assignment_num = request.form['assignmentNumber']
         database = DatabaseManager()
 
         if (request.form['submitBtn'] == 'Edit Selected'):
-            return redirect('/editAssignments/' + assignment_num)
+            return redirect('/assignments/edit/' + assignment_num)
 
         elif (request.form['submitBtn'] == 'Delete Selected'):
             database.delete_assignment(assignment_num)
             flash('Assignment ' + assignment_num + ' deleted.', 'success')
-            return redirect('/editAssignments')
+            return redirect('/assignments/manage')
 
         flash('Please select an Assignment', 'warning')
-        return redirect('/editAssignments')
+        return redirect('/assignments/manage')
 
-    @route('/editAssignments/<int:assignment_num>')
+    @route('/assignments/edit/<int:assignment_num>')
     def view_edit_assignment(self, assignment_num):
         ''' Edit assignment form
-        @GET /editAssignment
-        @redirect /
+        @GET /assignments/edit/<int:assignment_num>
+        @redirect /assignments/edit
         '''
         database = DatabaseManager()
         a = database.fetch_an_assignment(assignment_num)
-        return render_template('editAssignment.html', assignment=a)
+        return render_template('assignment_edit.html', assignment=a)
 
-    @route('/editAssignments/<int:assignment_num>', methods=['POST'])
+    @route('/assignments/edit/<int:assignment_num>', methods=['POST'])
     def update_assignment(self, assignment_num):
         ''' Update assignment
-        @PUT /editAssignment
-        @redirect /
+        @PUT /assignments/edit/<int:assignment_num>
+        @redirect /assignments/edit
         '''
         database = DatabaseManager()
         courseCode = request.form['courseCode']
@@ -128,17 +118,17 @@ class View(FlaskView):
         assignmentDescription = request.form['description']
         database.update_assignment(assignment_num, courseCode, assignmentDescription, dueDate)
         flash('Assignment ' + str(assignment_num) + ' updated.', 'success')
-        return redirect('/editAssignments')
+        return redirect('/assignments/manage')
 
-    @route('/<int:assignment_num>')
+    @route('/cheaters/<int:assignment_num>')
     def view_submissions(self, assignment_num):
         ''' Lists submissions in a given assignment_num
         @GET /{assignment_num}'
-        @render submissions.html'''
+        @render cheaters_review.html'''
         database = DatabaseManager()
         submissions = database.fetch_submissions(assignment_num)
         assignments = database.fetch_current_assignments()
-        return render_template('submissions.html',
+        return render_template('cheaters_review.html',
                 submissions=submissions, assignment_num=assignment_num, assignments=assignments)
 
 

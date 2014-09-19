@@ -3,7 +3,7 @@
 
 {% block navbar %}
     <ul class="nav navbar-nav navbar-right">
-        <li><a href="/createAssignment">Create Assignment</a></li>
+        <li><a href="/assignments/create">Create Assignment</a></li>
     </ul>
 {% endblock %}
 
@@ -28,7 +28,7 @@
                     <tbody>
                         {% for assignment in assignments %}
                         <tr class="{% if assignment.completed %}strikeout{% endif %}">
-                                <td><a href="/{{assignment.id}}">Assignment {{assignment.id}}</a></td>
+                                <td><a href="/cheaters/{{assignment.id}}">Assignment {{assignment.id}}</a></td>
                                 <td>{{assignment.dueDate}}</td>
                                 <td>{{assignment.description}}</td>
                                 {% if not assignment.completed %}
@@ -47,7 +47,7 @@
             </div>
 
             <div class="panel-footer">
-                <a href = "/editAssignments" class="btn btn-large btn-default">Manage assignments</a>
+                <a href="/assignments/manage" class="btn btn-large btn-default"><span class="glyphicon glyphicon-cog"></span> Manage assignments</a>
             </div>
 
         </div>
@@ -70,7 +70,7 @@
                     <tbody>
                         {% for assignment in assignments %}
                         <tr class="{% if assignment.completed %}strikeout{% endif %}">
-                                <td><a href="/{{assignment.id}}">Assignment {{assignment.id}}</a></td>
+                                <td><a href="/report/{{assignment.id}}">Assignment {{assignment.id}}</a></td>
                                 <td>154</td>
                                 {% if not assignment.completed %}
                                 {% endif %}
@@ -87,6 +87,11 @@
                 </table>
 
             </div>
+
+            <div class="panel-footer">
+                <a href="/reports/manage" class="btn btn-large btn-default"><span class="glyphicon glyphicon-cog"></span> Manage reports</a>
+            </div>
+
         </div>
 
     </div>

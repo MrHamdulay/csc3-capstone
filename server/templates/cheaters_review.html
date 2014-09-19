@@ -13,7 +13,7 @@
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Select Assignment <span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
             {% for assignment in assignments %}
-            <li><a href="{{assignment.id}}">Assignment {{assignment.id}}</a></li>
+            <li><a href="/cheaters/{{assignment.id}}">Assignment {{assignment.id}}</a></li>
             {% endfor %}
             </ul>
         </li>

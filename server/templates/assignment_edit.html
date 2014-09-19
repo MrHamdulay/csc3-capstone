@@ -1,29 +1,29 @@
 {% extends "layout.html" %}
-{% block title %}Create assignment{% endblock %}
+{% block title %}Edit assignment{% endblock %}
 {% block content %}
 
 <div class="panel panel-default">
 
-    <div class="panel-heading">Create an Assignment</div>
+    <div class="panel-heading">Edit Assignment {{assignment.id}}</div>
 
     <div class="panel-body">
-        <form action="/createAssignment" class="form-horizontal" method="POST" role="form">
+        <form action="/assignments/edit/{{assignment.id}}" class="form-horizontal" method="POST" role="form">
             <div class="form-group">
                 <label for="courseCode" class="col-sm-2 control-label">Course Code</label>
                 <div class="col-sm-10">
-                    <input name="courseCode" class="form-control" type="text" required="true" placeholder="enter Course code" />
+                    <input name="courseCode" class="form-control" type="text" value="{{assignment.course_code}}" required="true" placeholder="enter Course code" />
                 </div>
             </div>
             <div class="form-group">
                 <label for="dueDate" class="col-sm-2 control-label">Due Date</label>
                 <div class="col-sm-10">
-                    <input name = "dueDate" class="form-control" type="date" required="true" placeholder="enter Due date" />
+                    <input name="dueDate" class="form-control" type="date" value="{{assignment.dueDate}}" required="true" placeholder="enter Due date" />
                 </div>
             </div>
             <div class="form-group">
                 <label for="description" class="col-sm-2 control-label">Description</label>
                 <div class="col-sm-10">
-                    <textarea name="description" class="form-control" required="true" placeholder="enter Description"></textarea>
+                    <textarea name="description" class="form-control" required="true" placeholder="enter Description">{{assignment.description}}</textarea>
                 </div>
             </div>
             <div class="form-group">

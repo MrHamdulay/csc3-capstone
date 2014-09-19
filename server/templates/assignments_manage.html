@@ -2,11 +2,11 @@
 {% block title %}Edit assignments{% endblock %}
 {% block content %}
 
-<form action="/editAssignments" method="POST" role="form">
+<form action="/assignments/manage" method="POST" role="form">
 
 <div class="panel panel-default">
 
-        <div class="panel-heading">Edit an Assignment</div>
+        <div class="panel-heading">Manage Assignments</div>
 
         <div class="panel-body">
                 <table class="table">
@@ -38,7 +38,7 @@
             <div>
 
         <div class="panel-footer">
-            <a href = "/createAssignment" class="btn btn-large btn-primary">Create Assignment</a>
+            <a href = "/assignments/create" class="btn btn-large btn-primary">Create Assignment</a>
             <div class="pull-right">
                 <input type="submit" name="submitBtn" class="btn btn-large btn-default" value="Edit Selected" />
                 <input type="submit" name="submitBtn"class="btn btn-large btn-danger" value="Delete Selected" />
