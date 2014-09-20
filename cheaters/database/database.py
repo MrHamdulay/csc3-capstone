@@ -20,6 +20,7 @@ class DatabaseManager:
     conn = None
 
     '''A initiator method to allow the database to connect to the class for further database handling.'''
+
     def __init__(self, database_file='cheaters.db'):
         self.conn = sqlite3.connect(os.path.dirname(os.path.realpath(__file__))+'/../../'+database_file)
         self.conn.text_factory = str
@@ -29,12 +30,19 @@ class DatabaseManager:
         self.initialise_database()
         self.initialise_signature_manager()
 
+
+    '''initialise_database runs the schema.sql script to generate database for later use in terms of data population and
+    data manipulation.'''
+
     def initialise_database(self):
         c = self.conn.cursor()
         file = open(os.path.dirname(os.path.realpath(__file__))+'/schema.sql','r')
         c.executescript(file.read())
         c.close()
         self.conn.commit()
+
+    '''initialise_signatures initializes the signatures which have been generated. These signatures are stored in an array
+    after being looped through.'''
 
     def initialise_signature_manager(self):
         self.signature_manager = SignatureManager()
@@ -59,7 +67,11 @@ class DatabaseManager:
         c.close()
         self.conn.commit()
 
-    '''store_submissions stores the submissions sent to the program which is used to be checked against other submissions. '''
+    '''store_submissions stores the submissions sent to the program which is used to be checked against other
+    submissions. This method accepts the joint files from the .zip folder, assignment number, student number and
+    programming language in order to insert relevant data into database.
+    '''
+
     def store_submission(self,concatenated_file, assignment_number, student_number, langauge):
         c = self.conn.cursor()
         submission_value = (student_number, assignment_number, concatenated_file, langauge)
@@ -72,17 +84,26 @@ class DatabaseManager:
 
 
 
-    '''Lookup_signatures looks up signatures which will be used to check for potential cheating or copied code. '''
+    '''Lookup_signatures looks up signatures which will be used to check for potential cheating or copied code. This
+    assignment accepts the submission ID as a parameter and returns the relevant matches'''
+
     def lookup_matching_signatures(self, submission_id):
         return self.signature_manager.lookup_matching_signatures(submission_id)
 
-    '''Data populate is a method used to insert students into the database for testing.'''
+    '''Data populate is a method used to insert students into the database for testing. This method accepts the student
+    number and course code to populate the database with relevant information.'''
+
     def data_populate(self,student_number, course_code):
         c = self.conn.cursor()
         data_Values = (student_number,course_code)
         c.execute("INSERT INTO Students (StudentNumber, CourseCode) VALUES (?,?,?)",data_Values)
         c.close()
         self.conn.commit()
+
+    '''fetch_an_assignment fetches all assignment submissions from a requested assignment and is used to look in the UI
+    in order to display/illustrate potential cheating in code. This method accepts the assignment number and is then found
+    in the database.
+    '''
 
     def fetch_an_assignment(self,assignmentNumber):
         c = self.conn.cursor()
@@ -98,6 +119,8 @@ class DatabaseManager:
         c.close()
         return assignment
 
+    '''fetch_current_assignments fetches assignments which have already been submitted in order to check the assignments
+    against each other for matches'''
 
     def fetch_current_assignments(self):
         c = self.conn.cursor()
@@ -109,6 +132,9 @@ class DatabaseManager:
             assignments.append(Assignment(row[0], row[1], row[2], row[3], row[4], count))
         c.close()
         return assignments
+
+    '''fetch_a_submission fetches a specific submission to be compared to another specific assignment. This method accepts
+    the submission ID as a parameter and is then found in the database.'''
 
     def fetch_a_submission(self, assignment_id, submission_id):
         c = self.conn.cursor()
@@ -127,6 +153,8 @@ class DatabaseManager:
         c.close()
         return submission
 
+    '''fetch_submissions fetches a specific set of  submissions. This method accepts
+    the assignment ID as a parameter and is then found in the database.'''
 
     def fetch_submissions(self, assignment_id):
         c = self.conn.cursor()
@@ -145,6 +173,9 @@ class DatabaseManager:
         c.close()
         return submissions
 
+    '''fetch_source_code fetches source code from a specific assignment. This method accepts
+    the assignment ID as a parameter and is then found in the database.'''
+
     def fetch_source_codes(self, assignment_id):
         c = self.conn.cursor()
         source_codes = {}
@@ -154,6 +185,9 @@ class DatabaseManager:
             source_codes[x[0]] = x[1]
         c.close()
         return source_codes
+
+    '''store_assignment stores a specific assignment that a lecturer has created.
+    This method accepts the assignment description and due date as a parameter and is then stored in the database.'''
 
     def store_assignment(self,courseCode, assignment_description,due_date):
         c = self.conn.cursor()
@@ -166,11 +200,16 @@ class DatabaseManager:
         self.conn.commit()
         return assignment_id
 
+    '''delete_student deletes a student from the students table.
+        This method accepts the student Id as a parameter and is then deleted from the table.'''
     def delete_student(self,studentId):
         c = self.conn.cursor()
         c.execute('DELETE FROM Students where StudentNumber=?' ,(studentId, ))
         c.close()
         self.conn.commit()
+
+    '''delete_assignment deletes an assignment from the Assignments table.
+        This method accepts the Assignment Id as a parameter and is then deleted from the table.'''
 
     def delete_assignment(self, assignmentNumber):
         c = self.conn.cursor()
@@ -179,6 +218,10 @@ class DatabaseManager:
         self.delete_submissions(assignmentNumber)
         c.close()
         self.conn.commit()
+
+    '''update_assignment is a method used in the event that a lecturer has changed the assignment so the changes can be
+    stored and then reflected in the database. This method accepts the assignment number, course code, assignment
+    desciption and due date as parameters and then updates accordingly'''
 
     def update_assignment(self, assignmentNumber, courseCode, assignmentDescription, dueDate):
         c = self.conn.cursor()
@@ -196,17 +239,25 @@ class DatabaseManager:
         c.close()
         self.conn.commit()
 
+    '''delete_submissions deletes all submissions with a specific assignment number from the submission table.
+        This method accepts the assignment number as a parameter and is then deleted from the table.'''
+
     def delete_submissions(self, assignmentNum):
         c = self.conn.cursor()
         c.execute('DELETE FROM Submissions where AssignmentNumber=?' ,(assignmentNum, ))
         c.close()
         self.conn.commit()
 
+    '''delete_submission deletes a submission item from the submission table.
+        This method accepts the submission Id as a parameter and is then deleted from the table.'''
+
     def delete_submission(self,submissionId):
         c = self.conn.cursor()
         c.execute('DELETE FROM Submissions where Id=?' ,(submissionId, ))
         c.close()
         self.conn.commit()
+
+    '''count_submissions counts the number of submissions per assignment.'''
 
     def count_submissions(self, assignment_num):
         c = self.conn.cursor()
@@ -215,17 +266,17 @@ class DatabaseManager:
         c.close()
         return count
 
+
+    '''delete_signatures deletes a signature item from the signature table.
+        This method accepts the signature Id as a parameter and is then deleted from the table.'''
+
     def delete_signatures(self,signatureId):
         c = self.conn.cursor()
         c.execute('DELETE FROM Signatures where Id=?' ,(signatureId, ))
         c.close()
         self.conn.commit()
 
-    def update_assignment(self,id, courseCode, description, dueDate):
-        self.conn.execute('UPDATE Assignments SET CourseCode = ?, AssignmentDescription = ?, DueDate = ? Where Id = ?',
-                          (courseCode,description,dueDate,id))
-        self.conn.commit()
-        self.conn.close()
+    '''Fetches the maximum submission Id from the submissions table'''
 
     def fetch_max_submission_id(self):
         c = self.conn.cursor()
@@ -234,12 +285,16 @@ class DatabaseManager:
         c.close()
         return max_id
 
+    '''Fetches the submission with the most matching lines of code from the submissions matches table'''
+
     def fetch_max_submission_match_id(self):
         c = self.conn.cursor()
         c.execute('SELECT MAX(SubmissionId) FROM SubmissionMatches')
         max_id = c.fetchone()[0]
         c.close()
         return max_id
+
+    '''Fetches the submission match from the submissions matches table which is specified.'''
 
     def fetch_submission_match(self, submission_id):
         c = self.conn.cursor()
@@ -252,6 +307,7 @@ class DatabaseManager:
         c.close()
 
         return match
+    '''Updates the submission matches table with the new signature match, submission id and signatires matched.'''
 
     def update_submission_match(self, signature_match, match_submission_id, number_signatures_matched):
         c = self.conn.cursor()
@@ -263,6 +319,10 @@ class DatabaseManager:
         c.close()
         self.conn.commit()
 
+    '''store_submission_match stores a submission match that has been identified.
+    This method accepts the submission ID, other submission ID and the number of match potential
+     as a parameter and is then stored in the database.'''
+
     def store_submission_match(self, submission_id, other_submission_id, number_signatures_match):
         c = self.conn.cursor()
         c.execute('INSERT INTO SubmissionMatches (SubmissionId, MatchSubmissionId, NumberSignaturesMatched, Confidence)'
@@ -270,6 +330,9 @@ class DatabaseManager:
                 (submission_id, other_submission_id, number_signatures_match, number_signatures_match, submission_id))
         c.close()
         self.conn.commit()
+
+    '''fetch_all_submission_matches fetches all submission matches that has been identified.
+        This method accepts the assignment number as a parameter and is then selected from the database.'''
 
     def fetch_all_submission_matches(self, assignment_num):
         c = self.conn.cursor()
@@ -284,6 +347,9 @@ class DatabaseManager:
         c.close()
         return results
 
+    '''fetch_report fetches all submissions from an assignment and a report is later generated.
+        This method accepts the assignment number as a parameter and is then selected from the database.'''
+
     def fetch_report(self, assignment_num):
         c = self.conn.cursor()
         c.execute('SELECT * FROM Reports WHERE AssignmentNumber=?', (assignment_num, ))
@@ -293,11 +359,17 @@ class DatabaseManager:
         c.close()
         return results
 
+    '''insert_report_item inserts a new report item for a report which is later generated.
+        This method accepts the assignment number and student number as a parameter and is then inserted from the database.'''
+
     def insert_report_item(self, assignment_num, student_num):
         c = self.conn.cursor()
         c.execute('INSERT INTO Reports (StudentNumber, AssignmentNumber) VALUES (?,?)', (student_num, assignment_num, ))
         c.close()
         self.conn.commit()
+
+    '''delete_report_items deletes a report item from the report table.
+        This method accepts the assignment number and student number as a parameter and is then deleted from the table.'''
 
     def delete_report_items(self, assignment_num, student_nums):
         c = self.conn.cursor()
@@ -306,6 +378,9 @@ class DatabaseManager:
         c.execute(query)
         c.close()
         self.conn.commit()
+
+    '''count_cheaters counts the number of student suspected of cheating on a particular assignment. The assignment number
+    is entered as a parameter and all relevant data is deleted from the database.'''
 
     def count_cheaters(self, assignment_num):
         c = self.conn.cursor()

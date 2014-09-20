@@ -17,6 +17,3 @@ def java_strip_variables(code):
 
 
     return value
-
-
-print(java_strip_variables("class hello_world{ \n\n public static void main() int i =0;} "))
