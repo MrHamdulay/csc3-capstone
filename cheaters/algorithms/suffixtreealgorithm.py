@@ -4,8 +4,7 @@ from model.match import Match
 
 class SuffixTreeAlgorithm:
 
-    @staticmethod
-    def remove_overlapping_ranges(ranges):
+    def remove_overlapping_ranges(self, ranges):
         ranges.sort()
 
         result = [ranges[0]]
@@ -18,8 +17,7 @@ class SuffixTreeAlgorithm:
                 result.append(ranges[i])
         return result
 
-    @staticmethod
-    def string_indexes_to_line_numbers(string, indexes):
+    def string_indexes_to_line_numbers(self, string, indexes):
         # pre process string
         string_line_numbers = []
         n=0
@@ -35,14 +33,12 @@ class SuffixTreeAlgorithm:
         return result
 
 
-    @staticmethod
-    def filter_substrings(substring):
+    def filter_substrings(self, substring):
         lines = [x.strip() for x in substring.split('\n')]
         lines = filter(None, lines)
         return len(lines)>3
 
-    @staticmethod
-    def _wrap_to_lines(code, index, direction):
+    def _wrap_to_lines(self, code, index, direction):
         # check for non whitespace characters before this
         i = index - direction
         isInMiddleLine = False
@@ -63,21 +59,19 @@ class SuffixTreeAlgorithm:
             return index
 
 
-    @staticmethod
-    def wrap_substring_to_lines(code, begin, end):
-        return (SuffixTreeAlgorithm._wrap_to_lines(code, begin, +1),
-               SuffixTreeAlgorithm._wrap_to_lines(code, end, -1))
+    def wrap_substring_to_lines(self, code, begin, end):
+        return (self._wrap_to_lines(code, begin, +1),
+               self._wrap_to_lines(code, end, -1))
 
 
-    @staticmethod
-    def calculate_document_similarity(*submissions):
+    def calculate_document_similarity(self, *submissions):
         assert len(submissions) == 2
         assert submissions[0].language == submissions[1].language
         canonicalised = map(Detector.canonicalise_submission, submissions)
 
         st = SuffixTree(canonicalised)
         common_substrings = list(st.common_substrings_longer_than(20))
-        common_substrings = filter(SuffixTreeAlgorithm.filter_substrings, common_substrings)
+        common_substrings = filter(self.filter_substrings, common_substrings)
         # longest to shortest
         common_substrings.sort(key=lambda x: len(x), reverse=True)
 
@@ -88,10 +82,10 @@ class SuffixTreeAlgorithm:
             string_indexes = []
             for substring in common_substrings:
                 index = canonicalised[i].index(substring)
-                string_indexes.append(SuffixTreeAlgorithm.wrap_substring_to_lines(canonicalised[i], index, index + len(substring)))
+                string_indexes.append(self.wrap_substring_to_lines(canonicalised[i], index, index + len(substring)))
 
-            temp = SuffixTreeAlgorithm.string_indexes_to_line_numbers(canonicalised[i], string_indexes)
-            line_numbers = SuffixTreeAlgorithm.remove_overlapping_ranges(temp)
+            temp = self.string_indexes_to_line_numbers(canonicalised[i], string_indexes)
+            line_numbers = self.remove_overlapping_ranges(temp)
 
             matches = []
             for begin, end in line_numbers:
