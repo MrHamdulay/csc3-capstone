@@ -1,8 +1,21 @@
 from detector import Detector
 from algorithms.suffix_tree import SuffixTree
 from model.match import Match
+import tokenize
+from StringIO import StringIO
 
 class SuffixTreeAlgorithm:
+    def _variable_match(self, *originals):
+        tokenlists = []
+        for original in originals:
+            tokenlists.append(list(x[1] for x in tokenize.generate_tokens(StringIO(original).readline) if x[0] == 1))
+
+        token_map = {}
+        for token1, token2 in zip(*tokenlists):
+            if token1 in token_map and token_map[token1] != token2:
+                return False
+            token_map[token1] = token2
+        return True
 
     def remove_overlapping_ranges(self, ranges):
         ranges.sort()
@@ -17,7 +30,7 @@ class SuffixTreeAlgorithm:
                 result.append(ranges[i])
         return result
 
-    def string_indexes_to_line_numbers(self, string, indexes):
+    def string_indexes_to_line_numbers(self, string):
         # pre process string
         string_line_numbers = []
         n=0
@@ -27,10 +40,10 @@ class SuffixTreeAlgorithm:
             string_line_numbers.append(n)
         string_line_numbers.append(n)
 
-        result = []
-        for begin, end in indexes:
-            result.append((string_line_numbers[begin], string_line_numbers[end]))
-        return result
+        begin, end = yield
+
+        while True:
+            begin, end = yield (string_line_numbers[begin], string_line_numbers[end])
 
 
     def filter_substrings(self, substring):
@@ -75,23 +88,33 @@ class SuffixTreeAlgorithm:
         # longest to shortest
         common_substrings.sort(key=lambda x: len(x), reverse=True)
 
-        document_matches = []
+        document_matches = [[], []]
+        string_indexes = [[], []]
+        to_line_number = map(self.string_indexes_to_line_numbers, canonicalised)
+        to_line_number[0].send(None)
+        to_line_number[1].send(None)
 
-        # find the indexes of the strings and remove all overlapping occurrences
-        for i in xrange(2):
-            string_indexes = []
-            for substring in common_substrings:
+        source_lines = map(lambda x: x.program_source.split('\n'), submissions)
+
+        for substring in common_substrings:
+            indexes = []
+            substring_originals = []
+            for i in (0, 1):
                 index = canonicalised[i].index(substring)
-                string_indexes.append(self.wrap_substring_to_lines(canonicalised[i], index, index + len(substring)))
+                wrapped_index = self.wrap_substring_to_lines(canonicalised[i], index, index + len(substring))
+                line_index = to_line_number[i].send(wrapped_index)
+                indexes.append(line_index)
+                substring_originals.append('\n'.join(source_lines[i][line_index[0]:line_index[1]]))
 
-            temp = self.string_indexes_to_line_numbers(canonicalised[i], string_indexes)
-            line_numbers = self.remove_overlapping_ranges(temp)
+            # only add this index if we can match variables
+            if self._variable_match(*substring_originals):
+                for i in (0, 1):
+                    string_indexes[i].append(indexes[i])
 
-            matches = []
+        for i in (0, 1):
+            line_numbers = self.remove_overlapping_ranges(string_indexes[i])
+
             for begin, end in line_numbers:
-                matches.append(Match(submissions[i].id, begin, end - begin, 0))
-
-
-            document_matches.append(matches)
+                document_matches[i].append(Match(submissions[i].id, begin, end - begin, 0))
 
         return document_matches
