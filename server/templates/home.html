@@ -1,0 +1,107 @@
+{% extends "layout.html" %}
+{% block title %}Assignments List{% endblock %}
+
+{% block navbar %}
+    <ul class="nav navbar-nav navbar-right">
+        <li><a href="/assignments/create">Create Assignment</a></li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">View cheaters by assignment</div>
+            <div class="panel-body">
+
+                <table class="table table-hover">
+
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Submissions</th>
+                            <th>Due</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for assignment in assignments %}
+                        <tr class="{% if assignment.completed %}strikeout{% endif %}">
+                                <td><a href="/cheaters/{{assignment.id}}">Assignment {{assignment.id}}</a></td>
+                                <td>{{assignment.submissions_count}}</td>
+                                <td>{{assignment.dueDate}}</td>
+                                <td>{{assignment.description}}</td>
+                                {% if not assignment.completed %}
+                                {% endif %}
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td>No assignments found.</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+
+            <div class="panel-footer">
+                <a href="/assignments/manage" class="btn btn-large btn-default"><span class="glyphicon glyphicon-cog"></span> Manage assignments</a>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Review the Reports</div>
+            <div class="panel-body">
+
+                <table class="table table-hover">
+
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Cheaters</th>
+                            <th>%</th>
+                            <th>Students</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for assignment in assignments %}
+                        <tr class="{% if assignment.completed %}strikeout{% endif %}">
+                                <td><a href="/report/{{assignment.id}}">Assignment {{assignment.id}}</a></td>
+                                <td>154</td>
+                                <td>0.15</td>
+                                <td>750</td>
+                                {% if not assignment.completed %}
+                                {% endif %}
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td>No reports found</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div class="panel-footer">
+                <a href="/reports/manage" class="btn btn-large btn-default"><span class="glyphicon glyphicon-cog"></span> Manage reports</a>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+{% endblock %}

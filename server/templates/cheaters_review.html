@@ -1,0 +1,138 @@
+{% extends "layout.html" %}
+{% block title %}Submissions for Assignment {{assignment_num}}{% endblock %}
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="/static/css/prism.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/prism-line-numbers.css" />
+{% endblock %}
+
+{% block navbar %}
+    <ul class="nav navbar-nav navbar-right">
+        <li><a href="#">View Report</a></li>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Select Assignment <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+            {% for assignment in assignments %}
+            <li><a href="/cheaters/{{assignment.id}}">Assignment {{assignment.id}}</a></li>
+            {% endfor %}
+            </ul>
+        </li>
+    </ul>
+{% endblock %}
+{% block content %}
+
+    <ul class="nav nav-tabs" role="tablist">
+        <li data-view="pairs" class="active"><a href="#">Pairs of students</a></li>
+        <li data-view="groups"><a href="#">Groups of students</a></li>
+        <li data-view="code"><a href="#">Code view</a></li>
+    </ul>
+
+    <section id="subgroups" class="initializing">
+
+        <div id="pairs" class="active clearfix">
+            <div class="panel panel-default list">
+                <div class="panel-heading">List of student pairs</div>
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Student A</th>
+                                <th>Student B</th>
+                                <th>A %</th>
+                                <th>B %</th>
+                                <th>Lines</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div class="scrollable">
+                        <table class="table table-hover">
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">Histogram of confidence levels</div>
+                <div class="panel-body">
+                    <div class="diagram"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="groups" class="clearfix">
+            <div class="panel panel-default list">
+                <div class="panel-heading">Groups of students</div>
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Size</th>
+                                <th>Student A</th>
+                                <th>Student B</th>
+                                <th>A %</th>
+                                <th>B %</th>
+                                <th>Lines</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div class="scrollable">
+                        <table class="table table-hover"></table>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">Connections between students in the group</div>
+                <div class="panel-body">
+                    <div class="diagram"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="code" class="clearfix">
+
+            <div class="action-bar">
+                <button class="btn btn-default back" data-view="pairs"><span class="glyphicon glyphicon-arrow-left"></span> Back</button>
+                <div class="btn-group" id="shared-lines"></div>
+                <button class="btn btn-danger pull-right"><span class="glyphicon glyphicon-screenshot"></span> Mark as Cheated</button>
+            </div>
+
+            <div class="panel panel-default A">
+                <div class="panel-heading">
+                    <span class="id">Student A</span>
+                    <span class="confidence pull-right"># lines</span>
+                </div>
+                <div class="panel-body">
+                    <div class="howto"></div>
+                    <div class="loading"></div>
+                    <pre class="line-numbers">
+                        <code class="language-python"></code>
+                    </pre>
+                </div>
+            </div>
+
+            <div class="panel panel-default B">
+                <div class="panel-heading">
+                    <span class="id">Student B</span>
+                    <span class="confidence pull-right"># lines</span>
+                </div>
+                <div class="panel-body">
+                    <div class="howto"></div>
+                    <div class="loading"></div>
+                    <pre class="line-numbers">
+                        <code class="language-python"></code>
+                    </pre>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+{% endblock %}
+{% block scripts %}
+    <script>
+        // bootstrapped data, used by main.js
+        var assignment_number = {{ assignment_num }};
+    </script>
+    <script src="/static/js/main.js"></script>
+{% endblock %}

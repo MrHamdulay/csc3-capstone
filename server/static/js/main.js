@@ -146,6 +146,10 @@ var draw_graph_diagram = function(d) {
     var width = $(groups_diagram_selector).width(),
         height = $(groups_diagram_selector).innerHeight();
 
+    if (!$(groups_diagram_selector).hasClass('rendered')) {
+        $(groups_diagram_selector).addClass('rendered');
+    }
+
     d3.select(groups_diagram_selector).selectAll('*').remove();
 
     var svg = d3.select(groups_diagram_selector).append("svg")
@@ -370,6 +374,12 @@ var populate_code_view = function(d) {
     $('.line-highlight').remove();
     $(shared_lines_selector).empty();
 
+    if (!$(code_panel_body_selector).hasClass('rendered'))
+        $(code_panel_body_selector).addClass('rendered');
+
+    if (!$(code_panel_body_selector).hasClass('fetching'))
+        $(code_panel_body_selector).addClass('fetching');
+
     // set Student A and Student B
     d3.select(student_A_id_selector).text(d.source);
     d3.select(student_B_id_selector).text(d.target);
@@ -382,11 +392,11 @@ var populate_code_view = function(d) {
 
     retrieve_matches(d.source_id).then(function(json) {
 
+        $(code_panel_body_selector).removeClass('fetching');
+
         // enhance code view
         set_line_numbers(json);
         Prism.highlightAll();
-        $(student_A_code_selector).removeClass('loading');
-        $(student_B_code_selector).removeClass('loading');
 
         // line number buttons
         set_action_line_buttons(json.source);
@@ -434,7 +444,7 @@ var set_vertical_layout = function() {
 
     var navbar_h = $(navbar_selector).innerHeight(),
         navbar_bot = get_css_val('margin-bottom', navbar_selector),
-        navtabs_h = $(navtabs_selector).innerHeight(),
+        navtabs_h = $(navtabs_selector).innerHeight() + get_css_val('margin-bottom', navtabs_selector),
         subgroups_h = container_h - navbar_h - navbar_bot - navtabs_h;
 
     $(subgroups_selector).height(subgroups_h);
@@ -447,6 +457,8 @@ var set_vertical_layout = function() {
 
     $(pairs_panel_selector + ' .panel-body').height(panel_body_h);
     $(groups_panel_selector + ' .panel-body').height(panel_body_h);
+    $(pairs_panel_selector + ' .scrollable').height(panel_body_h - 37);
+    $(groups_panel_selector + ' .scrollable').height(panel_body_h - 37);
 
     // code panel height
 
@@ -490,6 +502,7 @@ var run = function() {
         set_pairs_table(json.pairs);
         draw_histogram_diagram(json.histogram);
         set_groups_table(json.groups);
+        $(subgroups_selector).removeClass('initializing');
     });
 
     $(action_bar_back_selector).on('click', function(e) {
@@ -515,6 +528,11 @@ var run = function() {
 }
 
 run();
+
+var easing, e, pos;
+$(function(){
+  // Get the click event
+});
 
 /*
 

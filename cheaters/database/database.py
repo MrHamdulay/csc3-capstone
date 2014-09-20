@@ -86,13 +86,14 @@ class DatabaseManager:
 
     def fetch_an_assignment(self,assignmentNumber):
         c = self.conn.cursor()
-        c.execute('SELECT Id, CourseCode, AssignmentDescription FROM Assignments WHERE Id = ?' ,(assignmentNumber, ))
+        c.execute('SELECT Id, CourseCode, AssignmentDescription, DueDate FROM Assignments WHERE Id = ?' ,(assignmentNumber, ))
         assignment = None
         for x in c:
             assignment = Assignment(
                 id = x[0],
                 course_code = x[1],
-                description = x[2]
+                description = x[2],
+                due_date = x[3]
             )
         c.close()
         return assignment
@@ -104,7 +105,8 @@ class DatabaseManager:
         c.execute('SELECT Id, CourseCode, AssignmentDescription, DueDate, DueDate < ? FROM Assignments',(date,))
         assignments = []
         for row in c:
-            assignments.append(Assignment(row[0], row[1], row[2], row[3], row[4]))
+            count = self.count_submissions(row[0])
+            assignments.append(Assignment(row[0], row[1], row[2], row[3], row[4], count))
         c.close()
         return assignments
 
@@ -166,27 +168,56 @@ class DatabaseManager:
 
     def delete_student(self,studentId):
         c = self.conn.cursor()
-        c.execute('DELETE FROM Students where StudentNumber = ?' ,(studentId, ))
+        c.execute('DELETE FROM Students where StudentNumber=?' ,(studentId, ))
         c.close()
         self.conn.commit()
 
     def delete_assignment(self, assignmentNumber):
         c = self.conn.cursor()
-        c.execute('DELETE FROM Assignments where Id =?' ,(assignmentNumber, ))
+        c.execute('DELETE FROM Assignments where Id=?' ,(assignmentNumber, ))
+        c.execute('DELETE FROM sqlite_sequence WHERE name="Assignments"')
+        self.delete_submissions(assignmentNumber)
         c.close()
-
         self.conn.commit()
 
-    def delete_submissions(self,submissionId):
+    def update_assignment(self, assignmentNumber, courseCode, assignmentDescription, dueDate):
         c = self.conn.cursor()
-        c.execute('DELETE FROM Submissions where Id = ?' ,(submissionId, ))
+        c.execute('SELECT * FROM Assignments WHERE Id=?', (assignmentNumber, ))
+        for row in c:
+            course_code = row[1]
+            description = row[2]
+        if (courseCode):
+            course_code = courseCode
+        if (assignmentDescription):
+            description = assignmentDescription
+        if (dueDate):
+            dueDate = dueDate
+        c.execute('UPDATE Assignments SET CourseCode="' + course_code + '", AssignmentDescription="' + description + '", DueDate="' + dueDate + '" WHERE ID=' + assignmentNumber + ';')
         c.close()
         self.conn.commit()
 
+    def delete_submissions(self, assignmentNum):
+        c = self.conn.cursor()
+        c.execute('DELETE FROM Submissions where AssignmentNumber=?' ,(assignmentNum, ))
+        c.close()
+        self.conn.commit()
+
+    def delete_submission(self,submissionId):
+        c = self.conn.cursor()
+        c.execute('DELETE FROM Submissions where Id=?' ,(submissionId, ))
+        c.close()
+        self.conn.commit()
+
+    def count_submissions(self, assignment_num):
+        c = self.conn.cursor()
+        c.execute('SELECT Count(*) FROM Submissions WHERE AssignmentNumber=?' ,(assignment_num, ))
+        count = c.fetchone()[0]
+        c.close()
+        return count
 
     def delete_signatures(self,signatureId):
         c = self.conn.cursor()
-        c.execute('DELETE FROM Signatures where Id = ?' ,(signatureId, ))
+        c.execute('DELETE FROM Signatures where Id=?' ,(signatureId, ))
         c.close()
         self.conn.commit()
 
