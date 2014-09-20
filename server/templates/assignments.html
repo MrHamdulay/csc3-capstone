@@ -31,8 +31,6 @@ tr.strikeout td:before {
                 <td><a href="/{{assignment.id}}">Assignment {{assignment.id}}</a></td>
                 <td>{{assignment.dueDate}}</td>
                 <td>{{assignment.description}}</td>
-                {% if not assignment.completed %}
-                {% endif %}
             </tr>
         {% else %}
             <tr>

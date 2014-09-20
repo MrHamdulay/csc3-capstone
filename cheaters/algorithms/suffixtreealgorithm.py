@@ -42,6 +42,34 @@ class SuffixTreeAlgorithm:
         return len(lines)>3
 
     @staticmethod
+    def _wrap_to_lines(code, index, direction):
+        # check for non whitespace characters before this
+        i = index - direction
+        isInMiddleLine = False
+        while i >= 0 and i < len(code):
+            if code[i] == '\n':
+                break
+            if code[i] not in '\t ':
+                isInMiddleLine = True
+                break
+            i -= direction
+        if isInMiddleLine:
+            # find first newline in direction
+            i = index
+            while i>=0 and i<len(code) and code[i] != '\n':
+                i += direction
+            return i
+        else:
+            return index
+
+
+    @staticmethod
+    def wrap_substring_to_lines(code, begin, end):
+        return (SuffixTreeAlgorithm._wrap_to_lines(code, begin, +1),
+               SuffixTreeAlgorithm._wrap_to_lines(code, end, -1))
+
+
+    @staticmethod
     def calculate_document_similarity(*submissions):
         assert len(submissions) == 2
         assert submissions[0].language == submissions[1].language
@@ -60,7 +88,7 @@ class SuffixTreeAlgorithm:
             string_indexes = []
             for substring in common_substrings:
                 index = canonicalised[i].index(substring)
-                string_indexes.append((index, index + len(substring)))
+                string_indexes.append(SuffixTreeAlgorithm.wrap_substring_to_lines(canonicalised[i], index, index + len(substring)))
 
             temp = SuffixTreeAlgorithm.string_indexes_to_line_numbers(canonicalised[i], string_indexes)
             line_numbers = SuffixTreeAlgorithm.remove_overlapping_ranges(temp)
