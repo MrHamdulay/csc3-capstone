@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block title %}Assignments List{% endblock %}
+{% block content %}
+<style>
+table {
+    border-collapse:collapse
+}
+tr.strikeout td {
+    position:relative;
+    color: #ccc;
+}
+tr.strikeout td:before {
+  content: " ";
+  position: absolute;
+  left: 0; top: 50%; width: 100%;
+  border-bottom: 1px solid #ccc;
+}
+</style>
+<h3>Assignments</h3>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Due</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for assignment in assignments %}
+        <tr class="{% if assignment.completed %}strikeout{% endif %}">
+                <td><a href="/{{assignment.id}}">Assignment {{assignment.id}}</a></td>
+                <td>{{assignment.dueDate}}</td>
+                <td>{{assignment.description}}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td>No Assignments found.</td>
+                <td></td>
+                <td></td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href = "/createAssignment" class="btn btn-large btn-primary">Create an assignment</a>
+<a href = "/deleteAssignment" class="btn btn-large btn-danger" >Delete an assignment</a>
+{% endblock %}

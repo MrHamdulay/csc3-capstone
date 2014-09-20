@@ -113,4 +113,4 @@ class Detector:
     def canonicalise_submission(submission):
         language_handler = Detector.LANGUAGES[submission.language]()
         language_handler.parse_file(submission.program_source)
-        return language_handler.strip_unstable_atrributes()
+        return language_handler.strip_unstable_atrributes().replace(' ', '')

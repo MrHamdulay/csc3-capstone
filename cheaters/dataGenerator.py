@@ -47,7 +47,7 @@ class DataGenerator:
         database = DatabaseManager()
         for assignment in assignments:
             document_assignment_number = self.get_assignment_number(assignment)
-            if document_assignment_number not in (6,):
+            if document_assignment_number != 6:
                 continue
             if document_assignment_number not in assignment_id_map:
                 name = 'Assignment %d' % document_assignment_number
