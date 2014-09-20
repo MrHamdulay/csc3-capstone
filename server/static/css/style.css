@@ -261,8 +261,9 @@ tr.selected {
     word-wrap: normal;
 }
 
-#code #mark-student {
-    width: 189px;
+#code .mark {
+    width: 140px;
+    margin-left: 10px;
 }
 
 h3.a {
