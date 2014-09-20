@@ -301,6 +301,7 @@ class DatabaseManager:
 
     def delete_report_items(self, assignment_num, student_nums):
         c = self.conn.cursor()
+        student_nums = ','.join(map("'{0}'".format, student_nums))
         query = 'DELETE FROM Reports WHERE AssignmentNumber=%s AND StudentNumber IN (%s)' % (assignment_num, student_nums)
         c.execute(query)
         c.close()

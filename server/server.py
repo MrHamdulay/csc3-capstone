@@ -166,8 +166,6 @@ class View(FlaskView):
         @render report_delete.html
         '''
         student_numbers = request.form.getlist('studentNums')
-        student_numbers = ','.join(map("'{0}'".format, student_numbers))
-        print(student_numbers)
         database = DatabaseManager()
         report = database.delete_report_items(assignment_num, student_numbers)
         return redirect('/reports/' + str(assignment_num))
@@ -207,14 +205,21 @@ class View(FlaskView):
         return jsonify(source=match_strings[0], target=match_strings[1])
 
     @route('/api/reports', methods=['POST'])
-    def json_reports(self):
+    def json_report_insert(self):
         '''Reports a student as having cheated from the UI'''
         database = DatabaseManager()
-        source = request.form['source']
-        target = request.form['target']
+        student = request.form['student']
         assignment_number = request.form['assignment_number']
-        database.insert_report_item(assignment_number, source)
-        database.insert_report_item(assignment_number, target)
+        database.insert_report_item(assignment_number, student)
+        return jsonify(result=True)
+
+    @route('/api/reports', methods=['DELETE'])
+    def json_report_delete(self):
+        '''Deletes a report of a student from the UI'''
+        database = DatabaseManager()
+        student = request.form['student']
+        assignment_number = request.form['assignment_number']
+        database.delete_report_items(assignment_number, [student])
         return jsonify(result=True)
 
 
