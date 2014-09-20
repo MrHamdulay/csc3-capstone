@@ -86,7 +86,7 @@ class DatabaseManager:
 
     def fetch_an_assignment(self,assignmentNumber):
         c = self.conn.cursor()
-        c.execute('SELECT Id, CourseCode, AssignmentDescription, DueDate FROM Assignments WHERE Id = ?' ,(assignmentNumber, ))
+        c.execute('SELECT Id, CourseCode, AssignmentDescription, DueDate FROM Assignments WHERE Id=?' ,(assignmentNumber, ))
         assignment = None
         for x in c:
             assignment = Assignment(
@@ -271,8 +271,6 @@ class DatabaseManager:
         c.close()
         self.conn.commit()
 
-
-
     def fetch_all_submission_matches(self, assignment_num):
         c = self.conn.cursor()
         c.execute('SELECT sm.Id, sm.SubmissionId, sm.MatchSubmissionId, NumberSignaturesMatched, Confidence, '
@@ -285,3 +283,33 @@ class DatabaseManager:
             results.append(SignatureMatch(*row))
         c.close()
         return results
+
+    def fetch_report(self, assignment_num):
+        c = self.conn.cursor()
+        c.execute('SELECT * FROM Reports WHERE AssignmentNumber=?', (assignment_num, ))
+        results = []
+        for row in c:
+            results.append(row[1])
+        c.close()
+        return results
+
+    def insert_report_item(self, assignment_num, student_num):
+        c = self.conn.cursor()
+        c.execute('INSERT INTO Reports (StudentNumber, AssignmentNumber) VALUES (?,?)', (student_num, assignment_num, ))
+        c.close()
+        self.conn.commit()
+
+    def delete_report_items(self, assignment_num, student_nums):
+        c = self.conn.cursor()
+        query = 'DELETE FROM Reports WHERE AssignmentNumber=%s AND StudentNumber IN (%s)' % (assignment_num, student_nums)
+        c.execute(query)
+        c.close()
+        self.conn.commit()
+
+    def count_cheaters(self, assignment_num):
+        c = self.conn.cursor()
+        c.execute('SELECT Count(*) FROM Reports WHERE AssignmentNumber=?' ,(assignment_num, ))
+        count = c.fetchone()[0]
+        c.close()
+        return count
+

@@ -261,6 +261,10 @@ tr.selected {
     word-wrap: normal;
 }
 
+#code #mark-student {
+    width: 189px;
+}
+
 h3.a {
     padding: 0;
     float: left;

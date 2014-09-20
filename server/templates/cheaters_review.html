@@ -7,7 +7,7 @@
 
 {% block navbar %}
     <ul class="nav navbar-nav navbar-right">
-        <li><a href="#">View Report</a></li>
+        <li><a href="/reports/{{assignment_num}}">View Report</a></li>
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Select Assignment <span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
@@ -93,7 +93,7 @@
             <div class="action-bar">
                 <button class="btn btn-default back" data-view="pairs"><span class="glyphicon glyphicon-arrow-left"></span> Back</button>
                 <div class="btn-group" id="shared-lines"></div>
-                <button class="btn btn-danger pull-right"><span class="glyphicon glyphicon-screenshot"></span> Mark as Cheated</button>
+                <button class="btn btn-danger pull-right" id="mark-student"><span class="glyphicon glyphicon-screenshot"></span> Mark students as cheated</button>
             </div>
 
             <div class="panel panel-default A">

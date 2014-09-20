@@ -33,7 +33,8 @@ var code_selector = '#code',
     student_B_id_selector    = code_selector + ' .B .id',
     student_B_lines_selector = code_selector + ' .B .lines',
     student_B_pre_selector  = code_selector + ' .B pre',
-    student_B_code_selector  = code_selector + ' .B code';
+    student_B_code_selector  = code_selector + ' .B code',
+    mark_button_selector = '#mark-student';
 
 var code = {},
     confidence_values = [];
@@ -368,6 +369,22 @@ var set_action_line_buttons = function(lines) {
     });
 }
 
+var mark_cheated = function(student_A, student_B) {
+    return new Promise(function(fulfill, reject) {
+        $.ajax({
+            url: get_api_url('mark'),
+            type: 'POST',
+            data: {
+                source: student_A,
+                target: student_B,
+                assignment_number: assignment_number
+            },
+            success: function(res) { fulfill(res) },
+            error: function(err) { reject(err) }
+        });
+    });
+}
+
 var populate_code_view = function(d) {
 
     // clean view
@@ -379,6 +396,10 @@ var populate_code_view = function(d) {
 
     if (!$(code_panel_body_selector).hasClass('fetching'))
         $(code_panel_body_selector).addClass('fetching');
+
+    $(mark_button_selector).text('Mark students as cheated')
+        .removeClass('btn-warning').addClass('btn-danger')
+        .removeAttr('disabled');
 
     // set Student A and Student B
     d3.select(student_A_id_selector).text(d.source);
@@ -425,6 +446,9 @@ var get_api_url = function(key, id) {
             break;
         case 'lines':
             url += '/' + id;
+            break;
+        case 'mark':
+            url = '/api/reports';
             break;
     }
     return url;
@@ -516,6 +540,19 @@ var run = function() {
         e.stopPropagation();
         var view = $(e.target).closest('li').data('view');
         toggle_view(view);
+    });
+
+    $(mark_button_selector).on('click', function(e) {
+        e.preventDefault();
+        var student_A = $(student_A_id_selector).text(),
+            student_B = $(student_B_id_selector).text();
+        $(mark_button_selector).text('Reporting students...');
+        mark_cheated(student_A, student_B).then(function() {
+            $(mark_button_selector).text('reported');
+            $(mark_button_selector).removeClass('btn-danger')
+                .addClass('btn-warning')
+                .attr('disabled', 'disabled');
+        });
     });
 
     set_vertical_layout();

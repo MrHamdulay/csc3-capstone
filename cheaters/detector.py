@@ -44,9 +44,6 @@ class Detector:
             print(str(assignment_number) + " " + student_number + " Failed")
             pass
 
-
-
-
     def store_and_update_closest_matches(self, submission_id):
         database = DatabaseManager()
         grouper = Grouper()
@@ -81,11 +78,6 @@ class Detector:
                 return extension
         raise UnknownLanguageException()
 
-    def delete_assignment(self,assignmentNumber):
-        db = DatabaseManager()
-        db.delete_assignment(assignmentNumber)
-        print('Assignment deleted')
-
     def concatenate_files(self, zip_file):
         concatenated_file = ''
         for filename in zip_file.namelist():
@@ -96,11 +88,6 @@ class Detector:
             if extension in self.language_handler.file_types:
                 concatenated_file += zip_file.read(filename) + '\n'
         return concatenated_file
-
-    def runAssignment(self,description, dueDate,courseCode):
-        database = DatabaseManager()
-        database.store_assignment(courseCode, description,dueDate)
-        print('stored')
 
     @staticmethod
     def find_most_similar_submission(submission):

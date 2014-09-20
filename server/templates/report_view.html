@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+{% block title %}Report List{% endblock %}
+
+{% block navbar %}
+    <ul class="nav navbar-nav navbar-right">
+        <li><a href="/cheaters/{{assignment_num}}">View Assignment</a></li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <form action="/reports/delete/{{assignment_num}}" method="POST" role="form">
+
+            <div class="panel panel-default">
+                <div class="panel-heading">List of Cheaters for assignment {{assignment_num}}</div>
+                <div class="panel-body">
+
+                    <table class="table table-hover">
+
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Student</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for student_num in report %}
+                            <tr>
+                                <td>
+                                    <input name="studentNums" type="checkbox" value="{{student_num}}" />
+                                </td>
+                                <td>{{student_num}}</td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td>No students found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+
+                <div class="panel-footer">
+                    <button class="btn btn-large btn-danger" type="submis">Remove students</button>
+                    <a class="btn btn-large btn-default pull-right" id="csv-download">Download as CSV</a>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        var report = {{ report | safe }},
+            assignment_number = {{ assignment_num }};
+    </script>
+    <script src="/static/js/report.js"></script>
+{% endblock %}

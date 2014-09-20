@@ -44,3 +44,9 @@ CREATE TABLE IF NOT EXISTS SubmissionMatches(
 );
 CREATE INDEX IF NOT EXISTS submission_match_id ON SubmissionMatches(SubmissionId);
 CREATE INDEX IF NOT EXISTS submission_match_id_id ON SubmissionMatches(MatchSubmissionId);
+
+CREATE TABLE if not exists Reports(
+  Id INTEGER PRIMARY KEY AUTOINCREMENT,
+  StudentNumber TEXT,
+  AssignmentNumber INT
+ );

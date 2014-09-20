@@ -28,20 +28,18 @@
 
                     <tbody>
                         {% for assignment in assignments %}
-                        <tr class="{% if assignment.completed %}strikeout{% endif %}">
-                                <td><a href="/cheaters/{{assignment.id}}">Assignment {{assignment.id}}</a></td>
-                                <td>{{assignment.submissions_count}}</td>
-                                <td>{{assignment.dueDate}}</td>
-                                <td>{{assignment.description}}</td>
-                                {% if not assignment.completed %}
-                                {% endif %}
-                            </tr>
+                        <tr>
+                            <td><a href="/cheaters/{{assignment.id}}">Assignment {{assignment.id}}</a></td>
+                            <td>{{assignment.submissions_count}}</td>
+                            <td>{{assignment.dueDate}}</td>
+                            <td>{{assignment.description}}</td>
+                        </tr>
                         {% else %}
-                            <tr>
-                                <td>No assignments found.</td>
-                                <td></td>
-                                <td></td>
-                            </tr>
+                        <tr>
+                            <td>No assignments found.</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
                         {% endfor %}
                     </tbody>
 
@@ -72,15 +70,17 @@
                     </thead>
 
                     <tbody>
-                        {% for assignment in assignments %}
-                        <tr class="{% if assignment.completed %}strikeout{% endif %}">
-                                <td><a href="/report/{{assignment.id}}">Assignment {{assignment.id}}</a></td>
-                                <td>154</td>
-                                <td>0.15</td>
-                                <td>750</td>
-                                {% if not assignment.completed %}
-                                {% endif %}
-                            </tr>
+                        {% for report in reports %}
+                        <tr>
+                            <td><a href="/reports/{{report.assignment_num}}">Assignment {{report.assignment_num}}</a></td>
+                            <td>{{report.count}}</td>
+                            {% if report.assignment_count == 0 %}
+                                <td>0</td>
+                            {% else %}
+                                <td>{{ "%.2f" % (report.count / report.assignment_count) }}</td>
+                            {% endif %}
+                            <td>{{report.assignment_count}}</td>
+                        </tr>
                         {% else %}
                             <tr>
                                 <td>No reports found</td>
@@ -94,9 +94,6 @@
 
             </div>
 
-            <div class="panel-footer">
-                <a href="/reports/manage" class="btn btn-large btn-default"><span class="glyphicon glyphicon-cog"></span> Manage reports</a>
-            </div>
 
         </div>
 
