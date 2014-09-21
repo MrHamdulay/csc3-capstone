@@ -1,3 +1,11 @@
+'''
+Author: Yaseen Hamdulay, Jarred de Beer, Merishka Lalla
+Date: 15 August 2014
+
+Python parser and attribute stripper.
+
+Used to
+'''
 import ast
 from keyword import kwlist as PYTHON_KWLIST
 from collections import defaultdict
@@ -87,19 +95,6 @@ class PythonLanguageHandler(ProgramSubmission):
     except SyntaxError:
         self.ast = ast.parse(program_source)
 
-
-  '''
-  mark a section of code as having being cheated
-  from someone'''
-  def mark_cheated(self, node):
-    # reevaluate this when we mark more things
-    self.cheated_sections = None
-    if isinstance(node, SectionMatch):
-      bottom, top = node.startline, node.endline
-    else:
-      bottom, top = getLineLimits(node)
-    for i in xrange(bottom, top):
-      self.potential_cheated_sections[i] = True
 
   ''' print the source of a given node '''
   def print_node(self, node):
