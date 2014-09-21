@@ -1,3 +1,16 @@
+'''
+Author: Yaseen Hamdulay, Jarred de Beer, Merishka Lalla
+Date: 15 August 2014
+
+
+Takes signatures from output of winnower algorithm and manipulates them
+in various ways.
+
+Grouping by original document, filtering out lonely signatures (signatures
+that are multiple lines away from other signatures) and groping consecutive
+multi line occurences of signatures into one Match object
+'''
+
 from collections import defaultdict
 from model.match import Match
 
@@ -41,7 +54,7 @@ class Grouper:
                               signature.line_number_mine - start_signature.line_number_mine,
                               i - run_start)
                 # if more than a few matches
-                if density > 3 and number_of_lines > 3:
+                if number_of_lines > 2:
                     document_matches.append(match)
                 run_start = i
 

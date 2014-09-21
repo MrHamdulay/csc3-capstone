@@ -1,3 +1,9 @@
+'''
+Author: Yaseen Hamdulay, Jarred de Beer, Merishka Lalla
+Date: 15 August 2014
+
+Cache of db storage for signatures
+'''
 from collections import defaultdict
 from model.signature import Signature
 

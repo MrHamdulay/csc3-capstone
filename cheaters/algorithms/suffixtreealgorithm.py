@@ -1,3 +1,9 @@
+'''
+Author: Yaseen Hamdulay, Jarred de Beer, Merishka Lalla
+Date: 15 August 2014
+
+Using suffix trees to find similarity between pairs of documents
+'''
 from detector import Detector
 from algorithms.suffix_tree import SuffixTree
 from model.match import Match
@@ -18,6 +24,8 @@ class SuffixTreeAlgorithm:
         return True
 
     def remove_overlapping_ranges(self, ranges):
+        if not ranges:
+            return []
         ranges.sort()
 
         result = [ranges[0]]
@@ -51,70 +59,97 @@ class SuffixTreeAlgorithm:
         lines = filter(None, lines)
         return len(lines)>3
 
-    def _wrap_to_lines(self, code, index, direction):
+    def _wrap_to_lines(self, lines, code, index, direction):
         # check for non whitespace characters before this
-        i = index - direction
-        isInMiddleLine = False
-        while i >= 0 and i < len(code):
-            if code[i] == '\n':
-                break
-            if code[i] not in '\t ':
-                isInMiddleLine = True
-                break
-            i -= direction
-        if isInMiddleLine:
-            # find first newline in direction
-            i = index
-            while i>=0 and i<len(code) and code[i] != '\n':
-                i += direction
-            return i
-        else:
-            return index
+        code = code+'\n'
+        if index > 0 and index < len(code):
+            if lines[index] == lines[index-direction]:
+                # find first newline in direction
+                i = index
+                while i>=0 and i<len(code) and lines[i] == lines[i-direction]:
+                    i += direction
+                return i
+        return index
 
 
-    def wrap_substring_to_lines(self, code, begin, end):
-        return (self._wrap_to_lines(code, begin, +1),
-               self._wrap_to_lines(code, end, -1))
+    def wrap_substring_to_lines(self, code, lines, begin, end):
+        our_lines = lines+[lines[-1]+1]
+        return (self._wrap_to_lines(our_lines, code, begin, +1),
+                self._wrap_to_lines(our_lines, code, end, -1))
 
+    def whitespaced_stripped_with_line_numbers(self, string):
+        WHITESPACE = ' \n\t'
+        line_number = 0
+        s = ''
+        line_numbers = []
+        for char in string:
+            if char == '\n':
+                line_number += 1
+            if char in WHITESPACE:
+                continue
+            s += char
+            line_numbers.append(line_number)
+        line_numbers.append(line_number)
+        return s, line_numbers
 
     def calculate_document_similarity(self, *submissions):
         assert len(submissions) == 2
         assert submissions[0].language == submissions[1].language
-        canonicalised = map(Detector.canonicalise_submission, submissions)
+        line_numbers = []
+        canonicalised = []
+        for submission in submissions:
+            document = Detector.canonicalise_submission(submission)
+            s, l = self.whitespaced_stripped_with_line_numbers(document)
+            line_numbers.append(l)
+            canonicalised.append(s)
 
         st = SuffixTree(canonicalised)
         common_substrings = list(st.common_substrings_longer_than(20))
-        common_substrings = filter(self.filter_substrings, common_substrings)
         # longest to shortest
         common_substrings.sort(key=lambda x: len(x), reverse=True)
 
         document_matches = [[], []]
         string_indexes = [[], []]
-        to_line_number = map(self.string_indexes_to_line_numbers, canonicalised)
-        to_line_number[0].send(None)
-        to_line_number[1].send(None)
 
         source_lines = map(lambda x: x.program_source.split('\n'), submissions)
 
         for substring in common_substrings:
-            indexes = []
-            substring_originals = []
-            for i in (0, 1):
-                index = canonicalised[i].index(substring)
-                wrapped_index = self.wrap_substring_to_lines(canonicalised[i], index, index + len(substring))
-                line_index = to_line_number[i].send(wrapped_index)
-                indexes.append(line_index)
-                substring_originals.append('\n'.join(source_lines[i][line_index[0]:line_index[1]]))
-
-            # only add this index if we can match variables
-            if self._variable_match(*substring_originals):
+            startAt = [0, 0]
+            while True:
+                indexes = []
+                substring_originals = []
+                empty = False
+                newStartAt = startAt[:]
                 for i in (0, 1):
-                    string_indexes[i].append(indexes[i])
+
+                    index = canonicalised[i].find(substring, startAt[i])
+                    if index != -1:
+                        newStartAt[i] = index+1
+                    else:
+                        index = canonicalised[i].find(substring)
+                    index = self.wrap_substring_to_lines(canonicalised[i], line_numbers[i], index, index + len(substring))
+                    # it wrapped to 0 lines
+                    if index[0] >= index[1]:
+                        empty = True
+                        continue
+                    line_index = line_numbers[i][index[0]], line_numbers[i][index[1]]
+                    indexes.append(line_index)
+                    substring_originals.append('\n'.join(source_lines[i][line_index[0]:line_index[1]]))
+
+                if startAt == newStartAt:
+                    break
+                startAt = newStartAt
+
+                # only add this index if we can match variables
+                if not empty and self._variable_match(*substring_originals):
+                    for i in (0, 1):
+                        string_indexes[i].append(indexes[i])
 
         for i in (0, 1):
             line_numbers = self.remove_overlapping_ranges(string_indexes[i])
 
             for begin, end in line_numbers:
-                document_matches[i].append(Match(submissions[i].id, begin, end - begin, 0))
+                if end - begin > 1:
+                    document_matches[i].append(Match(submissions[i].id, begin, end - begin, 0))
 
         return document_matches

@@ -1,18 +1,12 @@
+'''
+Author: Yaseen Hamdulay, Jarred de Beer, Merishka Lalla
+Date: 15 August 2014
+
+Implementation of Ukkonen's generalised Suffix Tree algorithm.
+
+Used for finding common substrings.
+'''
 class Node(object):
-    """A node in the suffix tree.
-
-    suffix_node
-        the index of a node with a matching suffix, representing a suffix link.
-        -1 indicates this node has no suffix link.
-
-    strings_contained
-        bitstring of strings the substring defined by the partial path
-        of this edge is contained within
-
-        e.g. if the path from root - current edge is 'aham'
-        and 'aham' is in string 1 and string 2 the first bit and
-        second bit will be set
-    """
     def __init__(self):
         self.suffix_node = -1
         self.strings_contained = -1
@@ -21,21 +15,6 @@ class Node(object):
         return "Node(suffix link: %d)"%self.suffix_node
 
 class Edge(object):
-    """An edge in the suffix tree.
-
-    first_char_index
-        index of start of string part represented by this edge
-
-    last_char_index
-        index of end of string part represented by this edge
-
-    source_node_index
-        index of source node of edge
-
-    dest_node_index
-        index of destination node of edge
-
-    """
     def __init__(self, string, first_char_index, last_char_index, source_node_index, dest_node_index):
         self.string = string
         self.first_char_index = first_char_index
@@ -55,17 +34,6 @@ class Edge(object):
 
 
 class Suffix(object):
-    """Represents a suffix from first_char_index to last_char_index.
-
-    source_node_index
-        index of node where this suffix starts
-
-    first_char_index
-        index of start of suffix in string
-
-    last_char_index
-        index of end of suffix in string
-    """
     def __init__(self, source_node_index, first_char_index, last_char_index):
         self.source_node_index = source_node_index
         self.first_char_index = first_char_index
@@ -86,16 +54,7 @@ class Suffix(object):
 
 
 class SuffixTree(object):
-    """A suffix tree for string matching. Uses Ukkonen's algorithm
-    for construction.
-    """
     def __init__(self, string, case_insensitive=False):
-        """
-        string
-            the string for which to construct a suffix tree
-            or a list of strings if this is a generalised
-            suffix tree
-        """
         self.original_strings = [string]
         special = '$#'
         if isinstance(string, list):
@@ -123,9 +82,6 @@ class SuffixTree(object):
             self._precalculate_common_substrings()
 
     def __repr__(self):
-        """
-        Lists edges in the suffix tree
-        """
         curr_index = self.N
         s = "\tStart \tEnd \tSuf \tFirst \tLast \tString\n"
         values = [e for edge in self.edges for e in edge.values()]

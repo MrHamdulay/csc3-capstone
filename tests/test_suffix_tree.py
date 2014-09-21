@@ -49,7 +49,7 @@ class SuffixTreeTest(unittest.TestCase):
         self.assertEqual(st.longest_common_substring(), ' hamdulay ')
 
         st = SuffixTree(['aaa\naaa', 'aaa\n\naaa'])
-        self.assertEqual(st.longest_common_substring(), ['aaa\naaa'])
+        self.assertEqual(st.longest_common_substring(), 'aaa\n')
 
     def test_long_strings(self):
         st = SuffixTree(['abcdefghijkl', 'z;kdiowghijklabc12'])
