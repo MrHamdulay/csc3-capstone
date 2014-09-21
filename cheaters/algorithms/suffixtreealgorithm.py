@@ -1,14 +1,14 @@
 from detector import Detector
 from algorithms.suffix_tree import SuffixTree
 from model.match import Match
-import tokenize
+from external.no_indent_tokenize import generate_tokens
 from StringIO import StringIO
 
 class SuffixTreeAlgorithm:
     def _variable_match(self, *originals):
         tokenlists = []
         for original in originals:
-            tokenlists.append(list(x[1] for x in tokenize.generate_tokens(StringIO(original).readline) if x[0] == 1))
+            tokenlists.append(list(x[1] for x in generate_tokens(StringIO(original).readline) if x[0] == 1))
 
         token_map = {}
         for token1, token2 in zip(*tokenlists):
