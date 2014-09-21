@@ -350,9 +350,9 @@ class DatabaseManager:
     def store_submission_match(self, assignment_id, submission_id, other_submission_id, number_signatures_match, confidence):
         assert int(submission_id) != int(other_submission_id)
         c = self.conn.cursor()
-        c.execute('INSERT INTO SubmissionMatches (SubmissionId, MatchSubmissionId, NumberSignaturesMatched, Confidence, StudentId1, StudentId2, AssignmentId)'
-                ' VALUES (?, ?, ?, ?, (SELECT StudentId FROM Submissions WHERE Id=?), (SELECT StudentId FROM Submissions WHERE Id=?), ?)',
-                (submission_id, other_submission_id, number_signatures_match, submission_id, confidence, other_submission_id, assignment_id))
+        c.execute('INSERT INTO SubmissionMatches (SubmissionId, MatchSubmissionId, NumberSignaturesMatched, StudentId1, StudentId2, AssignmentId, Confidence)'
+        ' VALUES (?, ?, ?, (SELECT StudentId FROM Submissions WHERE Id=?), (SELECT StudentId FROM Submissions WHERE Id=?),?, ?)',
+        (submission_id, other_submission_id, number_signatures_match, submission_id, other_submission_id, assignment_id, confidence))
         c.close()
         self.conn.commit()
 
@@ -362,12 +362,7 @@ class DatabaseManager:
     def fetch_all_submission_matches(self, assignment_num):
         c = self.conn.cursor()
         c.execute('SELECT Id, SubmissionId, MatchSubmissionId, NumberSignaturesMatched, Confidence, StudentId1, StudentId2 '
-                  'FROM SubmissionMatches WHERE AssignmentId = ? ORDER BY NumberSignaturesMatched DESC', (assignment_num, ))
-        ''''c.execute('SELECT sm.Id, sm.SubmissionId, sm.MatchSubmissionId, NumberSignaturesMatched, Confidence, '
-                's.StudentId, s2.StudentId FROM SubmissionMatches sm'
-                ' JOIN Submissions s ON sm.SubmissionId = s.Id JOIN Submissions s2 ON sm.MatchSubmissionId = s2.Id WHERE s.AssignmentNumber = ? AND s2.AssignmentNumber = ?'
-                ' ORDER BY NumberSignaturesMatched DESC',
-                (assignment_num, assignment_num))'''
+                  'FROM SubmissionMatches WHERE AssignmentId = ? ORDER BY Confidence DESC', (assignment_num, ))
         results = []
         for row in c:
             results.append(SignatureMatch(*row))

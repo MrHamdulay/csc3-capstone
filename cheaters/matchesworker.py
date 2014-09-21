@@ -49,7 +49,6 @@ while True:
         print 'done'
 
         for other_submission_id2, signatures in signatures_by_document.iteritems():
-            break
             num_signatures = len(signatures)
             other_submission = database.fetch_a_submission(other_submission_id2)
             signature_match = database.fetch_submission_match(other_submission_id2)
