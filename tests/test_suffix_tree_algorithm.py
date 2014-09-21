@@ -87,12 +87,14 @@ class SuffixTreeAlgorithmTestCase(unittest.TestCase):
         self.assertEqual(str(matches), '[[<Match their_submission_id:1 my_start_line:0 match_length:7 (0)>], [<Match their_submission_id:2 my_start_line:1 match_length:4 (0)>]]')
 
     def test_wrap_to_lines(self):
-#            0123456789  12
-        a = '   hello my \nname is\n yaseen'
+#            012  345678  9  12
+        a = 'hel\nnameis\nyaseen'
         st=SuffixTreeAlgorithm()
-        self.assertEqual(st.wrap_substring_to_lines(a, 6, len(a)-3), (12, 20))
-        self.assertEqual(st.wrap_substring_to_lines(a, 6, len(a)), (12, len(a)))
-        self.assertEqual(st.wrap_substring_to_lines(a, 2, len(a)), (2, len(a)))
+        string, lines = st.whitespaced_stripped_with_line_numbers(a)
+        self.assertEqual(st.wrap_substring_to_lines(lines, string, 0, 2), (0, 2))
+        self.assertEqual(st.wrap_substring_to_lines(lines, string, 0, 5), (0, 2))
+        self.assertEqual(st.wrap_substring_to_lines(lines, string, 1, 13), (3, 8))
+        self.assertEqual(st.wrap_substring_to_lines(lines, string, 8, 15), (9, 15))
 
     def test_partial_lines(self):
         matches = SuffixTreeAlgorithm().calculate_document_similarity(*submissions2)

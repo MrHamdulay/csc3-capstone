@@ -53,30 +53,23 @@ class SuffixTreeAlgorithm:
         lines = filter(None, lines)
         return len(lines)>3
 
-    def _wrap_to_lines(self, code, index, direction):
+    def _wrap_to_lines(self, lines, code, index, direction):
         # check for non whitespace characters before this
-        i = index - direction
-        isInMiddleLine = False
-        while i >= 0 and i < len(code):
-            if code[i] == '\n':
-                break
-            if code[i] not in '\t ':
-                isInMiddleLine = True
-                break
-            i -= direction
-        if isInMiddleLine:
-            # find first newline in direction
-            i = index
-            while i>=0 and i<len(code) and code[i] != '\n':
-                i += direction
-            return i
-        else:
-            return index
+        code = code+'\n'
+        if index > 0 and index < len(code):
+            if lines[index] == lines[index-direction]:
+                # find first newline in direction
+                i = index
+                while i>=0 and i<len(code) and lines[i] == lines[i-direction]:
+                    i += direction
+                return i
+        return index
 
 
-    def wrap_substring_to_lines(self, code, begin, end):
-        return (self._wrap_to_lines(code, begin, +1),
-               self._wrap_to_lines(code, end, -1))
+    def wrap_substring_to_lines(self, code, lines, begin, end):
+        our_lines = lines+[lines[-1]+1]
+        return (self._wrap_to_lines(our_lines, code, begin, +1),
+                self._wrap_to_lines(our_lines, code, end, -1))
 
     def whitespaced_stripped_with_line_numbers(self, string):
         WHITESPACE = ' \n\t'
@@ -117,15 +110,20 @@ class SuffixTreeAlgorithm:
         for substring in common_substrings:
             indexes = []
             substring_originals = []
+            empty = False
             for i in (0, 1):
                 index = canonicalised[i].index(substring)
-                #wrapped_index = self.wrap_substring_to_lines(canonicalised[i], index, index + len(substring))
-                line_index = line_numbers[i][index], line_numbers[i][index+len(substring)]
+                index = self.wrap_substring_to_lines(canonicalised[i], line_numbers[i], index, index + len(substring))
+                # it wrapped to 0 lines
+                if index[0] >= index[1]:
+                    empty = True
+                    continue
+                line_index = line_numbers[i][index[0]], line_numbers[i][index[1]]
                 indexes.append(line_index)
                 substring_originals.append('\n'.join(source_lines[i][line_index[0]:line_index[1]]))
 
             # only add this index if we can match variables
-            if self._variable_match(*substring_originals):
+            if self._variable_match(*substring_originals) and not empty:
                 for i in (0, 1):
                     string_indexes[i].append(indexes[i])
 
