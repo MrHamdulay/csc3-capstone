@@ -1,3 +1,9 @@
+'''
+Author: Yaseen Hamdulay, Jarred de Beer, Merishka Lalla
+Date: 15 August 2014
+
+Script to read in data given to us by Hussein into our database
+'''
 import os
 import zipfile
 from StringIO import StringIO

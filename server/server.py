@@ -1,3 +1,10 @@
+'''
+Author: Yaseen Hamdulay, Jarred de Beer, Merishka Lalla
+Date: 15 August 2014
+
+Starting point for the Web UI and rest server.
+All requests begin here.
+'''
 from flask import Flask, render_template, request, redirect, jsonify, flash
 from flask.ext.classy import FlaskView, route
 import sys
@@ -184,9 +191,11 @@ class View(FlaskView):
 
     @route('/api/<int:assignment_num>/<int:submission_id>')
     def json_submission_match_numbers(self, assignment_num, submission_id):
+        ''' Retrieves line numbers for a given submission
+        @GET /{assignment_num}/{submission_id}
+        @render JSON'''
         database = DatabaseManager()
         submission = database.fetch_a_submission(assignment_num, submission_id)
-        #other_submission = Detector.find_most_similar_submission(submission)
 
         submission_matches = [database.fetch_matches(submission.id, 0), database.fetch_matches(submission.id, 1)]
         print submission_matches
@@ -201,6 +210,9 @@ class View(FlaskView):
 
     @route('/api/<int:assignment_num>/matches')
     def json_assignment_matches(self, assignment_num):
+        ''' Fetches all pairs of submission ids that are copied and our confidence
+        @GET /{assignment_num}/matches
+        @render JSON'''
         database = DatabaseManager()
         matches = [x.apiify() for x in database.fetch_all_submission_matches(assignment_num)]
         return jsonify({'matches': matches})
