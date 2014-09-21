@@ -143,6 +143,7 @@ class SuffixTreeAlgorithm:
             line_numbers = self.remove_overlapping_ranges(string_indexes[i])
 
             for begin, end in line_numbers:
-                document_matches[i].append(Match(submissions[i].id, begin, end - begin, 0))
+                if end - begin > 1:
+                    document_matches[i].append(Match(submissions[i].id, begin, end - begin, 0))
 
         return document_matches

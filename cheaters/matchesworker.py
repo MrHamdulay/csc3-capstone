@@ -44,7 +44,7 @@ while True:
             continue
         print 'done'
 
-        for other_submission_id2, signatures in signatures_by_document.iteritems():
+        '''for other_submission_id2, signatures in signatures_by_document.iteritems():
             num_signatures = len(signatures)
             signature_match = database.fetch_submission_match(other_submission_id2)
 
@@ -55,7 +55,7 @@ while True:
                         submission_id,
                         signature_match,
                         match_submission_id=other_submission_id2,
-                        number_signatures_matched=num_signatures)
+                        number_signatures_matched=num_signatures)'''
 
         print 'done'
 
