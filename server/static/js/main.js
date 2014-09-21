@@ -108,13 +108,12 @@ var initialize_data = function(callback) {
                 });
                 // histogram
                 histogram.push(json.matches[i].confidence);
-                histogram.push(json.matches[i].confidence);
             }
             groups = graph.get_groups();
 
             fulfill({
                 pairs: json.matches,
-                groups: graph.get_groups(),
+                groups: groups,
                 histogram: histogram
             });
 
@@ -215,9 +214,10 @@ var draw_graph_diagram = function(d) {
         .attr("height", height);
 
     // Compute the distinct nodes from the links.
+    // side effect: sets name to [object]. need to set it back to string at end of function.
     links.forEach(function(link) {
-      link.source = nodes[link.source] || (nodes[link.source] = {name: link.source});
-      link.target = nodes[link.target] || (nodes[link.target] = {name: link.target});
+        link.source = nodes[link.source] || (nodes[link.source] = {name: link.source});
+        link.target = nodes[link.target] || (nodes[link.target] = {name: link.target});
     });
 
     var force = d3.layout.force()
@@ -303,6 +303,19 @@ var draw_graph_diagram = function(d) {
     function transform(d) {
       return "translate(" + d.x + "," + d.y + ")";
     }
+}
+
+// resets the name attribute of the d object used by d3
+// to allow for the graph to be rendered properly more than once.
+// This occurs due to a side effect from the d3 graph drawing code
+// that happens from a mutation on the d object after first time the graph is rendered.
+var reset_d_name = function(links) {
+    links.forEach(function(link) {
+        if (typeof link.source == 'object') {
+            link.source = link.source.name;
+            link.target = link.target.name;
+        }
+    });
 }
 
 // Draw the histogram which appears to the right of the 'Pairs of students' list.
@@ -396,6 +409,7 @@ var set_groups_table = function(list) {
     tbody.on('click', function(d) {
         $(subgroups_selector + ' tr.selected').removeClass('selected');
         $(this).find('tr').addClass('selected');
+        reset_d_name(d);
         draw_graph_diagram(d);
     });
 
@@ -455,7 +469,6 @@ var set_action_line_buttons = function(lines) {
 //
 var send_report = function(student, del) {
     var type = (del) ? 'DELETE' : 'POST';
-    console.log(type);
     return new Promise(function(fulfill, reject) {
         $.ajax({
             url: get_api_url('mark'),
@@ -478,6 +491,12 @@ var populate_code_view = function(d) {
     // clean view
     $('.line-highlight').remove();
     $(shared_lines_selector).empty();
+
+    // reset scroll on code
+    $(student_A_pre_selector).scrollTop(0);
+    $(student_B_pre_selector).scrollTop(0);
+    $(student_A_pre_selector).scrollLeft(0);
+    $(student_B_pre_selector).scrollLeft(0);
 
     if (!$(code_panel_body_selector).hasClass('rendered'))
         $(code_panel_body_selector).addClass('rendered');

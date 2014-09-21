@@ -1,8 +1,27 @@
+/**
+ * Graph.js
+ * Author: Jarred de Beer
+ * Date: 22 September 2014
+ *
+ * Description:
+ * A simple Graph data structure to take the Pairs of students and generate a graph
+ * with nodes as the student numbers and edges as the Pair connection.
+ * This contains a method to generate groups of students from the graph topoplogy
+ * by traversing the graph and identifying isolated clusters of nodes.
+ **/
+
+// constructor
 function Graph() {
     this.E = 0;
     this.adj = {};
 }
 
+// private and public methods.
+//
+// private methods are prefixed with an underscore.
+// Extends the Graph prototype object mimicking the declaration of methods for the Graph 'class'
+
+// Add an edge from node v to node w
 Graph.prototype.add_edge = function(v, w) {
     this._add_edge(v, w);
     this.E++;
@@ -14,10 +33,13 @@ Graph.prototype._add_edge = function(s, t) {
     this.adj[s].push(t)
 }
 
+// Get the number of edges in the graph
 Graph.prototype.get_num_edges = function() {
     return this.E;
 }
 
+// Get the source and target pair objects from the edges to be used with d3
+// when rendering the tables list
 Graph.prototype.get_d3_json = function() {
     var json = [];
     var adj;
@@ -30,39 +52,42 @@ Graph.prototype.get_d3_json = function() {
     return json;
 }
 
+// Get the groups from the Graph topology.
+// Traverses the graph and finds isolated clusters of nodes which are the groups
 Graph.prototype.get_groups = function() {
-    var c = 0;
-    var islands = {};
+    var c = 0; // count of clusters
+    var clusters = {};
     for (var key in this.adj) {
         var adj = this.adj[key];
-        if (typeof islands[key] == 'undefined') {
+        if (typeof clusters[key] == 'undefined') {
             // get index from adj, otherwise set to c
             var has_c = false;
             for (var i = 0; i < adj.length; i++) {
                 var w = adj[i];
-                if (typeof islands[w.target] != 'undefined') {
-                    islands[key] = islands[w.target];
+                if (typeof clusters[w.target] != 'undefined') {
+                    clusters[key] = clusters[w.target];
                     has_c = true;
                     break;
                 }
             }
             if (!has_c) {
-                islands[key] = c;
+                clusters[key] = c;
                 c++;
             }
         } else {
             // give all adjacent it's value
             for (var i = 0; i < adj.length; i++) {
                 var w = adj[i];
-                islands[w.target] = islands[key];
+                clusters[w.target] = clusters[key];
             }
         }
     }
+
     var result = new Array(c);
     var index;
     var c;
-    for (var key in islands) {
-        c = islands[key];
+    for (var key in clusters) {
+        c = clusters[key];
         if (typeof result[c] == 'undefined')
             result[c] = [];
         var adj = this.adj[key];
