@@ -182,12 +182,6 @@ class View(FlaskView):
         source_codes = database.fetch_source_codes(assignment_num)
         return jsonify(**source_codes)
 
-    @route('/api/<int:assignment_num>/matches')
-    def json_assignment_matches(self, assignment_num):
-        database = DatabaseManager()
-        matches = [x.apiify() for x in database.fetch_all_submission_matches(assignment_num)]
-        return jsonify({'matches': matches})
-
     @route('/api/<int:assignment_num>/<int:submission_id>')
     def json_submission_match_numbers(self, assignment_num, submission_id):
         database = DatabaseManager()
@@ -203,6 +197,12 @@ class View(FlaskView):
                         for m in matches)
             match_strings.append(match_string)
         return jsonify(source=match_strings[0], target=match_strings[1])
+
+    @route('/api/<int:assignment_num>/matches')
+    def json_assignment_matches(self, assignment_num):
+        database = DatabaseManager()
+        matches = [x.apiify() for x in database.fetch_all_submission_matches(assignment_num)]
+        return jsonify({'matches': matches})
 
     @route('/api/reports', methods=['POST'])
     def json_report_insert(self):
