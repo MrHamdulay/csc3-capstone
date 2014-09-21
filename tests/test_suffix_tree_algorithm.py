@@ -9,6 +9,9 @@ from algorithms.suffixtreealgorithm import SuffixTreeAlgorithm
 submissions1=[Submission(1, 'hmdyas001',
 
 '''c=0
+
+
+
 print 'hello'
 for c in range(1000):
     stuff()
@@ -81,7 +84,7 @@ class SuffixTreeAlgorithmTestCase(unittest.TestCase):
     def test_comparison(self):
         st=SuffixTreeAlgorithm()
         matches = st.calculate_document_similarity(*submissions1)
-        self.assertEqual(str(matches), '[[<Match their_submission_id:1 my_start_line:0 match_length:4 (0)>], [<Match their_submission_id:2 my_start_line:1 match_length:4 (0)>]]')
+        self.assertEqual(str(matches), '[[<Match their_submission_id:1 my_start_line:0 match_length:7 (0)>], [<Match their_submission_id:2 my_start_line:1 match_length:4 (0)>]]')
 
     def test_wrap_to_lines(self):
 #            0123456789  12

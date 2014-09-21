@@ -78,23 +78,39 @@ class SuffixTreeAlgorithm:
         return (self._wrap_to_lines(code, begin, +1),
                self._wrap_to_lines(code, end, -1))
 
+    def whitespaced_stripped_with_line_numbers(self, string):
+        WHITESPACE = ' \n\t'
+        line_number = 0
+        s = ''
+        line_numbers = []
+        for char in string:
+            if char == '\n':
+                line_number += 1
+            if char in WHITESPACE:
+                continue
+            s += char
+            line_numbers.append(line_number)
+        line_numbers.append(line_number)
+        return s, line_numbers
 
     def calculate_document_similarity(self, *submissions):
         assert len(submissions) == 2
         assert submissions[0].language == submissions[1].language
-        canonicalised = map(Detector.canonicalise_submission, submissions)
+        line_numbers = []
+        canonicalised = []
+        for submission in submissions:
+            document = Detector.canonicalise_submission(submission)
+            s, l = self.whitespaced_stripped_with_line_numbers(document)
+            line_numbers.append(l)
+            canonicalised.append(s)
 
         st = SuffixTree(canonicalised)
         common_substrings = list(st.common_substrings_longer_than(20))
-        common_substrings = filter(self.filter_substrings, common_substrings)
         # longest to shortest
         common_substrings.sort(key=lambda x: len(x), reverse=True)
 
         document_matches = [[], []]
         string_indexes = [[], []]
-        to_line_number = map(self.string_indexes_to_line_numbers, canonicalised)
-        to_line_number[0].send(None)
-        to_line_number[1].send(None)
 
         source_lines = map(lambda x: x.program_source.split('\n'), submissions)
 
@@ -103,8 +119,8 @@ class SuffixTreeAlgorithm:
             substring_originals = []
             for i in (0, 1):
                 index = canonicalised[i].index(substring)
-                wrapped_index = self.wrap_substring_to_lines(canonicalised[i], index, index + len(substring))
-                line_index = to_line_number[i].send(wrapped_index)
+                #wrapped_index = self.wrap_substring_to_lines(canonicalised[i], index, index + len(substring))
+                line_index = line_numbers[i][index], line_numbers[i][index+len(substring)]
                 indexes.append(line_index)
                 substring_originals.append('\n'.join(source_lines[i][line_index[0]:line_index[1]]))
 
