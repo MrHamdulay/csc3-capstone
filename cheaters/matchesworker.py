@@ -1,3 +1,10 @@
+'''
+Author: Yaseen Hamdulay, Jarred de Beer, Merishka Lalla
+Date: 15 August 2014
+
+Background process that waits for incoming submissions, parses them,
+matches it to the closest match and stores the results
+'''
 from time import sleep
 
 from algorithms.grouper import Grouper

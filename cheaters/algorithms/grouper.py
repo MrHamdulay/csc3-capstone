@@ -1,3 +1,16 @@
+'''
+Author: Yaseen Hamdulay, Jarred de Beer, Merishka Lalla
+Date: 15 August 2014
+
+
+Takes signatures from output of winnower algorithm and manipulates them
+in various ways.
+
+Grouping by original document, filtering out lonely signatures (signatures
+that are multiple lines away from other signatures) and groping consecutive
+multi line occurences of signatures into one Match object
+'''
+
 from collections import defaultdict
 from model.match import Match
 

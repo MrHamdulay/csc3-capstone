@@ -1,3 +1,13 @@
+'''
+Author: Yaseen Hamdulay, Jarred de Beer, Merishka Lalla
+Date: 15 August 2014
+
+Implementation of winnowing algorithm from
+
+Schleimer, S., Wilkerson, D. S., & Aiken, A. (2003, June). Winnowing: local algorithms for
+            document fingerprinting. In Proceedings of the 2003 ACM SIGMOD
+            international conference on Management of data (pp. 76-85). ACM.
+'''
 import hashlib
 
 from algorithms.base import BaseAlgorithm, SectionMatch
@@ -92,7 +102,3 @@ class WinnowerAlgorithm(BaseAlgorithm):
           previous = best
     except StopIteration:
         pass
-
-  def group(self, matches):
-      print matches
-      raise Exception()

@@ -1,3 +1,9 @@
+'''
+Author: Yaseen Hamdulay, Jarred de Beer, Merishka Lalla
+Date: 15 August 2014
+
+Using suffix trees to find similarity between pairs of documents
+'''
 from detector import Detector
 from algorithms.suffix_tree import SuffixTree
 from model.match import Match

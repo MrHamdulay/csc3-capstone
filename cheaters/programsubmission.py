@@ -1,3 +1,8 @@
+'''
+Author: Yaseen Hamdulay, Jarred de Beer, Merishka Lalla
+Date: 15 August 2014
+'''
+
 MIN_CHEAT_LENGTH = 1
 
 
