@@ -15,7 +15,9 @@ from model.match import Match
 from model.assignment import Assignment
 from model.submissions import Submission
 from model.signaturematch import SignatureMatch
+from model.student import Student
 from signaturemanager import SignatureManager
+import os.path
 
 class DatabaseManager:
     conn = None
@@ -23,7 +25,7 @@ class DatabaseManager:
     '''A initiator method to allow the database to connect to the class for further database handling.'''
 
     def __init__(self, database_file='cheaters.db'):
-        self.conn = sqlite3.connect(os.path.dirname(os.path.realpath(__file__))+'/../../'+database_file)
+        self.conn = sqlite3.connect(os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', '..', database_file))
         self.conn.text_factory = str
         '''The initialise database method connects a cursor and reads a sql script. The script is read and executed.
         Once executed, tables with relevant columns is created and initiated. There after the cursor is closed and the
@@ -97,9 +99,27 @@ class DatabaseManager:
     def data_populate(self,student_number, course_code):
         c = self.conn.cursor()
         data_Values = (student_number,course_code)
-        c.execute("INSERT INTO Students (StudentNumber, CourseCode) VALUES (?,?,?)",data_Values)
+        c.execute("INSERT INTO Students (StudentNumber, CourseCode) VALUES (?,?)",data_Values)
         c.close()
         self.conn.commit()
+
+    '''fetch_student fetches a student from the database with necessary data.
+     This method accepts the student id and is then found
+    in the database.
+    '''
+
+    def fetch_student(self,studentId):
+            c = self.conn.cursor()
+            c.execute('SELECT Id, StudentNumber,CourseCode FROM Students where Id =?', (studentId,))
+            student = []
+            for x in c:
+                student = Student(
+                    id = x[0],
+                    course_code = x[1],
+                    student_number = x[2]
+                )
+            c.close()
+            return student
 
     '''fetch_an_assignment fetches all assignment submissions from a requested assignment and is used to look in the UI
     in order to display/illustrate potential cheating in code. This method accepts the assignment number and is then found
@@ -203,6 +223,7 @@ class DatabaseManager:
         c.close()
         self.conn.commit()
         return assignment_id
+
 
     '''delete_student deletes a student from the students table.
         This method accepts the student Id as a parameter and is then deleted from the table.'''
