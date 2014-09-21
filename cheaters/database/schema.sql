@@ -39,8 +39,9 @@ CREATE TABLE IF NOT EXISTS SubmissionMatches(
   MatchSubmissionId INTEGER,
   NumberSignaturesMatched INTEGER,
   Confidence FLOAT NOT NULL,
-  FOREIGN KEY (SubmissionId) REFERENCES Submissions(Id),
-  FOREIGN KEY (MatchSubmissionId) REFERENCES Submissions(Id)
+  StudentId1 INTEGER NOT NULL,
+  StudentId2 INTEGER NOT NULL,
+  AssignmentId INTEGER NOT NULL
 );
 CREATE INDEX IF NOT EXISTS submission_match_id ON SubmissionMatches(SubmissionId);
 CREATE INDEX IF NOT EXISTS submission_match_id_id ON SubmissionMatches(MatchSubmissionId);
@@ -50,3 +51,12 @@ CREATE TABLE if not exists Reports(
   StudentNumber TEXT,
   AssignmentNumber INT
  );
+
+CREATE TABLE IF NOT EXISTS Matches(
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    SubmissionId INTEGER NOT NULL,
+    MatchSubmissionId INTEGER,
+    MatchStartLine INTEGER,
+    MatchLength INTEGER,
+    Direction INTEGER
+);

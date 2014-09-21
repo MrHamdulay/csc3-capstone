@@ -11,6 +11,7 @@ import os
 import sqlite3
 import time
 from model.signature import Signature
+from model.match import Match
 from model.assignment import Assignment
 from model.submissions import Submission
 from model.signaturematch import SignatureMatch
@@ -135,14 +136,17 @@ class DatabaseManager:
 
     '''fetch_a_submission fetches a specific submission to be compared to another specific assignment. This method accepts
     the submission ID as a parameter and is then found in the database.'''
-
-    def fetch_a_submission(self, assignment_id, submission_id):
+    def fetch_a_submission(self, assignment_id, submission_id=None):
+        if submission_id is None:
+            assignment_id, submission_id= None, assignment_id
         c = self.conn.cursor()
         c.execute('SELECT Id, StudentId, AssignmentNumber, ProgramSource, SubmissionDate, '
-                'ProgrammingLanguage FROM Submissions WHERE AssignmentNumber = ? AND Id = ?',
-                (assignment_id, submission_id))
+                'ProgrammingLanguage, AssignmentNumber FROM Submissions WHERE Id = ?',
+                (submission_id, ))
         submission = None
         for x in c:
+            if assignment_id is not None:
+                assert int(x[6]) == int(assignment_id)
             submission = Submission(
                     id=x[0],
                     student_number=x[1],
@@ -309,13 +313,13 @@ class DatabaseManager:
         return match
     '''Updates the submission matches table with the new signature match, submission id and signatires matched.'''
 
-    def update_submission_match(self, signature_match, match_submission_id, number_signatures_matched):
+    def update_submission_match(self, submission_id, signature_match, match_submission_id, number_signatures_matched):
+        assert submission_id != match_submission_id
         c = self.conn.cursor()
         c.execute('UPDATE SubmissionMatches SET MatchSubmissionId = ?, NumberSignaturesMatched = ?, '
-                  'Confidence=(SELECT ? / length(ProgramSource) FROM Submissions WHERE Id = ? LIMIT 1)'
+                  'Confidence=0 '
                 'WHERE SubmissionId = ?',
-                (match_submission_id, number_signatures_matched, number_signatures_matched,
-                 signature_match.submission_id, signature_match.submission_id))
+                (match_submission_id, number_signatures_matched, submission_id))
         c.close()
         self.conn.commit()
 
@@ -323,11 +327,12 @@ class DatabaseManager:
     This method accepts the submission ID, other submission ID and the number of match potential
      as a parameter and is then stored in the database.'''
 
-    def store_submission_match(self, submission_id, other_submission_id, number_signatures_match):
+    def store_submission_match(self, assignment_id, submission_id, other_submission_id, number_signatures_match):
+        assert int(submission_id) != int(other_submission_id)
         c = self.conn.cursor()
-        c.execute('INSERT INTO SubmissionMatches (SubmissionId, MatchSubmissionId, NumberSignaturesMatched, Confidence)'
-                ' VALUES (?, ?, ?, (SELECT ?*100 / length(ProgramSource) FROM Submissions WHERE id = ? LIMIT 1))',
-                (submission_id, other_submission_id, number_signatures_match, number_signatures_match, submission_id))
+        c.execute('INSERT INTO SubmissionMatches (SubmissionId, MatchSubmissionId, NumberSignaturesMatched, Confidence, StudentId1, StudentId2, AssignmentId)'
+                ' VALUES (?, ?, ?, 0, (SELECT StudentId FROM Submissions WHERE Id=?), (SELECT StudentId FROM Submissions WHERE Id=?), ?)',
+                (submission_id, other_submission_id, number_signatures_match, submission_id, other_submission_id, assignment_id))
         c.close()
         self.conn.commit()
 
@@ -336,11 +341,13 @@ class DatabaseManager:
 
     def fetch_all_submission_matches(self, assignment_num):
         c = self.conn.cursor()
-        c.execute('SELECT sm.Id, sm.SubmissionId, sm.MatchSubmissionId, NumberSignaturesMatched, Confidence, '
+        c.execute('SELECT Id, SubmissionId, MatchSubmissionId, NumberSignaturesMatched, Confidence, StudentId1, StudentId2 '
+                  'FROM SubmissionMatches WHERE AssignmentId = ? ORDER BY NumberSignaturesMatched DESC', (assignment_num, ))
+        ''''c.execute('SELECT sm.Id, sm.SubmissionId, sm.MatchSubmissionId, NumberSignaturesMatched, Confidence, '
                 's.StudentId, s2.StudentId FROM SubmissionMatches sm'
                 ' JOIN Submissions s ON sm.SubmissionId = s.Id JOIN Submissions s2 ON sm.MatchSubmissionId = s2.Id WHERE s.AssignmentNumber = ? AND s2.AssignmentNumber = ?'
                 ' ORDER BY NumberSignaturesMatched DESC',
-                (assignment_num, assignment_num))
+                (assignment_num, assignment_num))'''
         results = []
         for row in c:
             results.append(SignatureMatch(*row))
@@ -389,3 +396,33 @@ class DatabaseManager:
         c.close()
         return count
 
+    def store_matches(self, submission_id, other_submission_id, matches0, matches1):
+        c = self.conn.cursor()
+
+        matchstring = '(?, ?, ?, ?, 0),'*len(matches0) + '(?, ?, ?, ?, 1),'*len(matches1)
+        matchstring=matchstring[:-1]
+
+        matchsubmission = []
+        for match in matches0+matches1:
+            matchsubmission.append(submission_id)
+            matchsubmission.append(other_submission_id)
+            matchsubmission.append(match.start_line_mine)
+            matchsubmission.append(match.match_length)
+        query = 'INSERT INTO Matches (SubmissionId, MatchSubmissionId, MatchStartLine, MatchLength, Direction) VALUES %s' % matchstring
+        c.execute(query, matchsubmission)
+        c.close()
+        self.conn.commit()
+
+    def fetch_matches(self, submission_id, direction):
+        c = self.conn.cursor()
+        c.execute('SELECT MatchSubmissionId, MatchStartLine, MatchLength, Direction FROM Matches WHERE '
+                  'SubmissionId = ? AND Direction=?', (submission_id, direction))
+        matches = []
+        for row in c:
+            if row[3] == '0':
+                matches.append(Match(row[0], row[1], row[2], 0))
+            else:
+                matches.append(Match(submission_id, row[1], row[2], 0))
+
+        c.close()
+        return matches

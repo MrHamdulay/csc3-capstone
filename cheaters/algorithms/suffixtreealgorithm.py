@@ -18,6 +18,8 @@ class SuffixTreeAlgorithm:
         return True
 
     def remove_overlapping_ranges(self, ranges):
+        if not ranges:
+            return []
         ranges.sort()
 
         result = [ranges[0]]

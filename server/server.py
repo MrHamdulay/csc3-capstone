@@ -194,7 +194,8 @@ class View(FlaskView):
         submission = database.fetch_a_submission(assignment_num, submission_id)
         other_submission = Detector.find_most_similar_submission(submission)
 
-        submission_matches = SuffixTreeAlgorithm().calculate_document_similarity(submission, other_submission)
+        submission_matches = [database.fetch_matches(submission.id, 0), database.fetch_matches(submission.id, 1)]
+        print submission_matches
 
         match_strings = []
         for matches in submission_matches:
