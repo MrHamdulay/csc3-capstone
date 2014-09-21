@@ -1,3 +1,8 @@
+'''Authors: Jarred De Beer, Yaseen Hamdulay & Merishka Lalla
+Date: 22/9/2014
+SignatureMatch class. This class instantiates the Signaturematch type for further use
+'''
+
 class SignatureMatch:
     def __init__(self, id, submission_id, match_submission_id, number_signatures_matched, confidence, student_number1=None, student_number2=None):
       self.id = id

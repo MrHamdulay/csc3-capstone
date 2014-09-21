@@ -1,3 +1,8 @@
+'''Authors: Jarred De Beer, Yaseen Hamdulay & Merishka Lalla
+Date: 22/9/2014
+Submission class. This class instantiates the submission type for further use
+'''
+
 class Submission:
     id = None
     student_number = None

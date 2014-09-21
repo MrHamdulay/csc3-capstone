@@ -1,3 +1,8 @@
+'''Authors: Jarred De Beer, Yaseen Hamdulay & Merishka Lalla
+Date: 22/9/2014
+Signature class. This class instantiates the signature type for further use
+'''
+
 class Signature:
     '''
     Identifies common structure between code '''

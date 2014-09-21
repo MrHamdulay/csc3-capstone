@@ -1,6 +1,6 @@
 '''Authors: Jarred De Beer, Yaseen Hamdulay & Merishka Lalla
 Date: 22/9/2014
-Match class. 
+Match class. This class instantiates the match type for further use
 '''
 
 class Match:
