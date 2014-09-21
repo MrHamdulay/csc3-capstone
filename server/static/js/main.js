@@ -1,6 +1,38 @@
+/**
+ * main.js
+ * Author: Jarred de Beer
+ * Date: 22 September 2014
+ *
+ * Description: This file is used in the cheaters_review.html template
+ * to enhance the page with responsive UI functionality. It is responsible
+ * for initializing all the data needed for interaction, which it obtains by
+ * sending asynchronous HTTP requests to the server on page load (see the
+ * run() function which is the point of execution).
+ *
+ * It is responsible for registering click events to the buttons on the page:
+ * The "Pairs of Students", "Groups of Students" and "Code view" navigation
+ * tabs; Transitions between tab views when clicking a pair in the list;
+ * rendering the diagrams (Histogram and Graph) on click; maintaining the state
+ * of the system to allow the 'Back' button to transition to the previous view;
+ * rendering and enhancing the code in the 'Code view'; Reporting students
+ * as having cheated from the 'Report Student' buttons on the 'Code view'
+ *
+ * Dependencies:
+ * - jQuery.js
+ * - D3.js
+ * - Prism.js
+ * - Graph.js
+ *
+ **/
+
+// self executing anonymous function, creating a closure
+// that protects the global scope.
+
 (function() {
 
-// selectors for indexing DOM elements
+// selectors for indexing DOM elements.
+// all DOM selections made in the code
+// are listed and can be adjusted here.
 
 var container_selector    = '.container',
     navbar_selector       = container_selector  + ' > nav.navbar',
@@ -36,11 +68,19 @@ var code_selector = '#code',
     student_B_code_selector = code_selector + ' .B code',
     mark_button_selector = code_selector + ' ' + action_bar_selector + ' .mark';
 
+// local variables to store system data
+
 var code = {},
     confidence_values = [];
 
-// initialization methods
+// begin methods
 
+// Promise which fetches data used by the UI.
+// - Gets student pairs,
+// - Generates groups from student pairs,
+// - Populate data for Histogram,
+// - Fullfill promise with pairs, groups, histogram data.
+//
 var initialize_data = function(callback) {
 
     return new Promise(function(fulfill, reject) {
@@ -64,11 +104,11 @@ var initialize_data = function(callback) {
                     target_id: json.matches[i].target_id,
                     target: json.matches[i].target,
                     confidence: json.matches[i].confidence,
-                    line_numbers: [ {source: {start: 10, end: 15}, target: {start: 17, end: 22}} ]
+                    line_numbers: []
                 });
                 // histogram
-                histogram.push(json.matches[i].confidence / 10);
-                histogram.push(json.matches[i].confidence / 10);
+                histogram.push(json.matches[i].confidence);
+                histogram.push(json.matches[i].confidence);
             }
             groups = graph.get_groups();
 
@@ -84,6 +124,9 @@ var initialize_data = function(callback) {
 
 }
 
+// Promise to fetch all the code submissions for the current assignment
+// Fulfilled by an Object Hash with student numbers as keys and code String as value
+//
 var fetch_code = function() {
     return new Promise(function(fulfill, reject) {
         d3.json(get_api_url('code'), function(error, json) {
@@ -93,6 +136,8 @@ var fetch_code = function() {
     });
 }
 
+// Enhances the Prism Code blocks with line numbers
+//
 var set_line_numbers = function(lines) {
     var pre_A = d3.select(student_A_pre_selector),
         pre_B = d3.select(student_B_pre_selector);
@@ -101,12 +146,14 @@ var set_line_numbers = function(lines) {
         data_line_r = lines.target,
         start, end;
 
+    // set line number data attributes
     pre_A.attr('data-line', lines.source);
     pre_B.attr('data-line', lines.target);
 
     var code_A_w = $(student_A_code_selector).width() + 50,
         code_B_w = $(student_B_code_selector).width() + 50;
 
+    // make line highlight blocks full width of horizontal scrollable area
     setTimeout(function() {
         $(student_A_pre_selector + ' .line-highlight').css('width', code_A_w);
         $(student_B_pre_selector + ' .line-highlight').css('width', code_B_w);
@@ -114,6 +161,10 @@ var set_line_numbers = function(lines) {
 
 }
 
+// Enable mirroring of scrolling of the left code block by the right code block
+// The right code block scrolls independently in order to match offsets where
+// line number matches are not one-to-one between both sources of code.
+//
 var mirror_code_scrolling = function() {
     var $pre_A = $(student_A_pre_selector),
         $pre_B = $(student_B_pre_selector);
@@ -130,15 +181,21 @@ var mirror_code_scrolling = function() {
     });
 }
 
-var set_group_row = function(tr) {
+// Set a row of students from a Pair into either the:
+// - 'Pairs of students' table
+// - 'Groups of students' table
+//
+var set_pair_row = function(tr) {
     tr.append('td').text(function(d, i) { return i + 1 });
     tr.append('td').text(function(d, i) { return d.source });
     tr.append('td').text(function(d, i) { return d.target });
     tr.append('td').text(function(d, i) { return d.confidence });
-    tr.append('td').text(function(d, i) { return d.confidence });
-    tr.append('td').text(function(d, i) { return d.confidence });
 }
 
+// Draw the graph of a student group in the diagram to the right of
+// the 'Groups of students' list. Enable clicking of an edge to
+// transition to the 'Code View'.
+//
 var draw_graph_diagram = function(d) {
 
     var links = d,
@@ -186,6 +243,7 @@ var draw_graph_diagram = function(d) {
       .append("path")
         .attr("d", "M0,-5L10,0L0,5");
 
+    // graph edges
     var path = svg.append("g").selectAll("path")
         .data(force.links())
       .enter().append("path")
@@ -201,12 +259,14 @@ var draw_graph_diagram = function(d) {
         })
         .attr("marker-end", function(d) { return "url(#" + d.type + ")"; });
 
+    // graph nodes
     var circle = svg.append("g").selectAll("circle")
         .data(force.nodes())
       .enter().append("circle")
         .attr("r", 10)
         .call(force.drag);
 
+    // graph node student numbers
     var text = svg.append("g").selectAll("text")
         .data(force.nodes())
       .enter().append("text")
@@ -214,6 +274,7 @@ var draw_graph_diagram = function(d) {
         .attr("y", 5)
         .text(function(d) { return d.name; });
 
+    // bind click event to graph edge
     path.on('click', function(d) {
         populate_code_view({
             source: d.source.name,
@@ -222,10 +283,10 @@ var draw_graph_diagram = function(d) {
             target_id: d.target_id,
             confidence: d.confidence
         });
-        toggle_view('code');
+        transition_view('code');
     });
 
-    // Use elliptical arc path segments to doubly-encode directionality.
+    // helper functions provided by d3 template
     function tick() {
       path.attr("d", linkArc);
       circle.attr("transform", transform);
@@ -244,6 +305,9 @@ var draw_graph_diagram = function(d) {
     }
 }
 
+// Draw the histogram which appears to the right of the 'Pairs of students' list.
+// This is run on page load by initialize_data() in the run() function.
+//
 var draw_histogram_diagram = function(values) {
 
     // A formatter for counts.
@@ -300,20 +364,27 @@ var draw_histogram_diagram = function(values) {
         .call(xAxis);
 }
 
+// Set the table which lists Student pairs in the 'Pairs of students' view.
+//
 var set_pairs_table = function(pairs) {
     var tr = d3.select(pairs_tbody_selector).selectAll('tr')
         .data(pairs)
         .enter().append('tr')
 
-    set_group_row(tr);
+    set_pair_row(tr);
     tr.on('click', function(d) {
         $(subgroups_selector + ' tr.selected').removeClass('selected');
         $(this).addClass('selected');
         populate_code_view(d);
-        toggle_view('code');
+        transition_view('code');
     });
 }
 
+// Set the table which lists Group pairs in the 'Groups of students' view.
+// This differs from the 'Pairs of students' table in that it is a table
+// containing multiple tbody elements for each group where each tbody lists the
+// pairs. Wheras the 'Pairs of students' table has just one tbody listing all pairs.
+//
 var set_groups_table = function(list) {
 
     var tbody = d3.select(groups_table_selector).selectAll('tbody')
@@ -321,6 +392,7 @@ var set_groups_table = function(list) {
         .enter()
         .append('tbody');
 
+    // highlight selected group and draw the corresponding graph
     tbody.on('click', function(d) {
         $(subgroups_selector + ' tr.selected').removeClass('selected');
         $(this).find('tr').addClass('selected');
@@ -332,8 +404,9 @@ var set_groups_table = function(list) {
         .enter()
         .append('tr');
 
-    set_group_row(tr);
+    set_pair_row(tr);
 
+    // set the first cell of the first row in each tbody with the number of pairs in the group
     $(groups_table_selector + ' tbody').each(function(i, tbody) {
         var len = $(tbody).children().length;
         $(tbody).find('tr:first-child td:first-child').each(function(i, td) {
@@ -346,11 +419,17 @@ var set_groups_table = function(list) {
 
 }
 
+// Dynamically render buttons in the action toolbar of the 'Code view' which
+// scrolls the code to the appropriate line number when clicked.
+// lines is a comma separated list of number ranges, i.e. "1-5,10-13,54-75"
+//
 var set_action_line_buttons = function(lines) {
 
+    // extract line ranges
     var ranges = lines.split(','),
         line_height = parseFloat($(student_A_pre_selector).css('line-height'));
 
+    // generate button elements for each line range
     for (var i = 0, range; range = ranges[i++];) {
         var $button = $('<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-align-justify"></span></button>'),
             text = range;
@@ -362,6 +441,7 @@ var set_action_line_buttons = function(lines) {
         $(shared_lines_selector).append($button);
     }
 
+    // set click event to scroll code to the top line
     $(shared_lines_selector + ' .btn').on('click', function(e) {
         e.preventDefault();
         var scroll_top = parseFloat($(e.target).data('top'));
@@ -369,6 +449,10 @@ var set_action_line_buttons = function(lines) {
     });
 }
 
+// Promise to either insert or delete an entry for a student in the Report table
+// If the 'del' param is true it sends a DELETE request to delete a student, otherwise
+// it sends a POST request to insert a student
+//
 var send_report = function(student, del) {
     var type = (del) ? 'DELETE' : 'POST';
     console.log(type);
@@ -386,6 +470,9 @@ var send_report = function(student, del) {
     });
 }
 
+// Populates the 'Code view' with code from the student pairs,
+// re-initializes the view by clearing any existing
+// line number information and re-establishing the state of the 'Report student' buttons
 var populate_code_view = function(d) {
 
     // clean view
@@ -428,6 +515,8 @@ var populate_code_view = function(d) {
 
 }
 
+// Promise to retrieve matching line numbers between a Pair of students
+//
 var retrieve_matches = function(id) {
     return new Promise(function(fulfill, reject) {
         d3.json(get_api_url('lines', id), function(error, json) {
@@ -437,6 +526,9 @@ var retrieve_matches = function(id) {
     });
 }
 
+// Helper function to return the appropriate url for API http requests.
+// These URLS are needed in multiple places and thus only need to be updated here
+// if the change.
 var get_api_url = function(key, id) {
     var url = '/api/' + assignment_number;
     switch (key) {
@@ -456,6 +548,11 @@ var get_api_url = function(key, id) {
     return url;
 }
 
+// Sets the vertical layout of elements on the page to fit the vertical
+// height of the browser. Horizontal width is handled by CSS rules and are responsive
+// to any reasonable page width. However, vertical height is nearly impossible to do with CSS
+// and needs to be handled by javascript on page load.
+//
 var set_vertical_layout = function() {
 
     // .container height
@@ -497,11 +594,17 @@ var set_vertical_layout = function() {
 
 }
 
+// Helper function used by set_vertical_layout to get the css integer value
+// of a specified CSS rule for a DOM element.
+//
 var get_css_val = function(rule, selector) {
     return parseInt($(selector).css(rule).replace('px', ''));
 }
 
-var toggle_view = function(name) {
+// Transitions the view between 'Pair of students', 'Groups of students' and 'Code view'
+//
+var transition_view = function(name) {
+    // set the back button to the current view
     var back = $(navtabs_li_selector + '.active').data('view');
     $(navtabs_li_selector).removeClass('active');
     var $li = $(navtabs_li_selector + '[data-view="' + name + '"]').closest('li');
@@ -521,6 +624,9 @@ var toggle_view = function(name) {
     }
 }
 
+// Mark a student as having Cheated or Undo a student which was marked as cheated.
+// Triggered by click event on the 'Report Student A/B' buttons in the 'Code view'
+//
 var mark_student = function(btn) {
     var student, selector, orig_text;
     var choice = $(btn).attr('id');
@@ -549,6 +655,8 @@ var mark_student = function(btn) {
     }
 }
 
+// run method which is called on page load and is the initial entry point for main.js
+//
 var run = function() {
 
     initialize_data().then(function(json) {
@@ -561,14 +669,14 @@ var run = function() {
     $(action_bar_back_selector).on('click', function(e) {
         e.preventDefault();
         var view = $(e.target).data('view');
-        toggle_view(view);
+        transition_view(view);
     })
 
     $(navtabs_li_a_selector).on('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
         var view = $(e.target).closest('li').data('view');
-        toggle_view(view);
+        transition_view(view);
     });
 
     $(mark_button_selector).on('click', function(e) {
@@ -586,6 +694,7 @@ var run = function() {
 
 }
 
+// execute the run method. Main entry point.
 run();
 
 

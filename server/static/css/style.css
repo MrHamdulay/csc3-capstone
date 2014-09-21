@@ -192,12 +192,8 @@
 
 #subgroups table tr th:nth-child(1),
 #subgroups table tr th:nth-child(4),
-#subgroups table tr th:nth-child(5),
-#subgroups table tr th:nth-child(6),
 #subgroups table tr td:nth-child(1),
-#subgroups table tr td:nth-child(4),
-#subgroups table tr td:nth-child(5),
-#subgroups table tr td:nth-child(6) {
+#subgroups table tr td:nth-child(4) {
     width: 10%;
 }
 
