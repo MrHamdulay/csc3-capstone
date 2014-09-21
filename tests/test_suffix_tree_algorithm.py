@@ -27,6 +27,12 @@ print 'asdf'
 for i in range(1000):
     stuff()
     more_things(21, j)
+z=0
+i=0
+print 'asdf'
+for i in range(1000):
+    stuff()
+    more_things(21, j)
 ''',
 
 1, 1, 'py')]
@@ -84,21 +90,26 @@ class SuffixTreeAlgorithmTestCase(unittest.TestCase):
     def test_comparison(self):
         st=SuffixTreeAlgorithm()
         matches = st.calculate_document_similarity(*submissions1)
-        self.assertEqual(str(matches), '[[<Match their_submission_id:1 my_start_line:0 match_length:7 (0)>], [<Match their_submission_id:2 my_start_line:1 match_length:4 (0)>]]')
+        self.assertEqual(str(matches), '[[<Match their_submission_id:1 my_start_line:0 match_length:7 (0)>],'
+                                       ' [<Match their_submission_id:2 my_start_line:1 match_length:4 (0)>,'
+                                        ' <Match their_submission_id:2 my_start_line:7 match_length:4 (0)>]]')
 
     def test_wrap_to_lines(self):
 #            012  345678  9  12
         a = 'hel\nnameis\nyaseen'
         st=SuffixTreeAlgorithm()
         string, lines = st.whitespaced_stripped_with_line_numbers(a)
-        self.assertEqual(st.wrap_substring_to_lines(lines, string, 0, 2), (0, 2))
-        self.assertEqual(st.wrap_substring_to_lines(lines, string, 0, 5), (0, 2))
-        self.assertEqual(st.wrap_substring_to_lines(lines, string, 1, 13), (3, 8))
-        self.assertEqual(st.wrap_substring_to_lines(lines, string, 8, 15), (9, 15))
+        self.assertEqual(st.wrap_substring_to_lines(string, lines, 0, 2), (0, 2))
+        self.assertEqual(st.wrap_substring_to_lines(string, lines, 0, 5), (0, 2))
+        self.assertEqual(st.wrap_substring_to_lines(string, lines, 1, 13), (3, 8))
+        self.assertEqual(st.wrap_substring_to_lines(string, lines, 8, 15), (9, 15))
 
     def test_partial_lines(self):
         matches = SuffixTreeAlgorithm().calculate_document_similarity(*submissions2)
-        self.assertEqual(str(matches), '[[<Match their_submission_id:1 my_start_line:1 match_length:6 (0)>], [<Match their_submission_id:2 my_start_line:1 match_length:6 (0)>]]')
+        self.assertEqual(str(matches), '[[<Match their_submission_id:1 my_start_line:1 match_length:6 (0)>],'
+                                       ' [<Match their_submission_id:2 my_start_line:1 match_length:6 (0)>]]')
+#                                      '[[<Match their_submission_id:1 my_start_line:1 match_length:5 (0)>],
+#                                        [<Match their_submission_id:2 my_start_line:1 match_length:5 (0)>]]
 
 if __name__ == '__main__':
     unittest.main()

@@ -108,24 +108,36 @@ class SuffixTreeAlgorithm:
         source_lines = map(lambda x: x.program_source.split('\n'), submissions)
 
         for substring in common_substrings:
-            indexes = []
-            substring_originals = []
-            empty = False
-            for i in (0, 1):
-                index = canonicalised[i].index(substring)
-                index = self.wrap_substring_to_lines(canonicalised[i], line_numbers[i], index, index + len(substring))
-                # it wrapped to 0 lines
-                if index[0] >= index[1]:
-                    empty = True
-                    continue
-                line_index = line_numbers[i][index[0]], line_numbers[i][index[1]]
-                indexes.append(line_index)
-                substring_originals.append('\n'.join(source_lines[i][line_index[0]:line_index[1]]))
-
-            # only add this index if we can match variables
-            if self._variable_match(*substring_originals) and not empty:
+            startAt = [0, 0]
+            while True:
+                indexes = []
+                substring_originals = []
+                empty = False
+                newStartAt = startAt[:]
                 for i in (0, 1):
-                    string_indexes[i].append(indexes[i])
+
+                    index = canonicalised[i].find(substring, startAt[i])
+                    if index != -1:
+                        newStartAt[i] = index+1
+                    else:
+                        index = canonicalised[i].find(substring)
+                    index = self.wrap_substring_to_lines(canonicalised[i], line_numbers[i], index, index + len(substring))
+                    # it wrapped to 0 lines
+                    if index[0] >= index[1]:
+                        empty = True
+                        continue
+                    line_index = line_numbers[i][index[0]], line_numbers[i][index[1]]
+                    indexes.append(line_index)
+                    substring_originals.append('\n'.join(source_lines[i][line_index[0]:line_index[1]]))
+
+                if startAt == newStartAt:
+                    break
+                startAt = newStartAt
+
+                # only add this index if we can match variables
+                if not empty and self._variable_match(*substring_originals):
+                    for i in (0, 1):
+                        string_indexes[i].append(indexes[i])
 
         for i in (0, 1):
             line_numbers = self.remove_overlapping_ranges(string_indexes[i])
