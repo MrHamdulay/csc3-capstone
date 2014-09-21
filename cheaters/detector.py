@@ -1,3 +1,13 @@
+'''
+Author: Yaseen Hamdulay, Jarred de Beer, Merishka Lalla
+Date: 15 August 2014
+
+Class that wraps the entire assignment submission process
+excluding getting the file from the client to the server.
+Including unzipping the file, detecting programming language,
+concatenating all the files together, generating signatures
+and storing results
+'''
 import zipfile
 
 from languages.python import PythonLanguageHandler
@@ -38,35 +48,12 @@ class Detector:
             signatures = cheating_algorithm.generate_signatures()
             submission_id = database.store_submission(concatenated_file, assignment_number, student_number, language)
             database.store_signatures(signatures, submission_id)
+            # this now happens in the background process
             #self.store_and_update_closest_matches(submission_id)
             print(str(assignment_number) + " " + student_number + " Saved")
         except SyntaxError:
             print(str(assignment_number) + " " + student_number + " Failed")
             pass
-
-    def store_and_update_closest_matches(self, submission_id):
-        database = DatabaseManager()
-        grouper = Grouper()
-        matching_signatures = database.lookup_matching_signatures(submission_id)
-        signatures_by_document = grouper.group_signatures_by_document(matching_signatures)
-
-        if not signatures_by_document:
-            return
-        other_submission_id = max(signatures_by_document.iteritems(), key=lambda x: len(x[1]))[0]
-        database.store_submission_match(submission_id, other_submission_id, len(signatures_by_document[other_submission_id]))
-
-        for other_submission_id, signatures in signatures_by_document.iteritems():
-            num_signatures = len(signatures)
-            signature_match = database.fetch_submission_match(other_submission_id)
-
-            if signature_match is None:
-                continue
-            if num_signatures > signature_match.number_signatures_matched:
-                database.update_submission_match(
-                        signature_match,
-                        match_submission_id=other_submission_id,
-                        number_signatures_matched=num_signatures)
-
 
     def set_language_handler(self, zip_file):
         '''

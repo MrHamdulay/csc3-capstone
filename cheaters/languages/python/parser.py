@@ -6,7 +6,6 @@ Python parser class. This class takes a .py file and parses it to the system.
 import ast
 from keyword import kwlist as PYTHON_KWLIST
 from collections import defaultdict
-from utils import Counter
 from languages.python.ast_utils import getLineLimits
 import external.unparser
 from StringIO import StringIO
