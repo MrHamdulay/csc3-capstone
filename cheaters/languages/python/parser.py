@@ -1,3 +1,8 @@
+'''Authors: Jarred De Beer, Yaseen Hamdulay & Merishka Lalla
+Date: 22/9/2014
+Python parser class. This class takes a .py file and parses it to the system.
+'''
+
 import ast
 from keyword import kwlist as PYTHON_KWLIST
 from collections import defaultdict

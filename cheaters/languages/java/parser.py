@@ -1,6 +1,12 @@
+'''Authors: Jarred De Beer, Yaseen Hamdulay & Merishka Lalla
+Date: 22/9/2014
+Parser class
+'''
 from programsubmission import ProgramSubmission
 import plyj.parser as plyj
 
+'''The parser will accept a .java file and using the plyj library, parse the .java file into out system. The parser will
+strip the file down into input types, join the stripped type and thereafter return the value of all tokens.'''
 
 parser = plyj.Parser()
 class JavaLanguageHandler(ProgramSubmission):

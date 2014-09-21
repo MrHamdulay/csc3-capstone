@@ -1,5 +1,12 @@
+'''Authors: Jarred De Beer, Yaseen Hamdulay & Merishka Lalla
+Date: 22/9/2014
+Signature manager class
+'''
+
 from collections import defaultdict
 from model.signature import Signature
+
+'''SignatureManager is a class used to assist the DatabaseManager with the format needed for signatures to be in for comparitive reasons'''
 
 class SignatureManager:
     def __init__(self):
@@ -7,11 +14,16 @@ class SignatureManager:
         self.ngram_to_submission = defaultdict(list)
         self.signatures = {}
 
+    '''store_signatures is a method which stores a signature with all relevant data.'''
+
     def store_signature(self, s, submission_id):
         submission_id = int(submission_id)
         self.submission_to_ngram[submission_id].append(s.ngram_hash)
         self.ngram_to_submission[s.ngram_hash].append(submission_id)
         self.signatures[(submission_id, s.ngram_hash)] = s
+
+    '''lookup_matching_signatures finds all signatures with a matching structure based on ngram hashing. A set is then made and
+    returned'''
 
     def lookup_matching_signatures(self, submission_id):
         submission_id = int(submission_id)

@@ -1,3 +1,8 @@
+'''Authors: Jarred De Beer, Yaseen Hamdulay & Merishka Lalla
+Date: 22/9/2014
+Main class
+'''
+
 from algorithms.treehashalgorithm import TreeHashAlgorithm
 from algorithms.winnoweralgorithm import WinnowerAlgorithm
 from languages.python import PythonProgramSubmission
