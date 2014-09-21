@@ -334,13 +334,12 @@ class DatabaseManager:
         return match
     '''Updates the submission matches table with the new signature match, submission id and signatires matched.'''
 
-    def update_submission_match(self, submission_id, signature_match, match_submission_id, number_signatures_matched):
+    def update_submission_match(self, submission_id, signature_match, match_submission_id, number_signatures_matched, confidence):
         assert submission_id != match_submission_id
         c = self.conn.cursor()
         c.execute('UPDATE SubmissionMatches SET MatchSubmissionId = ?, NumberSignaturesMatched = ?, '
-                  'Confidence=0 '
-                'WHERE SubmissionId = ?',
-                (match_submission_id, number_signatures_matched, submission_id))
+                  'Confidence=? WHERE SubmissionId = ?',
+                (match_submission_id, number_signatures_matched, confidence, submission_id))
         c.close()
         self.conn.commit()
 
@@ -348,12 +347,12 @@ class DatabaseManager:
     This method accepts the submission ID, other submission ID and the number of match potential
      as a parameter and is then stored in the database.'''
 
-    def store_submission_match(self, assignment_id, submission_id, other_submission_id, number_signatures_match):
+    def store_submission_match(self, assignment_id, submission_id, other_submission_id, number_signatures_match, confidence):
         assert int(submission_id) != int(other_submission_id)
         c = self.conn.cursor()
         c.execute('INSERT INTO SubmissionMatches (SubmissionId, MatchSubmissionId, NumberSignaturesMatched, Confidence, StudentId1, StudentId2, AssignmentId)'
-                ' VALUES (?, ?, ?, 0, (SELECT StudentId FROM Submissions WHERE Id=?), (SELECT StudentId FROM Submissions WHERE Id=?), ?)',
-                (submission_id, other_submission_id, number_signatures_match, submission_id, other_submission_id, assignment_id))
+                ' VALUES (?, ?, ?, ?, (SELECT StudentId FROM Submissions WHERE Id=?), (SELECT StudentId FROM Submissions WHERE Id=?), ?)',
+                (submission_id, other_submission_id, number_signatures_match, submission_id, confidence, other_submission_id, assignment_id))
         c.close()
         self.conn.commit()
 
