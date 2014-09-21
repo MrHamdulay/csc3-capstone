@@ -30,8 +30,6 @@ while True:
 
 
     for submission_id in xrange(max_submission_match_id+1, max_submission_id+1):
-        if submission_id>3:
-            break
         print 'Processing', submission_id
         matching_signatures = database.lookup_matching_signatures(submission_id)
         submissions = [database.fetch_a_submission(submission_id)]
