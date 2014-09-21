@@ -1,8 +1,11 @@
 import os
 import sys
 import unittest
-sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../cheaters')
+import os
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', 'cheaters'))
+
 from database import DatabaseManager
+from model.signature import Signature
 
 
 ''' Extend DatabaseManager with functionality to empty the tables
@@ -11,20 +14,22 @@ class DatabaseManager(DatabaseManager):
 
     def empty_tables(self):
         c = self.conn.cursor()
-        c.execute('DELETE * FROM Students')
-        c.execute('DELETE * FROM Signatures')
-        c.execute('DELETE * FROM Assignments')
-        c.execute('DELETE * FROM Submissions')
-        c.commit()
-
+        c.execute('DELETE FROM Students')
+        c.execute('DELETE FROM Signatures')
+        c.execute('DELETE FROM Assignments')
+        c.execute('DELETE FROM Submissions')
+        c.close()
+        self.conn.commit()
 
 ''' Database Manager Test Suite '''
 class DatabaseManagerTests(unittest.TestCase):
 
-    db_file = os.getcwd() + '/test.db'
+    db_file = os.path.join(os.getcwd(), 'test.db')
     db = DatabaseManager(db_file)
 
-
+    def __init__(self, *args):
+        self.empty_tables()
+        unittest.TestCase.__init__(self, *args)
 
     def empty_tables(self):
         '''Start with an empty database'''
@@ -33,44 +38,55 @@ class DatabaseManagerTests(unittest.TestCase):
 
     def test_student_table(self):
         course_code = 'CRS1000F'
-        student_number = 'TSTSDN001'
+        student_number = 'TSTSDN002'
 
         # insert, fetch
-        self.db.store_student(student_number, course_code)
-        student = self.db.fetch_student(student_number, course_code)
-        self.failUnless(student.student_number == student_number and student.course_code == course_code)
+        self.db.data_populate(student_number, course_code)
+        student = self.db.fetch_student(student_number)
+        print(student)
+
 
         # delete
-        self.db.delete_student(student_number, course_code)
-        student = self.db.fetch_student(student_number, course_code)
-        self.failUnless(student == None)
+        self.db.delete_student(student_number)
+
 
     def test_assignment_table(self):
         course_code = 'CRS1000F'
         description = 'assignment 1 for the course'
         due = '9/2/2014'
-        self.db.store_assignment(course_code,description,due)
-        assignment = self.db.fetch_current.assignments()
-        self.failUnless(assignment == None)
+        assignment = []
+        self.db.store_assignment(course_code, description, due)
+
+        assignment = self.db.fetch_current_assignments()
+        self.failUnless(assignment.course_code == course_code )
+        print(assignment)
+        self.failUnless(assignment)
 
 
     def test_submission_table(self):
-        # self.db.store_submission()
+
+        c_file = "print (hello world) print(tomorrow this assignment is over =D ) eurhwrfhireheifibivbsdkbkvbhbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
         subId = 1
         assignmentId = 1
+        languagefile = "python"
+
+        self.db.store_submission(c_file, subId, assignmentId,languagefile)
+
         submission = self.db.fetch_a_submission(subId, assignmentId)
-        self.failUnless(submission == None)
-        submissions = self.db.fetch_a_submissions(assignmentId)
-        self.failUnless(submissions == None)
+        print(submission)
+        self.failUnless(submission)
+        submissions = self.db.fetch_submissions(assignmentId)
+        print(submissions)
+
 
     def test_signatures_table(self):
-        # db.store_signatures()
-        submissionId = 1
-        signatures = self.db.lookup_my_signatures(submissionId)
-        self.failUnless(signatures== None)
 
-        signatureList = self.db.lookup_matching_signatures (submissionId)
-        self.failUnless(signatureList == None)
+        self.db.store_signatures([Signature('(i)whii:',100,3), Signature('(i)whii:',100,3)],100)
+        self.db.store_signatures([Signature('(i)whii:',101,3), Signature('(i)whii:',101,3)],101)
+        signatures = self.db.lookup_matching_signatures(100)
+        print(signatures)
+        self.assertEqual(str(signatures[0]),'[<Submission id:1 student_number:1 source_len:139 assignment_id:1 submission_date:2014-09-21>')
+
 
 if __name__ == '__main__':
     unittest.main()
