@@ -55,8 +55,6 @@ var course = '1015';
 var url = 'http://mufasa.cs.uct.ac.za/~hussein/2014/1015_plagiarism_reports/';
 var assignments = {};
 
-
-
 var get_results_page = async(function* (name) {
     var assignment_url = yield get_assignment_url(name);
     var assignment_html = yield req_html(assignment_url);
@@ -148,18 +146,18 @@ function fetch_assignments() {
     return req_html(url).then(extract_assignment_names);
 }
 
-
-
-
 var run = async(function* () {
     var output = {};
+    console.log('fetching assignments');
     var assignments = yield fetch_assignments();
     var assgnmnt, refid, result_page, num_results;
     for(var i = 0; i < assignments.length; i++) {
         assgnmnt = assignments[i];
+        console.log('fetching assignment ', (i + 1));
         output[assgnmnt] = {};
         result_url  = yield get_result_url(assgnmnt);
         result_html = yield req_html(result_url);
+        console.log('requesting result html')
         for (var url of get_diff_url(result_html, result_url)) {
             var result = yield extract_diff_data(url);
             output[assgnmnt][result[0].student] = result[0];
@@ -169,11 +167,9 @@ var run = async(function* () {
     return output
 });
 
-
-
-
 run().then(function(output) {
     write_output(output);
+    console.log('output written.');
 }, function(err) {
     console.log(err);
 });
