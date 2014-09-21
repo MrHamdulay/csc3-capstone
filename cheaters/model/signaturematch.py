@@ -14,5 +14,5 @@ class SignatureMatch:
           'target': str(self.student_number2),
           'source_id': str(self.submission_id),
           'target_id': str(self.match_submission_id),
-          'confidence': str(self.number_signatures_matched)
+          'confidence': str(self.confidence)
         }

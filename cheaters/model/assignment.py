@@ -1,3 +1,8 @@
+'''Authors: Jarred De Beer, Yaseen Hamdulay & Merishka Lalla
+Date: 22/9/2014
+Assignment class. This class is to optimise the "blueprint" for the assignment type which will be later used.
+'''
+
 class Assignment:
     id = None
     course_code = None

@@ -1,3 +1,8 @@
+'''Authors: Jarred De Beer, Yaseen Hamdulay & Merishka Lalla
+Date: 22/9/2014
+Match class. 
+'''
+
 class Match:
     submission_id = None
     start_line = None
