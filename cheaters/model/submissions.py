@@ -1,3 +1,10 @@
+'''
+Author: Yaseen Hamdulay, Jarred de Beer, Merishka Lalla
+Date: 15 August 2014
+
+Python object that represents a row in the Submissions database table.
+'''
+
 class Submission:
     id = None
     student_number = None

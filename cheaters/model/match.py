@@ -1,3 +1,9 @@
+'''
+Author: Yaseen Hamdulay, Jarred de Beer, Merishka Lalla
+Date: 15 August 2014
+
+Python object that represents a row in the Matches database table
+'''
 class Match:
     submission_id = None
     start_line = None
@@ -12,3 +18,4 @@ class Match:
 
     def __repr__(self):
         return '<Match their_submission_id:%s my_start_line:%s match_length:%s (%d)>' % (self.submission_id, self.start_line_mine, self.match_length, self.number_of_signatures)
+

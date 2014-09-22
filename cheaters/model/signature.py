@@ -1,3 +1,10 @@
+'''
+Author: Yaseen Hamdulay, Jarred de Beer, Merishka Lalla
+Date: 15 August 2014
+
+Python object that represents a row in the Signatures database table
+'''
+
 class Signature:
     '''
     Identifies common structure between code '''

@@ -1,3 +1,10 @@
+'''
+Author: Yaseen Hamdulay, Jarred de Beer, Merishka Lalla
+Date: 15 August 2014
+
+Python object that represents a row in the SubmissionMatch database table
+'''
+
 class SignatureMatch:
     def __init__(self, id, submission_id, match_submission_id, number_signatures_matched, confidence, student_number1=None, student_number2=None):
       self.id = id
