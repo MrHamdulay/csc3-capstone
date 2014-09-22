@@ -98,18 +98,16 @@ class SuffixTreeAlgorithmTestCase(unittest.TestCase):
 #            012  345678  9  12
         a = 'hel\nnameis\nyaseen'
         st=SuffixTreeAlgorithm()
-        string, lines = st.whitespaced_stripped_with_line_numbers(a)
-        self.assertEqual(st.wrap_substring_to_lines(string, lines, 0, 2), (0, 2))
-        self.assertEqual(st.wrap_substring_to_lines(string, lines, 0, 5), (0, 2))
-        self.assertEqual(st.wrap_substring_to_lines(string, lines, 1, 13), (3, 8))
-        self.assertEqual(st.wrap_substring_to_lines(string, lines, 8, 15), (9, 15))
+        string, lines = st._whitespaced_stripped_with_line_numbers(a)
+        self.assertEqual(st._wrap_substring_to_lines(string, lines, 0, 2), (0, 2))
+        self.assertEqual(st._wrap_substring_to_lines(string, lines, 0, 5), (0, 2))
+        self.assertEqual(st._wrap_substring_to_lines(string, lines, 1, 13), (3, 8))
+        self.assertEqual(st._wrap_substring_to_lines(string, lines, 8, 15), (9, 15))
 
     def test_partial_lines(self):
         matches = SuffixTreeAlgorithm().calculate_document_similarity(*submissions2)
         self.assertEqual(str(matches), '[[<Match their_submission_id:1 my_start_line:1 match_length:5 (0)>],'
                                        ' [<Match their_submission_id:2 my_start_line:1 match_length:5 (0)>]]')
-#                                      '[[<Match their_submission_id:1 my_start_line:1 match_length:5 (0)>],
-#                                        [<Match their_submission_id:2 my_start_line:1 match_length:5 (0)>]]
 
 if __name__ == '__main__':
     unittest.main()
