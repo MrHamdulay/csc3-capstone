@@ -4,6 +4,8 @@ Date: 15 August 2014
 
 Python object that represents a row in the Matches database table
 '''
+
+
 class Match:
     submission_id = None
     start_line = None

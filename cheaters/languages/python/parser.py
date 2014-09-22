@@ -1,10 +1,9 @@
 '''
 Author: Yaseen Hamdulay, Jarred de Beer, Merishka Lalla
-Date: 15 August 2014
+Date: 22/9/2014
 
 Python parser and attribute stripper.
-
-Used to
+This class takes a .py file and parses it to the system.
 '''
 import ast
 from keyword import kwlist as PYTHON_KWLIST
