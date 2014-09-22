@@ -1,4 +1,5 @@
-'''author = 'Merishka Lalla
+'''author = Jarred De Beer, Yaseen Hamdulay & Merishka Lalla
+Date: 22/9/2014
 A database class to manage all insertions into different tables. These tables being Students, Assignments, Signatures
 and Matches. Each table has a series of different values but linked together through a Primary Key which is linked through
 an ID and a foreign key which is linked through other relevant column values.
@@ -206,7 +207,7 @@ class DatabaseManager:
         c.execute('SELECT StudentId, ProgramSource '
                 'ProgrammingLanguage FROM Submissions WHERE AssignmentNumber = ?' ,(assignment_id, ))
         for x in c:
-            source_codes[x[0]] = x[1]
+            source_codes[str(x[0])] = x[1]
         c.close()
         return source_codes
 
@@ -411,6 +412,9 @@ class DatabaseManager:
         c.close()
         return count
 
+    '''store_matches stores a match from a particular assignment. The submission id, other student submission id and relevant matches
+    are entered as a parameter and all relevant data is deleted from the database.'''
+
     def store_matches(self, submission_id, other_submission_id, matches0, matches1):
         c = self.conn.cursor()
 
@@ -427,6 +431,9 @@ class DatabaseManager:
         c.execute(query, matchsubmission)
         c.close()
         self.conn.commit()
+
+    '''fetch_matches fetches all matches from a particular assignment. The submission id and direction
+    are entered as a parameter and all relevant data is deleted from the database.'''
 
     def fetch_matches(self, submission_id, direction):
         c = self.conn.cursor()

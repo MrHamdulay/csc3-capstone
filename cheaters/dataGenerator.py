@@ -1,3 +1,9 @@
+'''
+Author: Yaseen Hamdulay, Jarred de Beer, Merishka Lalla
+Date: 15 August 2014
+
+Script to read in data given to us by Hussein into our database
+'''
 import os
 import zipfile
 from StringIO import StringIO
@@ -7,7 +13,7 @@ from database.database import DatabaseManager
 class DataGenerator:
 
     course_code = 'csc10015f'
-    path = os.path.join(os.getcwd(), '../examples/data')
+    path = os.path.join(os.getcwd(), '..', 'examples', 'data')
 
     def get_assignment_number(self, name):
         ''' get the number out of an assignment
@@ -47,7 +53,7 @@ class DataGenerator:
         database = DatabaseManager()
         for assignment in assignments:
             document_assignment_number = self.get_assignment_number(assignment)
-            if document_assignment_number != 6:
+            if document_assignment_number not in  (6, 5):
                 continue
             if document_assignment_number not in assignment_id_map:
                 name = 'Assignment %d' % document_assignment_number

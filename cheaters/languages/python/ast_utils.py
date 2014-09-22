@@ -1,3 +1,7 @@
+'''Authors: Jarred De Beer, Yaseen Hamdulay & Merishka Lalla
+Date: 22/9/2014
+Abstract Syntax tree class
+'''
 import ast
 import _ast
 

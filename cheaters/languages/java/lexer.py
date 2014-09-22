@@ -1,4 +1,7 @@
-__author__ = 'Merishka Lalla'
+'''Authors: Jarred De Beer, Yaseen Hamdulay & Merishka Lalla
+Date: 22/9/2014
+lexer class
+'''
 import plyj.parser as plyj
 
 def java_strip_variables(code):

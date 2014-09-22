@@ -1,3 +1,8 @@
+'''Authors: Jarred De Beer, Yaseen Hamdulay & Merishka Lalla
+Date: 22/9/2014
+Student class. This class instantiates the student type for further use
+'''
+
 class Student:
 
     id = None
