@@ -25,6 +25,7 @@
 \renewcommand{\abstractname}{\vskip -5mm}  %  Change name of Abstract
                                 %  to nothing and loose some of the
                                 %  excessive white space
+\usepackage{float}
 
 
 \begin{document}
@@ -49,12 +50,54 @@
                        % footers (ie just the page number as footer).
 
 \section*{Abstract}
-The purpose of this project is to identify cheating among Computer Science students when submitting their assignments. It is estimated that 30\% of students will cheat in an assignment, often sharing the code in groups amongst themselves.Our goal is to detect such occurrences and display the results for lecturer administration. With the use of various data structures and algorithms, the final implementation can handle code matching from Java and Python. This project attempts to be similar to JMoss with the main difference being that this project has a more interactive user interface with data presented in different forms. The main algorithm was based on the proprietary JMoss system due to the nature of JMoss.  JMoss can handle a large number of code submissions and evaluate through them to find the suspected percentage cheated per assignment. Development was done using horizontal and evolutionary prototyping. Horizontally due to the initial broad functionality that was implemented and evolutionary because of the constant changes that were adopted. Testing the algorithm was done against 18658 python assignments. Thereafter it was discovered that the most effective solution was for the system performs alongside JMoss, despite the way it differs in its UI by grouping cheaters to recurring code blocks, a more convenient view to administer cheating.
+The purpose of this project is to identify cheating among Computer Science
+students when submitting their assignments. It is estimated that
+30\% of students will cheat in an assignment, often sharing the code in groups amongst themselves.
+ Our goal is to detect such occurrences and display the results for lecturer administration. 
+We began by building a prototype, basing the algorithm on the proprietary JMoss system, 
+but using only Python. We found our implementation worked well but failed in that it detected single lines 
+of common and insignificant code, also, the initial UI could not display the high number of results
+being listed. After refactoring our solution was to perform String matching, generating 
+signatures on the text and filtering them for multiple lines of
+recurring code, further comparing it with as an abstract syntax tree for subtree pattern matching. 
+To test the algorithm was run against 18658 python assignments, yielding the same 30\% mean
+of students cheating and deviating on the confidence interval with each occurrence by just 0.5\%
+as given by the JMoss system. In conclusion our solution performs alongside JMoss, yet differs in its UI by
+grouping cheaters to recurring code blocks, a more convenient view to administer cheating.
+
+
+
+The purpose of this project is to identify cheating among Computer Science
+students when submitting their assignments. It is estimated that 30\% of
+students will cheat in an assignment, often sharing the code in groups amongst
+themselves. Our goal is to detect such occurrences and display the results for
+lecturer administration. With the use of various data structures and algorithms,
+the final implementation supports code detection from Java and Python
+submissions. This project attempts to be similar to JMoss with the main
+difference being that the project has a more interactive user interface with
+data presented in alternate forms. The main algorithm was based on the
+proprietary JMoss system which can handle a large number of code submissions and
+evaluate them, finding the percentage of copied lines out of an assignment.
+Development was done using horizontal and evolutionary prototyping. Horizontal
+due to the initial broad functionality that was implemented for the prototype
+and evolutionary because of the constant changes that were adopted. Testing the
+algorithm was done against 18658 python assignments extracted out of the
+provided JMoss results. We're happy with the performance of the system, and
+believe it performs alongside JMoss, but differs with it's UI and presentation
+of data.
 
 \section{Introduction}
 \label{s:introduction}
 
-Reuse of code by students in an academic institution is a growing problem due to the fact  that manual detection can be time consuming and finding an algorithm to detect plagiarism in large repositories is hard to scale [1].The aim of this project has been to attempt to find similarities in code which can be considered cheating and thusly plagiarism in some form. The detection system plugs in to the student submission process on Vula and will extract the source files to generate signatures on the source code and match it with existing signatures. The methodology relates to that of the winnowing algorithm which generates a digital fingerprint[3]. A front end web UI was built to list the offending students and provide administration functionality for the convening lecturer to take action when needed. The web UI could be accessed from within an iframe in the Vula dashboard or its external URL, by convening lecturers. Lecturers will use this facility to verify code diffs against students' code, mark them as having cheated and be provided with a list of the marked students that they can use to reference when assigning a student zero for an assignment.
+Reuse of code by students in an academic institution is a growing problem due to
+the fact that manual detection can be time consuming and finding an algorithm
+to detect plagiarism in large repositories is hard to scale\cite{Burrow}.The aim
+of this project has been to attempt to find similarities in code which can be
+considered cheating and thusly plagiarism in some form. The detection system
+plugs in to the student submission process on Vula and will extract the source
+files to generate signatures on the source code and match it with existing
+signatures. The methodology relates to that of the winnowing algorithm which
+generates a digital fingerprint\cite{frohlich}. A front end web UI was built to list the offending students and provide administration functionality for the convening lecturer to take action when needed. The web UI could be accessed from within an iframe in the Vula dashboard or its external URL, by convening lecturers. Lecturers will use this facility to verify code diffs against students' code, mark them as having cheated and be provided with a list of the marked students that they can use to reference when assigning a student zero for an assignment.
 
 The programming languages used for assignments differ from year to year, and in some cases even within the same year. It was therefore necessary to detect the appropriate programming language used with each submission. The Computer Science department makes extensive use of Python and Java for assignments and so these are provided as plugins by default. The system has a plugin sub-system which can be used to write parsers for additional languages, extending the scope of languages used to detect cheating from within the department and allowing flexibility in terms of language support for the future.
 
@@ -68,16 +111,14 @@ signature generation and matching. We were able to use the output from a provide
 
 \subsection{Use Cases}
 
-Actors: Students and lecturers.
+Actors: Students and lecturers
 
 The typical scenario is a student submits an assignment through Vula. Once submitted, the assignment is checked against all other submitted assignments for cheating and the result is stored in a database. The lecturer can access the results at any given time to verify cheating.
 
-In the event that the Cheater Checker system takes too long to respond, the system will respond with an appropriate message explaining the reason for the delay. Most likely caused by overflow or assignments submitted at once. 
-
 In the event that a student submits a .zip folder with a syntax error or an unsupported language, the submission will be ignored. It is assumed that syntax errors in submissions would result in 0 from the automatic marker and also from tutors trying to run them.
 
-\begin{figure}[h!]
-  \center{\includegraphics[scale=0.8]{use_case.png}}
+\begin{figure}[H]
+  \center{\includegraphics[width=400px]{use_case.png}}
   \caption{A use case diagram illustrating system interaction}
   \label{fig:usecase}
 \end{figure}
@@ -165,18 +206,42 @@ In the event that a student submits a .zip folder with a syntax error or an unsu
 
 \subsection{Artefacts produced}
 
-A risk management assessment, relevant diagrams (such as class diagrams and architectural diagrams) and a gantt chart were produced in order to aid the development process in terms of time management and general direction. 
-
-\begin{figure}[h!]
-  \center{\includegraphics[scale=0.8]{analysis_class.png}}
+\begin{figure}[H]
+  \center{\includegraphics[width=\textwidth]{analysis_class.png}}
   \caption{Analysis Class Diagram}
   \label{fig:analysisclass}
 \end{figure}
 
+A risk management assessment, relevant diagrams (such as class diagrams and
+architectural diagrams) and a gantt chart were produced in order to aid the
+development process with respect to time management and general direction. 
+
 \section{Design Overview}
 \label{s:design-overview}
 
-We have designed the system to be used from within an existing system (i.e. Vula) and it does not have to run as a standalone service. The system plugs into Vula to receive submissions. It then generates and stores signatures on the submission which get processed by a separate service that identifies matches and stores them. A lecturer reviews the results from the matching in the presentation layer and makes a decision as to whether the student should be marked for cheating or not. Submissions are categorised by their respective assignment, and are matched against submissions within that assignment over multiple years.
+The UI may be embedded within an existing system such as Vula and it does not
+have to be used from an external URL endpoint. The system plugs into Vula to
+receive submissions. It then generates and stores signatures on the submission
+which get processed by a separate service that identifies matches and stores
+them. A lecturer reviews the results from the matches in the presentation layer and makes a decision as to whether the student should be marked for cheating or not. Submissions are categorised by their respective assignment, and are matched against submissions within that assignment over multiple years.
+
+\paragraph{Algorithms used were}
+\begin{itemize}
+\item The Winnower algorithm (coarse matching)
+\item Grouper algorithm
+\item Suffix tree algorithm (exact matching)
+\end{itemize}
+
+The winnowing algorithm\cite{frohlich} was used to give us coarse but fast
+matching between submissions. We used it to generate a signature for each
+submission and match that signature with other submission signatures. This tells
+us which submission most closely matches another. Due to the coarse nature of the winnowing algorithm we are unable to pull out line information from it. For this we used a Generalised Suffix Tree for more exact substring matching. Generating a suffix tree is a lot slower than the winnower algorithm so it can only be used for finding matches when we already know which pairs of submissions are most similar. We used the generalised suffix tree to find long common substrings and match those between submissions.
+
+We implemented Ukkonen's algorithm to generate the suffix tree in linear time.
+
+Prior to doing any submission matching we strip out all variable names, class
+names, method names etc that students may replace to attempt to obfuscate pieces
+of plagiarised code.
 
 \paragraph{Algorithms used were}
 \begin{itemize}
@@ -185,14 +250,14 @@ We have designed the system to be used from within an existing system (i.e. Vula
     \item Suffix tree algorithm
 \end{itemize}
 
-\begin{figure}[h!]
-  \center{\includegraphics[scale=0.8]{design_class.png}}
+\begin{figure}[H]
+  \center{\includegraphics[width=\textwidth]{design_class.png}}
   \caption{Design class diagram}
   \label{fig:designclass}
 \end{figure}
 
-\begin{figure}[h!]
-  \center{\includegraphics[scale=0.8]{layerd_architecture.png}}
+\begin{figure}[H]
+  \center{\includegraphics[width=400px]{layered_architecture.png}}
   \caption{Layered architectural diagram}
   \label{fig:layeredarchitecture}
 \end{figure}
@@ -203,37 +268,35 @@ We have designed the system to be used from within an existing system (i.e. Vula
 
 \subsection{Data structures used}
 
-\begin{figure}[h!]
-  \center{\includegraphics[scale=0.8]{abstract_syntax_tree.png}}
-  \caption{Abstract Syntax Tree}
+\begin{figure}[H]
+  \center{\includegraphics[width=250px]{abstract_syntax_tree.png}}
+  \caption{Abstract Syntax Tree\cite{schleimer}}
   \label{fig:abstractsyntaxtree}
 \end{figure}
 
-An Abstract syntax tree is generate a tree for programming syntax. The abstract syntax tree was used to generate signatures for comparison of submissions.
-
-\begin{figure}[h!]
-  \center{\includegraphics[scale=0.8]{suffix_tree.png}}
-  \caption{Suffix Tree}
+\begin{figure}[H]
+  \center{\includegraphics[width=250px]{suffix_tree.png}}
+  \caption{Suffix Tree\cite{unknown2}}
   \label{fig:suffixtree}
 \end{figure}
 
 The suffix tree is a tree structure which looks at the last part of a
 given output. From the example, it gives all possible end combinations. This was
-used to find the longest common substring in code.
+used to find the longest common substring in the code.
 
-\begin{figure}[h!]
-  \center{\includegraphics[scale=0.8]{hash_map.png}}
-  \caption{Hash Map}
+\begin{figure}[H]
+  \center{\includegraphics[width=250px]{hash_map.png}}
+  \caption{Hash Map\cite{unknown1}}
   \label{fig:hashmap}
 \end{figure}
 
-A hash map is used to implement an associative array. This means that  map keys to values. We used hashing to map between identifiers from once suspected instance of cheating to another for a greater measure of accuracy.
+A hash map is used to map keys to values in near constant time. We used hashing to map between identifiers from one suspected instance of cheating to another for a greater measure of accuracy.
 
 
 \section{User Interface features and implementation}
 
-\begin{figure}[h!]
-  \center{\includegraphics[scale=0.8]{ui_screenshot.png}}
+\begin{figure}[H]
+  \center{\includegraphics[width=\textwidth]{ui_screenshot.png}}
   \caption{A screenshot of the UI on the home screen}
   \label{fig:uiscreenshot}
 \end{figure}
@@ -246,35 +309,52 @@ The user interface forms the front-end of the system which is served by the Flas
 
 The Bootstrap 3 CSS framework was used as a base level of CSS to enforce resets and layout rules that would make the UI responsive and compatible across browsers, backing up to Internet Explorer 8 and 9. On top of this, a style.css file was written to override Bootstrap’s CSS rules where necessary to accomplish the overall design. It was not necessary to make use of all of Bootstrap’s javascript libraries, so this is not included, but we make use of two of its smaller javascript files: alert.js so users can close alert dialogs; and dropdown.js for the dropdown menu in the navigation bar.
 
-The considerations on cross browser javascript support in achieving responsive user interactions are less forgiving. Javascript runs single threaded in the browser and as a requirement needs to be non-blocking on the interface. In order to achieve a responsive and non-blocking interface the UI needs to make any combination of HTTP requests to the Flask server layer in an asynchronous manner. Such asynchronous requests are generally written with function calls that get given, as parameters, callback functions. These callback functions are to be executed on receiving a response from the server, and get passed either an error or the result from the server’s response. This leads to heavily nested, unmaintainable code which is hard to read. As a result, a design decision in favour of maintainability and readability was made for asynchronous requests to have to be made by a concept called Promises. Promises allow for chaining of asynchronous request/response calls. The code is more intuitive to read and avoids nesting, however it is limited to modern browsers from Firefox version 30, Chrome version 33, Opera version 23, and Safari version 8 and up. A polyfill can be included, providing support for Promises in browsers dating back to Internet Explorer 9, but this was not included due to time constraints and the assumption that users of the system would be from the Computer Science department, which is a controlled environment that likely runs up to date browsers.
+The considerations on cross browser javascript support in achieving responsive
+user interactions are less forgiving. Javascript runs single threaded in the
+browser and as a requirement needs to be non-blocking on the interface. In order
+to achieve a responsive and non-blocking interface the UI needs to make any
+combination of HTTP requests to the Flask server layer in an asynchronous
+manner. Such asynchronous requests are generally written with function calls
+that get given, as parameters, callback functions. These callback functions are
+to be executed on receiving a response from the server, and get passed either an
+error or the result in the server’s response. This leads to heavily nested, unmaintainable code which is hard to read. As a result, a design decision in favour of maintainability and readability was made for asynchronous requests to have to be made by a concept called Promises. Promises allow for chaining of asynchronous request/response calls. The code is more intuitive to read and avoids nesting, however it is limited to modern browsers from Firefox version 30, Chrome version 33, Opera version 23, and Safari version 8 and up. A polyfill can be included, providing support for Promises in browsers dating back to Internet Explorer 9, but this was not included due to time constraints and the assumption that users of the system would be from the Computer Science department, which is a controlled environment that likely runs up to date browsers.
 
 \subsection{Dynamic pages and dynamic interaction}
-
-The considerations on cross browser javascript support in achieving responsive user interactions are less forgiving. Javascript runs single threaded in the browser and as a requirement needs to be non-blocking on the interface. In order to achieve a responsive and non-blocking interface the UI needs to make any combination of HTTP requests to the Flask server layer in an asynchronous manner. Such asynchronous requests are generally written with function calls that get given, as parameters, callback functions. These callback functions are to be executed on receiving a response from the server, and get passed either an error or the result from the server’s response. This leads to heavily nested, unmaintainable code which is hard to read. As a result, a design decision in favour of maintainability and readability was made for asynchronous requests to have to be made by a concept called Promises. Promises allow for chaining of asynchronous request/response calls. The code is more intuitive to read and avoids nesting, however it is limited to modern browsers from Firefox version 30, Chrome version 33, Opera version 23, and Safari version 8 and up. A polyfill can be included, providing support for Promises in browsers dating back to Internet Explorer 9, but this was not included due to time constraints and the assumption that users of the system would be from the Computer Science department, which is a controlled environment that likely runs up to date browsers.
 
 The Flask server layer makes use of a templating engine called jinja which is used to render dynamic web pages from templates. These web pages are dynamic from the context of the server in that data is injected into the template to render the page. This data is variable and often depends on results from database queries. From the users perspective, however, these are static pages which do not respond to interaction other than to perform a full page refresh or navigate to another URL. In some circumstances this is grossly inefficient for interaction and in these situations javascript is used to enhance functionality on the page, providing dynamic user interaction which is highly responsive and time efficient.
 
 Once again browser compatibility is a concern as different browsers can have inconsistencies with their javascript implementations. In order to meet this shortfall, many checks have to be performed on the type of browser, which then run different implementations of the same javascript code. This is unmaintainable and as a result jQuery was used, which serves to abstract away these differences while also allowing for shorter, cleaner javascript code. jQuery version 2.1 was used, which is supported by Internet Explorer 9 and above.
+
+\begin{figure}[H]
+  \center{\includegraphics[width=400px]{js_dependencies.png}}
+  \caption{Dependencies of the used javascript libraries}
+  \label{fig:jsdependencies}
+\end{figure}
 
 Fortunately not all views require dynamic user interaction and as a result the
 crux of the javascript code base is isolated to just one view, the cheaters\_review.html page, where lecturers review code from student submissions marked for plagiarism and then decide to record students as having cheated or not. The following paragraph details the view and the javascript implementation to achieve the interaction, all remaining views do not need dynamic javascript interaction and perform relatively straight forward CRUD (Create, Read, Update and Delete) operations on the database.
 
 \subsection{Dynamic interaction for reviewing cheaters}
 
-The purpose of the cheaters\_review.html view is to display instances of possible cheating. Such an instance is a pair of submissions which are similar to one another, and as a result the data we work with is a list of pairs of students each with their notably similar submission. The students in a pair are each rated by the number of common lines, as well as a percentage based on this number to the total number of lines in their submission.
+The purpose of the cheaters\_review.html view is to display instances of
+possible cheating. An instance is a pair of submissions which are similar to one
+another, and as a result the data we work with is a list of pairs of students
+each with their notably similar submission. The students in a pair are each
+rated by a percentage of common lines of code to the total number of lines in
+the submission.
 
 This list of pairs tends to be long, and the lecturer needs to be able to intuit the degree of plagiarism by the ratings which are provided. It was detailed in a client review meeting that the use case for this is by observing the rating of the top few listings and tracing down the list for as long as the level remains more or less consistent. When the level falls off drastically it can be assumed that the likelihood of cheating for the remaining students does so as well. To aid  in determining where this threshold lies a histogram is displayed, to the right of the list of pairs, illustrating the number of students in the different percentage ranges.
 
-\begin{figure}[h!]
-  \center{\includegraphics[scale=0.8]{pairs_histogram.png}}
+\begin{figure}[H]
+  \center{\includegraphics[width=\textwidth]{pairs_histogram.png}}
   \caption{A screenshot of the pairs of students and the corresponding histogram}
   \label{fig:pairshistogram}
 \end{figure}
 
 When a lecturer wants to compare code they just have to click on a list pair and the view will switch its focus to a code view displaying the code of the two students side by side. The exact line numbers which match are fetched asynchronously and displayed clearly in highlighted blocks over the code. Above the code blocks there is an action bar which contains dynamically rendered buttons containing the common line numbers, and will scroll the code to the respective line number when clicked.
 
-\begin{figure}[h!]
-  \center{\includegraphics[scale=0.8]{code_view.png}}
+\begin{figure}[H]
+  \center{\includegraphics[width=\textwidth]{code_view.png}}
   \caption{A screenshot of the copied regions of code}
   \label{fig:codeview}
 \end{figure}
@@ -283,34 +363,60 @@ Horizontal and vertical scrolling in the left code block is mirrored by the righ
 
 Two buttons exist in the action bar for recording either student independently as having cheated. This is necessary for the use case where the lecturer determines that only one student has cheated. The buttons trigger an asynchronous request to record the respective student as a cheater for the given assignment. The text in the buttons responds accordingly and reflects the state of the request. For example, the button text could read “Record Student A”, upon click that will change to “Recording…” and on successful completion will change to “Undo”. “Undo” means that the transaction has been successful, and it can be reverted if this was made unintentionally by human error. Pressing the button while in the “Undo” state will send an asynchronous delete request and revert the system back to it’s original state. This serves our operability requirement in providing reversible actions and constant feedback.
 
+\begin{figure}[H]
+  \center{\includegraphics[width=250px]{report_button_state.png}}
+  \caption{State diagram of Report buttons}
+  \label{fig:statediagram}
+\end{figure}
+
+
 A back button is provided in the action bar to conveniently return back to the previous listing and continue after the lecturer has finished reviewing the code.
 
 \subsection{Listing students in Groups}
 
-It is often the case that code is shared among a group of students, not just two. The listing of student pairs is linear and provides no information as to the relationship among student pairs. It is useful for the lecturer, and a requirement of the system, to be able to see the extent of cheating by knowing about these groups of students with similar code. To meet this requirement we have an additional listing containing Groups of student pairs. This listing is built upon the data containing the student pairs and feeds the pair into a graph with the students as nodes and the pair as an edge connecting them. The graph is then traversed and it identifies groups by isolated clusters of students. These groups are then listed with the pairs that make up the group, containing the same information as on the Pairs listing but just categorised by group. Clicking on a pair in a group will render the graph representing the entire group into the diagram on the right of the group listing. This graph gives a visual illustration of how the group is related and a star shaped graph quickly identifies the student most likely to have shared the code. Clicking on an edge in the graph will select the pair and focus the view onto their code in precisely the same way as in the Pairs listing.
+It is often the case that code is shared among a group of students, not just
+two. The listing of student pairs is linear and provides no information as to
+the relationship among student pairs. It is useful for the lecturer, and a
+requirement of the system, to be able to see the extent of cheating by knowing
+about these groups of students with similar code. To meet this requirement we
+have an additional listing containing Groups of student pairs. This listing is
+built upon the data containing the student pairs and feeds the pairs into a
+graph with the students as nodes and the pair as the edge connecting them. The
+graph is then traversed and it identifies groups as isolated clusters of
+students. These groups are then listed, containing the pairs that make up the group. Clicking on a pair in a group will render the graph representing the entire group into the diagram on the right of the group listing. This graph gives a visual illustration of how the group is related and a star shaped graph quickly identifies the student most likely to have shared the code. Clicking on an edge in the graph will select the pair and focus the view onto their code in precisely the same way as in the Pairs listing.
 
-\begin{figure}[h!]
-  \center{\includegraphics[scale=0.8]{group_view.png}}
+\begin{figure}[H]
+  \center{\includegraphics[width=\textwidth]{group_view.png}}
   \caption{A screenshot of the group view with a star topology graph}
   \label{fig:graphview}
 \end{figure}
 
 \subsection{Reports on cheating students}
 
-A use case for acting on instances of cheating is to manually copy the offending student numbers over into an excel spreadsheet. This spreadsheet is then referenced when assigning students zero or taking further action on them. The system meets this use case by providing a report page which lists the students that have been marked for cheating by assignment. A button is provided on the report pages which will download the list as a CSV file in the case where a lecturer needs to use the data elsewhere. The downloaded CSV file is named according to the assignment number for easy identification. A button also exists to delete students from the listing. This is either in the case where a student has been added in error, or the student has been resolved or assigned zero and no longer needs to be listed.
+A use case for acting on instances of cheating is to manually copy the offending
+student numbers over into an excel spreadsheet. This spreadsheet is then
+referenced when assigning students zero or taking further action on them. The
+system meets this use case by providing a report page which lists the students
+that have been marked for cheating per assignment. A button is provided on the report pages which will download the list as a CSV file in the case where a lecturer needs to use the data elsewhere. The downloaded CSV file is named according to the assignment number for easy identification. A button also exists to delete students from the listing. This is either in the case where a student has been added in error, or the student has been resolved or assigned zero and no longer needs to be listed.
 
-\begin{figure}[h!]
-  \center{\includegraphics[scale=0.8]{group_view.png}}
+\begin{figure}[H]
+  \center{\includegraphics[height=200px]{report_view.png}}
   \caption{A screenshot of the report view, listing students that have been
   marked as cheating on an assignment}
-  \label{fig:graphview}
+  \label{fig:reportview}
+\end{figure}
+
+\begin{figure}[H]
+  \center{\includegraphics[height=600px]{ui_sequence_diagram.png}}
+  \caption{Sequence diagram of main.js of page load}
+  \label{fig:uisequence}
 \end{figure}
 
 
 \section{General overview of the entire system}
 
-\begin{figure}[h!]
-  \center{\includegraphics[scale=0.8]{sequence_diagram.png}}
+\begin{figure}[H]
+  \center{\includegraphics[width=\textwidth]{sequence_diagram.png}}
   \caption{A sequence diagram to indicate how the system works}
   \label{fig:sequencediagram}
 \end{figure}
@@ -328,22 +434,20 @@ classes are}
 \item UI
 \end{itemize}
 
-Selecting the most important method in each class will be close to impossible as each method is needed. Code has been stripped of redundant methods so every method in each class is equally important.
-
 \subsection{Relationship between classes}
 
-\textit{BaseAlgorithm abstract class}
-Abstract class for detection algorithm which defines methods.
+\textit{BaseAlgorithm abstract class}\\ 
+Abstract class for detection algorithm which defines methods.\\
 
-\textit{WinnowingAlgorithm extends BaseAlgorithm}
-Implements a string matching algorithm (similar to the one implemented by the MOSS
-system) for signature generation and signature matching.
+\textit{WinnowingAlgorithm extends BaseAlgorithm}\\
+Implements a string matching algorithm (similar to the one implemented by the
+JMoss system) for signature generation and signature matching.\\
 
-\textit{Program}
-Represents a submission by the user and stores our cheating detections
+\textit{Program}\\
+Represents a submission by the user and stores our cheating detections\\
 
-\textit{PythonProgram extends Program}
-Implements Python specific parsing to remove variable and function names
+\textit{PythonProgram extends Program}\\
+Implements Python specific parsing to remove variable and function names\\
 
 \subsection{Special programming techniques}
 
@@ -351,23 +455,15 @@ Test driven development was used to make code more efficient and reduce occurren
 
 \subsection{Libraries}
 
-Libraries plyj and  ply were used to parse code from submission to the system to be evaluated. Sqlite3 was used for database management. Flask was used as a web framework for the presentation layer of the system and to make calls to the database manager.
+Libraries plyj and  ply were used to parse code from submissions to the system to be evaluated. Sqlite3 was used for database management. Flask was used as a web framework for the presentation layer of the system and to make calls to the database manager.
 
 
 \section{Program Validation and Verification}
 \label{ss:progr-valid-verif}
 
-Tell us how you tested the system and why you believe it works.
-Describe all the steps taken to validate the correctness of the
-program.
+We wrote automated unit tests to verify that our code is correct and valid. Unit tests check that for a given input our methods and classes behave as expected. Inputs were method specific and any incorrect data was ignored with the use of try, catch statements. Random incorrect data is hard to come by given that the system simplifies inputs to methods as much as possible. 
 
-If you had user tests then say what you did and what the results
-were. Describe why these test data were chosen (what test conditions
-the data was testing).  Table \ref{tab:tests} provides an example of
-the sorts of results we are looking for. The full detail of the test
-runs should be appended to the report.
-
-\begin{table}[h!]
+\begin{table}[H]
   \centering
 \caption{A table of tests. A table caption goes above the table.}
 
@@ -438,32 +534,77 @@ runs should be appended to the report.
 \label{tab:tests}
 \end{table}
 
-Follow your table of results with a discussions of them highlighting
-how useful and usable your system is for its intended purpose.
+The system is sensitive because certain sets of inputs can cause the
+system to fail. Try, catch statements are used to bypass syntax errors in code
+submissions, allowing the system to continue processing remaining submissions.
+It is assumed that submissions are parsed through the automatic marker and the automatic marker wouldn't have accepted the syntax error either. The rest of the tests ran on the same principle in that inputs were supplied to ensure basic functionality. In essence basic functionality was all that was required as the system was specific enough to make sure that inputs supplied to the methods would be as simplified as possible. As an example of the simplification, the canonicalisation method takes a .zip folder and reduces it to one exceptionally long string and the string is then manipulated.
 
 \section{Conclusion}
 \label{ss:conclusion}
 
-Your report must have a clear conclusion where you revisit the aims
-set out in the beginning and discuss how well you met them. Did you
-achieve the objective of creating a well-structured, modular, and
-robust system?  Please summarize the design features and test results
-that show this.
+The initial aim of this project was to ensure optimal functionality of the system in terms of algorithm, speed, usability and user experience. Usability and user experience were well met in that the user interface has been designed to incorporate all necessary data in a simple layout which enhanced user experience. User experience success relies on the intuitive design and how easy it is to familiarize oneself with the system which was achieved. The speed and optimization of the algorithm was fairly well met. The expected time taken per submission was a little under what we expected however in practical use, it will be substantially faster in that one submission will be processed at a given time rather than every assignment we were given. The degree of achieving a successful system is fairly high. The system has withstood all tests and works efficiently. The code was structured as indicated using the object orientation standards and general layout. Thus, this project has been a combination of success in learning how to build the system and for a user to implement the system.
 
-\begin{thebibliography}{9}
+\begin{thebibliography}{51}
 
-\bibitem[Kopka and Daly(2004)]{KopkaDaly}
-Kopka, H. and Daly, P.W.  (2004) \textit{A Guide to \LaTeXe:
-Document Preparation for Beginners and Advanced Users} (4th~edn).
-Addison-Wesley.
+\bibitem{Burrow} [Burrows, S., Tahaghoghi, S. M., \& Zobel, J. (2007)]
+Efficient plagiarism detection for large code repositories. Software: Practice and Experience, 37(2), 151-175.
 
-\bibitem[Lamport(1994)]{Lamport}
-Lamport L. (1994) \textit{\LaTeX: A Document Preparation System}
-(2nd~edn). Addison-Wesley.
+\bibitem{schleimer} [Schleimer, S., Wilkerson, D. S., \& Aiken, A. (2003, June)]
+Winnowing: local algorithms for document fingerprinting. In Proceedings of the 2003 ACM SIGMOD international conference on Management of data (pp. 76-85). ACM.
 
-\bibitem[Mittelbach and Goossens(2004)]{Companion}
-Mittelbach, F. and Goossens, M., (2004) \textit{The \LaTeX\
-Companion} (2nd~edn). Addison-Wesley.
+\bibitem{frohlich} [Frohlich,P.H (2013,3)]
+Assignment 4: Semantic Analysis/ Abstract Syntax Tree. 
+http://gaming.jhu.edu/~phf/2013/spring/cs328/assignment-ast.shtml
+
+\bibitem{unknown1} [Unknown (2012,3)]
+PowerShell Hash Tables 
+http://www.bonusbits.com/main
+
+\bibitem{unknown2} [Unknown(2011,11)]
+Store/retrieve a data structure
+http://stackoverflow.com/questions/8300364/store-retrieve-a-data-structure
 
 \end{thebibliography}
+
+\section{Appendix A: User manual}
+
+The user enters the system on the home page. The home page consists of a list of
+assignments with all the submissions and the pairs of students suspected of
+cheating as well as the option of creating, editing and deleting an assignment.
+The user can select the desired assignment to view all relevant data to be
+sorted through and mark students as cheated. The home page has also incorporated
+the report aspect. The report aspect shows all students marked for cheating by a
+lecturer in a specific assignment. 
+
+To manage assignments from the home screen, the user can click the "Manage
+Assignments" button which will redirect them to the corresponding web page where
+they have an option of creating an assignment, editing a selected assignment or
+deleting an assignment. To create an assignment, the user must enter all
+required data and then click submit. To edit, an assignment must be selected and
+then the desired fields to be changed can be edited and saved. To delete an
+assignment, the user must select an assignment and click the delete button.
+
+To access the student submission data from the home page, click on an assignment
+link. The initial screen will show the pairs of students which have a high
+percentage of cheating confidence. The list is sorted by cheating confidence
+from highest to lowest. A histogram is on the right hand side of the pairs to
+indicate the general distribution of the confidence levels. The user can click
+on any pair and the copied sections of code will be highlighted on the adjacent
+code blocks. Horizontal and vertical scrolling allows for viewing code that is
+too long to fit neatly in the code block..
+
+There is a navigation tab to view Groups of students. Once clicked, groups of
+students will be displayed with the number of students per group as well as a
+visual representation on the right of the screen illustrating how they are
+related . The colour of a graph edge is related to the percentage of cheating
+across the group. Red indicates high for example. Clicking an edge on the graph
+will display the corresponding two students' code blocks and highlight similar
+lines as before. 
+
+Two buttons in the action bar of the code view labeled "Record student A/B"
+serve to mark a student as having cheated. Once a student is marked as cheated,
+the student name will be added to a list of students that have been caught
+cheating. The report can be generated or viewed at any time. If the lecturer
+wishes to take action, the report can be referenced for students who have cheated.  
+
 \end{document}
