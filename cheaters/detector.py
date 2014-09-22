@@ -34,6 +34,10 @@ class Detector:
 
     def run(self, submission, assignment_number, student_number):
         '''
+        Handles the submission process from the student/submit form
+
+        detects language, generates signatures and stores results
+
         @param submission, File posted through web form
         @param assignment_number, Number of assignment
         '''
@@ -57,6 +61,8 @@ class Detector:
 
     def set_language_handler(self, zip_file):
         '''
+        figures out language and loads the appropriate language handler
+
         @param submission list of files'''
         for filename in zip_file.namelist():
             extension = filename.split('.')[-1]
@@ -66,6 +72,12 @@ class Detector:
         raise UnknownLanguageException()
 
     def concatenate_files(self, zip_file):
+        '''
+        filters unneeded files and concatenates the program source together
+
+        @param zip_file the zip of the submission
+        @return string of the file put together
+        '''
         concatenated_file = ''
         for filename in zip_file.namelist():
             if '__MACOSX' in filename:
@@ -77,27 +89,12 @@ class Detector:
         return concatenated_file
 
     @staticmethod
-    def find_most_similar_submission(submission):
-        database = DatabaseManager()
-        grouper = Grouper()
-
-        # TODO: this can probably be done in one sql query without post processing
-        signatures = database.lookup_matching_signatures(submission.id)
-        grouped_signatures = grouper.group_signatures_by_document(signatures)
-
-        while True:
-            closest_submission_id = max(grouped_signatures.iteritems(), key=lambda x: len(x[1]))[0]
-            other_submission = database.fetch_a_submission(submission.assignment_id,
-                    closest_submission_id)
-            # it only makes sense to compare the same language
-            if other_submission.language != submission.language:
-                del grouped_signatures[closest_submission_id]
-            else:
-                return other_submission
-        return None
-
-    @staticmethod
     def canonicalise_submission(submission):
+        '''
+        given a submission remove all variable names etc from it
+
+        @return string program source with no identifying attributes
+        '''
         language_handler = Detector.LANGUAGES[submission.language]()
         language_handler.parse_file(submission.program_source)
         return language_handler.strip_unstable_atrributes().replace(' ', '')
