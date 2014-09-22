@@ -21,4 +21,4 @@ In console 2 run the following
 8. python server.py
 Open http://localhost:5000 in your web browser for the lecturer page.
 
-A simulated student submission page is available at http://localhost:5000/submit
+A simulated student submission page is available at http://localhost:5000/student/submit

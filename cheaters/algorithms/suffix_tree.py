@@ -101,8 +101,7 @@ class SuffixTree(object):
         return s
 
     def _add_prefix(self, last_char_index):
-        """The core construction method.
-        """
+        ''' add a prefix into our tree'''
         last_parent_node = -1
         while True:
             parent_node = self.active.source_node_index
@@ -144,6 +143,7 @@ class SuffixTree(object):
         self.edges[edge.source_node_index].pop(self.string[edge.first_char_index])
 
     def _split_edge(self, edge, suffix):
+        ''' split an edge (probably because we added a new suffix) '''
         self.nodes.append(Node())
         self.edges.append({})
         e = Edge(self.string, edge.first_char_index, edge.first_char_index + suffix.length, suffix.source_node_index, len(self.nodes) - 1)
@@ -237,6 +237,8 @@ class SuffixTree(object):
         return longest
 
     def common_substrings_longer_than(self, min_length, current_node=0):
+        ''' find all common substrings (in the gneralised suffix tree)
+            longer than a given length'''
         strings_contained = 0
         for i in xrange(len(self.original_strings)):
             strings_contained |= 1<<i

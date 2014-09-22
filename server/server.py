@@ -28,7 +28,8 @@ class View(FlaskView):
         @GET /submit
         @render student_submit.html
         '''
-        return render_template('student_submit.html')
+        db=DatabaseManager()
+        return render_template('student_submit.html', assignments=db.fetch_current_assignments())
 
     @route('/student/submit', methods=['POST'])
     def post_submit_form(self):
@@ -42,7 +43,8 @@ class View(FlaskView):
         if not student_number:
             student_number = submission.filename
         Detector().run(submission, assignment_id, student_number)
-        return redirect('/' + assignment_id)
+        flash('Your assignment was submitted successfully.', 'success')
+        return redirect('/student/submit')
 
     # lecturer routes
 
