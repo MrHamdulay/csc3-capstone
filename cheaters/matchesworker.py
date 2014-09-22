@@ -19,6 +19,7 @@ grouper = Grouper()
 def match(submissions):
     print 'Starting suffix matching'
     line_matches = SuffixTreeAlgorithm().calculate_document_similarity(*submissions)
+    print 'finished'
     num_matches = 0
     print line_matches
     for i in (0, 1):
@@ -43,6 +44,7 @@ while True:
         signatures_by_document = grouper.group_signatures_by_document(matching_signatures, False)
 
         other_submission_id = max(signatures_by_document.iteritems(), key=lambda x: len(x[1]))[0]
+
         submissions.append(database.fetch_a_submission(other_submission_id))
         print 'Matched to', other_submission_id
 
@@ -57,12 +59,12 @@ while True:
 
         for other_submission_id2, signatures in signatures_by_document.iteritems():
             num_signatures = len(signatures)
-            other_submission = database.fetch_a_submission(other_submission_id2)
             signature_match = database.fetch_submission_match(other_submission_id2)
 
             if signature_match is None:
                 continue
             if num_signatures > signature_match.number_signatures_matched:
+                other_submission = database.fetch_a_submission(other_submission_id2)
                 line_matches, num_matches = match([submissions[0], other_submission])
                 if num_matches > signature_match.confidence:
                     if line_matches[0]:

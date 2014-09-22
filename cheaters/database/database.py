@@ -207,7 +207,7 @@ class DatabaseManager:
         c.execute('SELECT StudentId, ProgramSource '
                 'ProgrammingLanguage FROM Submissions WHERE AssignmentNumber = ?' ,(assignment_id, ))
         for x in c:
-            source_codes[x[0]] = x[1]
+            source_codes[str(x[0])] = x[1]
         c.close()
         return source_codes
 

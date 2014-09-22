@@ -106,8 +106,8 @@ class SuffixTreeAlgorithmTestCase(unittest.TestCase):
 
     def test_partial_lines(self):
         matches = SuffixTreeAlgorithm().calculate_document_similarity(*submissions2)
-        self.assertEqual(str(matches), '[[<Match their_submission_id:1 my_start_line:1 match_length:6 (0)>],'
-                                       ' [<Match their_submission_id:2 my_start_line:1 match_length:6 (0)>]]')
+        self.assertEqual(str(matches), '[[<Match their_submission_id:1 my_start_line:1 match_length:5 (0)>],'
+                                       ' [<Match their_submission_id:2 my_start_line:1 match_length:5 (0)>]]')
 #                                      '[[<Match their_submission_id:1 my_start_line:1 match_length:5 (0)>],
 #                                        [<Match their_submission_id:2 my_start_line:1 match_length:5 (0)>]]
 
