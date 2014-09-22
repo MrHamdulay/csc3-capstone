@@ -13,7 +13,7 @@ from database.database import DatabaseManager
 class DataGenerator:
 
     course_code = 'csc10015f'
-    path = os.path.join(os.getcwd(), '../examples/data')
+    path = os.path.join(os.getcwd(), '..', 'examples', 'data')
 
     def get_assignment_number(self, name):
         ''' get the number out of an assignment

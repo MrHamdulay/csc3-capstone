@@ -54,10 +54,10 @@ class WinnowerAlgorithm(BaseAlgorithm):
               continue
           yield line_number, char
 
-  '''
-  given a string and a length generate and return all
-  length-grams of this string'''
   def ngrams(self, string, ngram_length):
+    '''
+    given a string and a length generate and return all
+    length-grams of this string'''
     line_number = 0
     string = list(self.whitespaced_stripped_with_line_numbers(string))
     last_ngram = None
@@ -69,19 +69,19 @@ class WinnowerAlgorithm(BaseAlgorithm):
         last_ngram = ngram
 
 
-  '''
-  generate all ngrams and then hash the string
-  '''
   def ngrams_hashes(self, string, ngram_length):
+    '''
+    generate all ngrams and then hash the string
+    '''
     for line_number, ngram in self.ngrams(string, ngram_length):
       yield line_number, hash_function(ngram)
 
 
-  '''
-  go through every window of length n and choose the minimum
-  n-gram hash within that window
-  '''
   def window_hashes(self, string, ngram_length=NGRAM_LENGTH):
+    '''
+    go through every window of length n and choose the minimum
+    n-gram hash within that window
+    '''
     ngram_iterator = self.ngrams(string, ngram_length)
     ngram_window = deque()
     previous = None
